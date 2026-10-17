@@ -708,22 +708,30 @@
         </div>
       </div>
 
-      <!-- MÉTRICAS DE IMPACTO -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <!-- MÉTRICAS DE IMPACTO E CADASTROS -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div class="bg-purple-50 border border-purple-200 p-4 rounded-2xl">
+          <p class="text-[10px] font-bold text-purple-700 uppercase">Moradores Cadastrados</p>
+          <p id="adminStatUsuarios" class="text-2xl font-black text-purple-950 mt-1">0</p>
+        </div>
+        <div class="bg-slate-100 border border-slate-300 p-4 rounded-2xl">
+          <p class="text-[10px] font-bold text-slate-700 uppercase">Total Itens Cadastrados</p>
+          <p id="adminStatTotalItens" class="text-2xl font-black text-slate-900 mt-1">0</p>
+        </div>
         <div class="bg-sky-50 border border-sky-200 p-4 rounded-2xl">
-          <p class="text-[11px] font-bold text-sky-700 uppercase">Anúncios Ativos</p>
+          <p class="text-[10px] font-bold text-sky-700 uppercase">Anúncios Disponíveis</p>
           <p id="adminStatAtivos" class="text-2xl font-black text-sky-950 mt-1">0</p>
         </div>
         <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl">
-          <p class="text-[11px] font-bold text-amber-800 uppercase">Aguardando Confirmação</p>
+          <p class="text-[10px] font-bold text-amber-800 uppercase">Aguardando Confirmação</p>
           <p id="adminStatPendentes" class="text-2xl font-black text-amber-950 mt-1">0</p>
         </div>
         <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-2xl">
-          <p class="text-[11px] font-bold text-emerald-700 uppercase">Trocas/Doações Concluídas</p>
+          <p class="text-[10px] font-bold text-emerald-700 uppercase">Trocas Concluídas</p>
           <p id="adminStatConcluidos" class="text-2xl font-black text-emerald-950 mt-1">0</p>
         </div>
         <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-2xl">
-          <p class="text-[11px] font-bold text-indigo-700 uppercase">Voluntários Inscritos</p>
+          <p class="text-[10px] font-bold text-indigo-700 uppercase">Voluntários Inscritos</p>
           <p id="adminStatVoluntarios" class="text-2xl font-black text-indigo-950 mt-1">0</p>
         </div>
       </div>
@@ -754,8 +762,21 @@
         </form>
       </div>
 
+      <!-- LISTA DE MORADORES CADASTRADOS E SALDO DE CRÉDITOS -->
+      <div class="space-y-3 pt-2 border-t">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h4 class="font-bold text-slate-800 text-lg font-heading flex items-center gap-2">
+              <i class="ph ph-users-three text-purple-600"></i> Moradores Cadastrados &amp; Créditos
+            </h4>
+            <p class="text-xs text-slate-500">Veja todos os usuários que criaram conta ou anunciaram itens no site e ajuste créditos se necessário.</p>
+          </div>
+        </div>
+        <div id="listaAdminUsuarios" class="space-y-2"></div>
+      </div>
+
       <!-- LISTA DE VOLUNTÁRIOS INSCRITOS -->
-      <div class="space-y-3 pt-2">
+      <div class="space-y-3 pt-4 border-t">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <h4 class="font-bold text-slate-800 text-lg font-heading flex items-center gap-2">
             <i class="ph ph-hands-praying text-emerald-600"></i> Voluntários Inscritos
@@ -857,19 +878,26 @@
     </div>
   </div>
 
-  <!-- MODAL DE AUTENTICAÇÃO (COM LOGIN POR GOOGLE E E-MAIL/SENHA EVIDENTES) -->
+  <!-- MODAL DE AUTENTICAÇÃO (COM LOGIN POR GOOGLE, FACEBOOK E E-MAIL/SENHA EVIDENTES) -->
   <div id="modalAuth" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
       <div class="flex items-center justify-between border-b pb-3">
         <h3 class="text-xl font-bold font-heading text-slate-800">Aceder ao Livros Livres</h3>
         <button type="button" id="fecharAuth" class="text-slate-400 hover:text-slate-600"><i class="ph ph-x text-xl"></i></button>
       </div>
-      <p class="text-xs text-slate-500">Faça login com sua conta Google ou utilizando seu e-mail e senha.</p>
+      <p class="text-xs text-slate-500">Faça login com sua conta Google, Facebook ou utilizando seu e-mail e senha.</p>
       
-      <button type="button" id="btnLoginGoogle" class="w-full bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 font-bold py-2.5 rounded-xl transition-all text-sm flex items-center justify-center gap-2 shadow-sm">
-        <i class="ph ph-google-logo text-lg text-red-500"></i>
-        <span>Continuar com o Google</span>
-      </button>
+      <div class="space-y-2.5">
+        <button type="button" id="btnLoginGoogle" class="w-full bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 font-bold py-2.5 rounded-xl transition-all text-sm flex items-center justify-center gap-2 shadow-sm">
+          <i class="ph ph-google-logo text-lg text-red-500"></i>
+          <span>Continuar com o Google</span>
+        </button>
+
+        <button type="button" id="btnLoginFacebook" class="w-full bg-[#1877F2] hover:bg-[#166FE5] text-white font-bold py-2.5 rounded-xl transition-all text-sm flex items-center justify-center gap-2 shadow-sm">
+          <i class="ph ph-facebook-logo text-lg"></i>
+          <span>Continuar com o Facebook</span>
+        </button>
+      </div>
 
       <div class="relative flex py-1 items-center">
         <div class="flex-grow border-t border-slate-200"></div>
@@ -1016,9 +1044,26 @@
     </div>
   </div>
 
+  <!-- MODAL DE POLÍTICA DE PRIVACIDADE E EXCLUSÃO DE DADOS (EXIGIDO PELO META/FACEBOOK LOGIN) -->
+  <div id="modalPrivacidade" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-xs text-slate-600 leading-relaxed">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="text-lg font-bold font-heading text-slate-800">Política de Privacidade &amp; Exclusão de Dados</h3>
+        <button type="button" onclick="document.getElementById('modalPrivacidade').classList.replace('flex', 'hidden')" class="text-slate-400 hover:text-slate-600"><i class="ph ph-x text-xl"></i></button>
+      </div>
+      <p><strong>1. Finalidade Comunitária:</strong> O portal <em>Livros Livres | Tabatinga Lê e Brinca</em> é uma iniciativa 100% gratuita e sem fins lucrativos voltada à troca e doação de livros e brinquedos educativos no Bairro Tabatinga.</p>
+      <p><strong>2. Dados Coletados:</strong> Ao fazer login via Google, Facebook ou E-mail, coletamos apenas seu nome de exibição e endereço de e-mail para identificar seus anúncios e seu saldo de créditos comunitários.</p>
+      <p><strong>3. Compartilhamento:</strong> Seus dados nunca são vendidos a terceiros. O meio de contacto informado por você num anúncio é exibido apenas para moradores autenticados na plataforma.</p>
+      <p><strong>4. Instruções para Exclusão de Dados (Data Deletion):</strong> Você pode excluir seus anúncios a qualquer momento na aba <em>Meus Anúncios</em>. Para solicitar a exclusão completa da sua conta e de todos os dados associados, envie um e-mail para <strong>jovemroots@gmail.com</strong> com o assunto "Exclusão de Conta Livros Livres".</p>
+    </div>
+  </div>
+
   <!-- RODAPÉ -->
-  <footer class="bg-white border-t py-6 text-center text-xs text-slate-400">
+  <footer class="bg-white border-t py-6 text-center text-xs text-slate-400 space-y-1">
     <p>Livros Livres &bull; Projeto Comunitário do Bairro Tabatinga</p>
+    <p>
+      <button type="button" onclick="document.getElementById('modalPrivacidade').classList.replace('hidden', 'flex')" class="underline hover:text-slate-600">Política de Privacidade e Exclusão de Dados</button>
+    </p>
   </footer>
 
   <!-- SCRIPT PRINCIPAL -->
@@ -1027,6 +1072,7 @@
     import { 
       getAuth, 
       GoogleAuthProvider, 
+      FacebookAuthProvider,
       signInWithPopup, 
       createUserWithEmailAndPassword, 
       signInWithEmailAndPassword, 
@@ -1228,10 +1274,11 @@
       }
     });
 
-    // SINCRONIZAR LISTA DE USUÁRIOS (PARA SELEÇÃO DE RECEBEDOR E CRÉDITOS)
+    // SINCRONIZAR LISTA DE USUÁRIOS (PARA SELEÇÃO DE RECEBEDOR, CONTAGEM DE CADASTROS E CRÉDITOS)
     onSnapshot(usuariosRef, (snap) => {
       todosUsuariosCache = {};
       snap.forEach(d => { todosUsuariosCache[d.id] = d.data(); });
+      renderizarUsuariosAdmin();
     });
 
     // ÚNICO LISTENER EM TEMPO REAL PARA OS ITENS DO MURAL (CORRIGE LEITURAS DUPLICADAS)
@@ -1243,6 +1290,7 @@
       renderizarMurais();
       atualizarPainelCreditosEHistorico();
       verificarLinkConfirmacaoURL();
+      renderizarUsuariosAdmin();
     });
 
     // Formulário de Voluntário
@@ -1281,8 +1329,25 @@
       try {
         await signInWithPopup(auth, provider);
         document.getElementById('modalAuth').classList.replace('flex', 'hidden');
-        mostrarAviso("Login realizado com sucesso!", "sucesso");
+        mostrarAviso("Login com Google realizado com sucesso!", "sucesso");
       } catch (err) { mostrarAviso("Erro no login do Google: " + err.message, "erro"); }
+    });
+
+    document.getElementById('btnLoginFacebook').addEventListener('click', async () => {
+      const provider = new FacebookAuthProvider();
+      try {
+        await signInWithPopup(auth, provider);
+        document.getElementById('modalAuth').classList.replace('flex', 'hidden');
+        mostrarAviso("Login com Facebook realizado com sucesso!", "sucesso");
+      } catch (err) {
+        if (err.code === 'auth/account-exists-with-different-credential') {
+          mostrarAviso("Este e-mail já está vinculado ao login pelo Google ou Senha. Entre usando o Google ou E-mail.", "alerta");
+        } else if (err.code === 'auth/operation-not-allowed') {
+          mostrarAviso("O login com Facebook precisa ser ativado no painel do Firebase Authentication.", "alerta");
+        } else {
+          mostrarAviso("Erro no login do Facebook: " + err.message, "erro");
+        }
+      }
     });
 
     document.getElementById('formAuth').addEventListener('submit', async (e) => {
@@ -1597,6 +1662,8 @@
       if (impactoTexto) {
         impactoTexto.innerText = `${totalConcluidos} ${totalConcluidos === 1 ? 'item já circulado' : 'itens já circulados'} + ${totalAtivos} disponíveis`;
       }
+      const statTotalEl = document.getElementById('adminStatTotalItens');
+      if (statTotalEl) statTotalEl.innerText = entries.length;
       document.getElementById('adminStatAtivos').innerText = totalAtivos;
       document.getElementById('adminStatPendentes').innerText = totalPendentes;
       document.getElementById('adminStatConcluidos').innerText = totalConcluidos;
@@ -1613,6 +1680,7 @@
 
       if (ehAdmin()) {
         renderizarItensAdmin(entries);
+        renderizarUsuariosAdmin();
       }
     }
 
@@ -2361,6 +2429,87 @@
       await updateDoc(doc(db, "itens", id), { status: novoStatus });
       mostrarAviso(`Status do anúncio alterado para ${novoStatus}.`, "info");
     };
+
+    function renderizarUsuariosAdmin() {
+      // Unifica usuários da coleção 'usuarios' com autores de anúncios antigos
+      const mapaUsuarios = { ...todosUsuariosCache };
+      Object.values(dadosLocaisItens).forEach(item => {
+        if (item.uidUsuario && !mapaUsuarios[item.uidUsuario]) {
+          mapaUsuarios[item.uidUsuario] = {
+            uid: item.uidUsuario,
+            nome: item.nome || 'Morador',
+            email: item.emailUsuario || '',
+            creditosLivro: 1,
+            creditosJogo: 1,
+            bonusPrimeiroCadastro: true,
+            trocasRealizadas: 0
+          };
+        }
+      });
+
+      const listaUsuarios = Object.values(mapaUsuarios);
+      const statUsuariosEl = document.getElementById('adminStatUsuarios');
+      if (statUsuariosEl) statUsuariosEl.innerText = listaUsuarios.length;
+
+      if (!ehAdmin()) return;
+      const container = document.getElementById('listaAdminUsuarios');
+      if (!container) return;
+
+      if (listaUsuarios.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-400">Nenhum morador cadastrado ainda.</p>`;
+        return;
+      }
+
+      container.innerHTML = listaUsuarios.map(u => {
+        const qtdAnuncios = Object.values(dadosLocaisItens).filter(i => i.uidUsuario === u.uid).length;
+        const cLivro = u.creditosLivro ?? 0;
+        const cJogo = u.creditosJogo ?? 0;
+        return `
+          <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div>
+              <div class="flex items-center gap-2">
+                <strong class="text-slate-800 text-sm">${u.nome || 'Morador'}</strong>
+                <span class="bg-purple-100 text-purple-800 text-[10px] font-bold px-2 py-0.5 rounded-full">${qtdAnuncios} ${qtdAnuncios === 1 ? 'item anunciado' : 'itens anunciados'}</span>
+              </div>
+              <p class="text-slate-500">${u.email || 'Sem e-mail visível'}</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-3">
+              <div class="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 px-2.5 py-1.5 rounded-xl">
+                <span class="font-bold text-emerald-900">📖 Livros: ${cLivro}</span>
+                <button type="button" onclick="ajustarCreditoAdmin('${u.uid}', 'creditosLivro', -1)" class="w-5 h-5 rounded bg-white border text-slate-700 font-bold hover:bg-slate-100">-</button>
+                <button type="button" onclick="ajustarCreditoAdmin('${u.uid}', 'creditosLivro', 1)" class="w-5 h-5 rounded bg-emerald-600 text-white font-bold hover:bg-emerald-700">+</button>
+              </div>
+              <div class="flex items-center gap-1.5 bg-amber-50 border border-amber-200 px-2.5 py-1.5 rounded-xl">
+                <span class="font-bold text-amber-900">🧩 Jogos: ${cJogo}</span>
+                <button type="button" onclick="ajustarCreditoAdmin('${u.uid}', 'creditosJogo', -1)" class="w-5 h-5 rounded bg-white border text-slate-700 font-bold hover:bg-slate-100">-</button>
+                <button type="button" onclick="ajustarCreditoAdmin('${u.uid}', 'creditosJogo', 1)" class="w-5 h-5 rounded bg-amber-500 text-white font-bold hover:bg-amber-600">+</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.ajustarCreditoAdmin = async function(uid, campo, delta) {
+      if (!ehAdmin()) return;
+      const atual = todosUsuariosCache[uid]?.[campo] ?? 0;
+      const novo = Math.min(10, Math.max(0, atual + delta));
+      try {
+        await setDoc(doc(db, "usuarios", uid), {
+          uid: uid,
+          [campo]: novo,
+          atualizadoEm: new Date().toISOString()
+        }, { merge: true });
+        mostrarAviso(`Saldo atualizado para ${novo}!`, "sucesso");
+      } catch (err) {
+        mostrarAviso("Erro ao ajustar crédito: " + err.message, "erro");
+      }
+    };
+
+    // Abrir modal de privacidade se vier via URL (?privacidade=1)
+    if (new URLSearchParams(window.location.search).get('privacidade') === '1') {
+      document.getElementById('modalPrivacidade').classList.replace('hidden', 'flex');
+    }
   </script>
 </body>
 </html>
