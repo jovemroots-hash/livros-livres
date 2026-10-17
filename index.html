@@ -1,0 +1,2366 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Livros Livres | Tabatinga Lê e Brinca</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    body { font-family: 'Nunito', sans-serif; }
+    h1, h2, h3, h4, .font-heading { font-family: 'Fredoka', sans-serif; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+
+  <!-- CONTAINER DE NOTIFICAÇÕES (TOASTS) -->
+  <div id="toastContainer" class="fixed bottom-4 right-4 z-[100] flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+  <!-- HEADER -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-30 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2 cursor-pointer" onclick="document.getElementById('btnAbaMural').click()">
+        <div class="w-10 h-10 rounded-xl bg-sky-500 text-white flex items-center justify-center font-bold text-xl shadow-md">
+          <i class="ph ph-books"></i>
+        </div>
+        <div>
+          <h1 class="text-xl font-bold text-slate-800 leading-tight font-heading">
+            Livros <span class="text-sky-500">Livres</span>
+          </h1>
+          <p class="text-xs text-slate-500">Tabatinga Lê e Brinca</p>
+        </div>
+      </div>
+
+      <!-- ÁREA DE AUTENTICAÇÃO / PERFIL -->
+      <div id="areaAuth" class="flex items-center gap-2">
+        <button type="button" id="btnAbrirAuth" class="bg-sky-500 hover:bg-sky-600 text-white font-bold px-4 py-2 rounded-xl text-xs sm:text-sm transition-all flex items-center gap-1.5 shadow-sm">
+          <i class="ph ph-user text-base"></i>
+          <span>Entrar / Criar Conta</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ABAS DE NAVEGAÇÃO PRINCIPAL -->
+    <div class="bg-slate-100 border-t border-slate-200 overflow-x-auto">
+      <div class="max-w-6xl mx-auto px-4 flex items-center gap-2 text-xs font-bold pt-2 min-w-max">
+        <button id="btnAbaMural" type="button" class="px-4 py-2.5 rounded-t-xl bg-white text-sky-600 border-t-2 border-sky-500 shadow-sm flex items-center gap-1.5 transition-all font-bold">
+          <i class="ph ph-storefront text-base"></i>
+          <span>Mural de Trocas</span>
+          <span id="qtdTrocasBadge" class="bg-sky-100 text-sky-700 text-[10px] px-2 py-0.5 rounded-full font-bold">0</span>
+        </button>
+        <button id="btnAbaDoacoes" type="button" class="px-4 py-2.5 rounded-t-xl text-slate-500 hover:text-slate-800 flex items-center gap-1.5 transition-all font-bold">
+          <i class="ph ph-heart text-base text-rose-500"></i>
+          <span>Mural de Doações</span>
+          <span id="qtdDoacoesBadge" class="bg-rose-100 text-rose-700 text-[10px] px-2 py-0.5 rounded-full font-bold">0</span>
+        </button>
+        <button id="btnAbaMeusAnuncios" type="button" class="hidden px-4 py-2.5 rounded-t-xl text-slate-500 hover:text-slate-800 flex items-center gap-1.5 transition-all font-bold">
+          <i class="ph ph-user-circle text-base"></i>
+          <span>Meus Anúncios</span>
+          <span id="qtdMeusAnunciosBadge" class="bg-sky-200 text-sky-800 text-[10px] px-2 py-0.5 rounded-full font-bold">0</span>
+        </button>
+        <button id="btnAbaPerfil" type="button" class="px-4 py-2.5 rounded-t-xl text-slate-500 hover:text-slate-800 flex items-center gap-1.5 transition-all font-bold">
+          <i class="ph ph-wallet text-base text-emerald-600"></i>
+          <span>Meu Perfil &amp; Créditos</span>
+          <span id="badgePendenciasPerfil" class="hidden bg-amber-400 text-slate-900 text-[10px] px-2 py-0.5 rounded-full font-extrabold animate-pulse">!</span>
+        </button>
+        <button id="btnAbaDoarNovos" type="button" class="px-4 py-2.5 rounded-t-xl text-slate-500 hover:text-slate-800 flex items-center gap-1.5 transition-all font-bold">
+          <i class="ph ph-gift text-base text-amber-500"></i>
+          <span>Doar Itens Novos (Wishlist)</span>
+        </button>
+        <button id="btnAbaVoluntarios" type="button" class="px-4 py-2.5 rounded-t-xl text-slate-500 hover:text-slate-800 flex items-center gap-1.5 transition-all font-bold">
+          <i class="ph ph-hands-praying text-base text-emerald-600"></i>
+          <span>Seja um Voluntário</span>
+        </button>
+        <button id="btnAbaSobre" type="button" class="px-4 py-2.5 rounded-t-xl text-slate-500 hover:text-slate-800 flex items-center gap-1.5 transition-all font-bold">
+          <i class="ph ph-info text-base"></i>
+          <span>Sobre o Projeto</span>
+        </button>
+        <button id="btnAbaAdmin" type="button" class="hidden px-4 py-2.5 rounded-t-xl text-indigo-700 hover:text-indigo-900 flex items-center gap-1.5 transition-all font-bold bg-indigo-50/70">
+          <i class="ph ph-shield-check text-base text-indigo-600"></i>
+          <span>Painel do Organizador</span>
+          <span id="qtdVoluntariosBadge" class="bg-indigo-200 text-indigo-900 text-[10px] px-2 py-0.5 rounded-full font-bold">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- BANNER DO EVENTO MENSAL -->
+  <section class="bg-gradient-to-r from-sky-500 via-indigo-500 to-emerald-500 text-white py-6 px-4 shadow-inner">
+    <div class="max-w-6xl mx-auto rounded-2xl bg-white/10 backdrop-blur-md p-4 border border-white/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="space-y-1 text-center sm:text-left">
+        <span id="bannerBadge" class="inline-block bg-amber-400 text-slate-900 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+          Encontro Mensal
+        </span>
+        <h2 id="bannerTitulo" class="text-xl sm:text-2xl font-bold font-heading">Tabatinga Lê &amp; Brinca</h2>
+        <p id="bannerDescricao" class="text-xs text-slate-100">1 Sábado por mês, das 9h às 12h • Rodas de leitura, quebra-cabeças, oficinas e frutas da época!</p>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-center gap-2 text-xs">
+        <div class="flex items-center gap-1 bg-black/20 px-3 py-1.5 rounded-lg">
+          <i class="ph ph-calendar-blank text-amber-300"></i>
+          <span id="bannerData">Sábado Mensal (9h - 12h)</span>
+        </div>
+        <div class="flex items-center gap-1 bg-black/20 px-3 py-1.5 rounded-lg">
+          <i class="ph ph-map-pin text-amber-300"></i>
+          <span id="bannerLocal">Bairro Tabatinga</span>
+        </div>
+        <div id="boxContadorImpactoBanner" class="hidden sm:flex items-center gap-1 bg-emerald-900/40 border border-emerald-300/30 px-3 py-1.5 rounded-lg text-emerald-100 font-bold">
+          <i class="ph ph-sparkle text-amber-300"></i>
+          <span id="bannerImpactoTexto">0 trocas e doações realizadas</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- AVISO GLOBAL DE CONFIRMAÇÃO DE RECEBIMENTO PENDENTE (ETAPA 2) -->
+  <div id="alertaConfirmacaoGlobal" class="hidden max-w-6xl mx-auto px-4 pt-4 w-full"></div>
+
+  <!-- 1. MURAL DE TROCAS -->
+  <main id="secaoMuralGeral" class="max-w-6xl mx-auto px-4 py-6 flex-1 w-full">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+      <div>
+        <h3 class="text-2xl font-bold font-heading text-slate-800">Mural de Trocas</h3>
+        <p class="text-slate-500 text-sm">Sabe aquele livro incrível que você já leu, que marcou a infância, e que agora descansa na estante? Ou aquele quebra-cabeça impecável que merece novos desafios?</p>
+      </div>
+
+      <button id="btnCadastrarItem" type="button" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold px-5 py-2.5 rounded-xl text-sm transition-all flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center flex-shrink-0">
+        <i class="ph ph-plus-circle text-lg"></i>
+        <span>Cadastrar Novo Item</span>
+      </button>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div class="bg-sky-50 border border-sky-200 p-4 rounded-2xl flex items-start gap-3">
+        <span class="w-7 h-7 rounded-full bg-sky-500 text-white font-bold flex items-center justify-center text-xs flex-shrink-0">1</span>
+        <div class="text-xs text-sky-900">
+          <strong class="block font-bold mb-0.5">Cadastre seus itens</strong>
+          No 1º item cadastrado você ganha <strong>+1 crédito bônus</strong> em cada categoria! Depois, ganha +1 crédito a cada troca confirmada.
+        </div>
+      </div>
+      <div class="bg-sky-50 border border-sky-200 p-4 rounded-2xl flex items-start gap-3">
+        <span class="w-7 h-7 rounded-full bg-sky-500 text-white font-bold flex items-center justify-center text-xs flex-shrink-0">2</span>
+        <div class="text-xs text-sky-900">
+          <strong class="block font-bold mb-0.5">Faça Login e Combine</strong>
+          Entre com Google ou E-mail para ver o contacto dos vizinhos, solicitar a troca e reservar o livro ou jogo.
+        </div>
+      </div>
+      <div class="bg-sky-50 border border-sky-200 p-4 rounded-2xl flex items-start gap-3">
+        <span class="w-7 h-7 rounded-full bg-sky-500 text-white font-bold flex items-center justify-center text-xs flex-shrink-0">3</span>
+        <div class="text-xs text-sky-900">
+          <strong class="block font-bold mb-0.5">Confirme o Recebimento</strong>
+          Ao receber o item, confirme pelo botão exclusivo no site para liberar o novo crédito ao vizinho doador!
+        </div>
+      </div>
+    </div>
+
+    <!-- BARRA DE PESQUISA E FILTROS (MURAL DE TROCAS) -->
+    <div class="bg-white p-3 sm:p-4 rounded-2xl border border-slate-200 shadow-sm mb-6 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+      <div class="relative flex-1">
+        <i class="ph ph-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-base"></i>
+        <input type="text" id="inputBuscaMural" placeholder="Buscar livro, autor ou quebra-cabeça..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-sky-500 focus:bg-white transition-all">
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-bold">
+          <button id="filtroTodos" type="button" class="px-3 py-1.5 rounded-lg bg-white text-slate-800 shadow-sm transition-all font-bold">Todos</button>
+          <button id="filtroLivro" type="button" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all font-bold">📖 Livros</button>
+          <button id="filtroJogo" type="button" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all font-bold">🧩 Quebra-Cabeças</button>
+        </div>
+
+        <select id="selectFiltroEtariaMural" class="px-3 py-2 bg-slate-100 border-0 rounded-xl text-xs font-bold text-slate-700 focus:outline-sky-500 cursor-pointer">
+          <option value="todas">Todas as idades</option>
+          <option value="0-3 anos">0-3 anos</option>
+          <option value="4-6 anos">4-6 anos</option>
+          <option value="7-9 anos">7-9 anos</option>
+          <option value="10+ anos">10+ anos</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="muralItens" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div class="col-span-full text-center py-12 text-slate-400">
+        <i class="ph ph-spinner animate-spin text-3xl mb-2"></i>
+        <p>A carregar itens de troca...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- 2. MURAL DE DOAÇÕES -->
+  <main id="secaoDoacoes" class="max-w-6xl mx-auto px-4 py-6 flex-1 w-full hidden">
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+      <div>
+        <h3 class="text-2xl font-bold font-heading text-slate-800 flex items-center gap-2">
+          <i class="ph ph-heart text-rose-500"></i> Espaço de Doações
+        </h3>
+        <p class="text-slate-500 text-sm">Gestos de carinho sem burocracia. Aqui, vizinhos oferecem livros e brinquedos inteiramente de graça para outras famílias da comunidade.</p>
+      </div>
+
+      <button type="button" class="btnCadastrarItemGlobal bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold px-5 py-2.5 rounded-xl text-sm transition-all flex items-center gap-2 shadow-sm">
+        <i class="ph ph-plus-circle text-lg"></i>
+        <span>Doar Livro ou Jogo</span>
+      </button>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+      <div class="bg-rose-50 border border-rose-200 p-4 rounded-2xl flex items-start gap-3">
+        <span class="w-7 h-7 rounded-full bg-rose-500 text-white font-bold flex items-center justify-center text-xs flex-shrink-0">1</span>
+        <div class="text-xs text-rose-900">
+          <strong class="block font-bold mb-0.5">Doação Solidária</strong>
+          Itens oferecidos por pura generosidade para incentivar a leitura e o brincar no bairro (não exige créditos de quem recebe).
+        </div>
+      </div>
+      <div class="bg-rose-50 border border-rose-200 p-4 rounded-2xl flex items-start gap-3">
+        <span class="w-7 h-7 rounded-full bg-rose-500 text-white font-bold flex items-center justify-center text-xs flex-shrink-0">2</span>
+        <div class="text-xs text-rose-900">
+          <strong class="block font-bold mb-0.5">Retirada Gratuita e Confirmação</strong>
+          Escolha o item, combine a entrega e confirme o recebimento no site para valorizar o gesto do doador!
+        </div>
+      </div>
+    </div>
+
+    <!-- BARRA DE PESQUISA E FILTROS (DOAÇÕES) -->
+    <div class="bg-white p-3 sm:p-4 rounded-2xl border border-rose-100 shadow-sm mb-6 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <div class="relative flex-1">
+        <i class="ph ph-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-base"></i>
+        <input type="text" id="inputBuscaDoacoes" placeholder="Buscar nas doações..." class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-rose-500 focus:bg-white transition-all">
+      </div>
+      <select id="selectFiltroEtariaDoacoes" class="px-3 py-2 bg-rose-50 border border-rose-100 rounded-xl text-xs font-bold text-rose-800 focus:outline-rose-500 cursor-pointer">
+        <option value="todas">Todas as idades</option>
+        <option value="0-3 anos">0-3 anos</option>
+        <option value="4-6 anos">4-6 anos</option>
+        <option value="7-9 anos">7-9 anos</option>
+        <option value="10+ anos">10+ anos</option>
+      </select>
+    </div>
+
+    <div id="muralDoacoes" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div class="col-span-full text-center py-12 text-slate-400">
+        <p>A carregar doações disponíveis...</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- 3. MEUS ANÚNCIOS -->
+  <main id="secaoMeusAnuncios" class="max-w-6xl mx-auto px-4 py-6 flex-1 w-full hidden space-y-6">
+    <!-- BOX DE CONFIRMAÇÕES PENDENTES DO RECEBEDOR -->
+    <div id="boxConfirmacoesRecebedorMeus" class="hidden"></div>
+
+    <div class="bg-sky-50 border border-sky-200 rounded-3xl p-6 shadow-sm">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-sky-200">
+        <div>
+          <h3 class="text-2xl font-bold font-heading text-slate-800 flex items-center gap-2">
+            <i class="ph ph-user-circle text-sky-600"></i> Meus Anúncios Cadastrados
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-600 mt-1">Gerencie seus itens, inicie a confirmação de troca quando entregar um livro/jogo ou edite informações.</p>
+        </div>
+
+        <button type="button" class="btnCadastrarItemGlobal bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold px-5 py-2.5 rounded-xl text-sm transition-all flex items-center gap-2 shadow-sm">
+          <i class="ph ph-plus-circle text-lg"></i>
+          <span>Cadastrar Novo Item</span>
+        </button>
+      </div>
+
+      <div id="muralMeusItens" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+    </div>
+  </main>
+
+  <!-- 4. MEU PERFIL & CRÉDITOS -->
+  <main id="secaoPerfil" class="max-w-4xl mx-auto px-4 py-8 flex-1 w-full hidden space-y-6">
+    <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-emerald-200 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4">
+        <div>
+          <h3 class="text-2xl font-bold font-heading text-slate-800 flex items-center gap-2">
+            <i class="ph ph-wallet text-emerald-600"></i> Painel de Créditos e Saldo
+          </h3>
+          <p class="text-xs text-slate-500 mt-1">Gerencie suas moedas de troca (separadas por categoria, com teto de 10 unidades cada).</p>
+        </div>
+        <div id="statusBonusPrimeiroCadastro" class="text-xs"></div>
+      </div>
+
+      <!-- AVISO PARA QUEM NÃO ESTÁ LOGADO -->
+      <div id="avisoPerfilDeslogado" class="hidden bg-sky-50 border border-sky-200 p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="text-xs text-sky-900">
+          <strong class="font-bold block text-sm">Faça login para acompanhar seus créditos em tempo real!</strong>
+          Todo morador começa com 0 e ganha <strong>+1 Livro Livre e +1 Jogo Livre de bônus</strong> logo no primeiro item cadastrado.
+        </div>
+        <button type="button" onclick="document.getElementById('modalAuth').classList.replace('hidden', 'flex')" class="bg-sky-500 hover:bg-sky-600 text-white font-bold px-4 py-2 rounded-xl text-xs whitespace-nowrap shadow-sm">
+          Entrar / Criar Conta
+        </button>
+      </div>
+
+      <!-- PENDÊNCIAS DE CONFIRMAÇÃO DE RECEBIMENTO NO PERFIL -->
+      <div id="boxConfirmacoesRecebedorPerfil" class="hidden"></div>
+
+      <div class="bg-emerald-50 border border-emerald-200 p-5 rounded-2xl space-y-3 text-xs text-emerald-950">
+        <h4 class="font-bold text-sm text-emerald-900 flex items-center gap-1.5">
+          <i class="ph ph-info text-base text-emerald-600"></i> Como funcionam as Moedas e a Liberação de Créditos?
+        </h4>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+          <div class="bg-white p-3 rounded-xl border border-emerald-100">
+            <strong class="block text-emerald-800 font-bold mb-1">🎁 Bônus de 1º Cadastro</strong>
+            Comece com 0 e, ao cadastrar seu <strong>1º item</strong> no site, ganhe automaticamente <strong>+1 Livro Livre e +1 Jogo Livre</strong>!
+          </div>
+          <div class="bg-white p-3 rounded-xl border border-emerald-100">
+            <strong class="block text-emerald-800 font-bold mb-1">🤝 Troca em 2 Etapas</strong>
+            Você marca o item como trocado (Etapa 1) e, quando o recebedor confirma pelo botão exclusivo (Etapa 2), você ganha <strong>+1 crédito</strong>!
+          </div>
+          <div class="bg-white p-3 rounded-xl border border-emerald-100">
+            <strong class="block text-emerald-800 font-bold mb-1">🛡️ Teto Máximo de 10</strong>
+            Cada morador pode acumular no máximo <strong>10 créditos por categoria</strong> para incentivar a circulação.
+          </div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-emerald-50/80 p-5 rounded-2xl border border-emerald-200 flex flex-col justify-between gap-3">
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-xs font-bold text-emerald-700 uppercase tracking-wide">Créditos de Livro Livre</p>
+              <p class="text-3xl font-black text-emerald-900 mt-1"><span id="saldoCreditoLivro">0</span> <span class="text-xs font-normal text-slate-600">/ teto 10</span></p>
+              <p class="text-[11px] text-emerald-600 mt-1">Para troca de livros infantis e juvenis</p>
+            </div>
+            <span class="text-4xl">📖</span>
+          </div>
+          <div class="w-full bg-emerald-200/60 h-2 rounded-full overflow-hidden">
+            <div id="barraCreditoLivro" class="bg-emerald-600 h-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <div class="bg-amber-50/80 p-5 rounded-2xl border border-amber-200 flex flex-col justify-between gap-3">
+          <div class="flex justify-between items-center">
+            <div>
+              <p class="text-xs font-bold text-amber-700 uppercase tracking-wide">Créditos de Jogo Livre</p>
+              <p class="text-3xl font-black text-amber-900 mt-1"><span id="saldoCreditoJogo">0</span> <span class="text-xs font-normal text-slate-600">/ teto 10</span></p>
+              <p class="text-[11px] text-amber-600 mt-1">Para troca de quebra-cabeças e jogos</p>
+            </div>
+            <span class="text-4xl">🧩</span>
+          </div>
+          <div class="w-full bg-amber-200/60 h-2 rounded-full overflow-hidden">
+            <div id="barraCreditoJogo" class="bg-amber-500 h-full transition-all duration-500" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HISTÓRICO DE TROCAS DO MORADOR -->
+      <div class="border-t pt-5">
+        <h4 class="font-bold text-slate-800 text-base font-heading mb-3 flex items-center gap-2">
+          <i class="ph ph-clock-counter-clockwise text-sky-500"></i> Meu Histórico de Trocas e Doações Concluídas
+        </h4>
+        <div id="listaHistoricoUsuario" class="space-y-2 text-xs text-slate-500">
+          <p>Nenhuma troca ou doação concluída ainda.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 5. DOAR ITENS NOVOS (WISHLIST MERCADO LIVRE & AMAZON + MANUAL DO DOADOR) -->
+  <main id="secaoDoarNovos" class="max-w-5xl mx-auto px-4 py-8 flex-1 w-full hidden space-y-8">
+    <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-amber-200 space-y-6">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-amber-100 text-amber-700 flex items-center justify-center text-2xl font-bold">
+          <i class="ph ph-gift"></i>
+        </div>
+        <div>
+          <h3 class="text-2xl font-bold font-heading text-slate-800">Doação de Itens Novos (Lista de Necessidades)</h3>
+          <p class="text-xs sm:text-sm text-slate-500">Se você quer ajudar, mas não tem livros nem quebra-cabeças guardados em casa, aqui é o lugar certo!</p>
+        </div>
+      </div>
+
+      <div class="bg-amber-50/60 p-5 rounded-2xl border border-amber-200 text-xs sm:text-sm text-amber-950 space-y-3 leading-relaxed">
+        <p>
+          Separamos para você uma lista de sugestões com os itens que mais precisamos no momento. Você faz a compra em menos de dois minutos e garante um sorriso para as nossas crianças.
+        </p>
+        <p>
+          No <strong>Tabatinga Lê e Brinca</strong>, prezamos pela transparência total: <strong>não recebemos doações em dinheiro</strong>. Acreditamos que a construção comunitária acontece de forma mais bonita quando você sabe exatamente qual livro ou jogo está presenteando.
+        </p>
+      </div>
+
+      <!-- BOTÕES DE LISTAS DE DESEJOS (MERCADO LIVRE & AMAZON) -->
+      <div class="bg-amber-50 p-6 rounded-2xl border border-amber-200 space-y-4">
+        <h4 class="font-bold text-amber-900 text-sm uppercase tracking-wide">Acesse Nossas Listas de Desejos:</h4>
+        
+        <div class="space-y-3">
+          <p class="text-xs font-bold text-slate-700">🛒 Mercado Livre:</p>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <a href="https://meli.la/1EDZukR" target="_blank" class="flex-1 bg-amber-500 hover:bg-amber-600 text-white font-bold px-4 py-3 rounded-xl text-xs sm:text-sm shadow-sm transition-all flex items-center justify-center gap-2 text-center">
+              <i class="ph ph-book-open text-base"></i>
+              <span>Lista de Livros (Mercado Livre) ↗</span>
+            </a>
+            <a href="https://meli.la/1XmTHzw" target="_blank" class="flex-1 bg-amber-600 hover:bg-amber-700 text-white font-bold px-4 py-3 rounded-xl text-xs sm:text-sm shadow-sm transition-all flex items-center justify-center gap-2 text-center">
+              <i class="ph ph-puzzle-piece text-base"></i>
+              <span>Lista de Quebra-Cabeças (Mercado Livre) ↗</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="space-y-3 pt-2">
+          <p class="text-xs font-bold text-slate-700">📦 Amazon:</p>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <a href="https://www.amazon.com.br/hz/wishlist/ls/3V0LBSJPZ05QQ?ref_=wl_share" target="_blank" class="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-bold px-4 py-3 rounded-xl text-xs sm:text-sm shadow-sm transition-all flex items-center justify-center gap-2 text-center">
+              <i class="ph ph-book-open text-base"></i>
+              <span>Lista de Livros (Amazon) ↗</span>
+            </a>
+            <a href="https://www.amazon.com.br/hz/wishlist/ls/2MBDJVZB1I7JG?ref_=wl_share" target="_blank" class="flex-1 bg-orange-600 hover:bg-orange-700 text-white font-bold px-4 py-3 rounded-xl text-xs sm:text-sm shadow-sm transition-all flex items-center justify-center gap-2 text-center">
+              <i class="ph ph-puzzle-piece text-base"></i>
+              <span>Lista de Quebra-Cabeças (Amazon) ↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- MANUAL DO DOADOR -->
+      <div class="border-t pt-6 space-y-4">
+        <h4 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+          <i class="ph ph-info text-sky-500"></i> Manual do Doador (Itens Próprios / Usados)
+        </h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-1">
+            <h5 class="font-bold text-slate-700 flex items-center gap-1"><i class="ph ph-baby text-sky-500 text-base"></i> Adequação Etária</h5>
+            <p class="text-slate-500">Indicado para crianças de 0 a 14 anos.</p>
+          </div>
+          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-1">
+            <h5 class="font-bold text-slate-700 flex items-center gap-1"><i class="ph ph-image text-emerald-500 text-base"></i> Imagens e Temas</h5>
+            <p class="text-slate-500">Para quebra-cabeças, prefira <strong>animais, paisagens e natureza</strong>. Proibido terror ou violência.</p>
+          </div>
+          <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-1">
+            <h5 class="font-bold text-slate-700 flex items-center gap-1"><i class="ph ph-check-circle text-amber-500 text-base"></i> Integridade Total</h5>
+            <p class="text-slate-500">Livros completos e quebra-cabeças com <strong>100% das peças</strong> em saquinho selado.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 6. SEJA UM VOLUNTÁRIO -->
+  <main id="secaoVoluntarios" class="max-w-3xl mx-auto px-4 py-8 flex-1 w-full hidden">
+    <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-emerald-200 space-y-6">
+      
+      <div class="flex items-center gap-3 border-b pb-4">
+        <div class="w-12 h-12 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl font-bold">
+          <i class="ph ph-hands-praying"></i>
+        </div>
+        <div>
+          <h3 class="text-2xl font-bold font-heading text-slate-800">Seja um Voluntário</h3>
+          <p class="text-xs sm:text-sm text-slate-500">Uma história contada ou um quebra-cabeça montado a quatro mãos são memórias para a vida toda.</p>
+        </div>
+      </div>
+
+      <div class="bg-emerald-50 border border-emerald-200 p-5 rounded-2xl text-xs sm:text-sm text-emerald-950 space-y-2">
+        <strong class="font-bold flex items-center gap-1.5 text-emerald-900">
+          <i class="ph ph-info text-base text-emerald-600"></i> Como funciona o Voluntariado?
+        </strong>
+        <p class="leading-relaxed">
+          Nossos encontros acontecem <strong>1 sábado por mês, das 9h às 12h</strong>. O projeto vive da energia e do afeto da nossa comunidade. Conheça abaixo as formas de colaborar e escolha aquela que mais combina com você:
+        </p>
+      </div>
+
+      <!-- CARDS DETALHADOS E LEGÍVEIS DE VOLUNTARIADO -->
+      <div class="space-y-4">
+        
+        <!-- OFICINAS (MAIOR CARÊNCIA) -->
+        <div class="bg-amber-50/70 border border-amber-200 p-4 sm:p-5 rounded-2xl space-y-1.5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <h4 class="font-bold text-amber-900 text-sm sm:text-base flex items-center gap-2">
+              <i class="ph ph-palette text-amber-600 text-lg"></i> Voluntário de Oficinas Lúdicas e Artísticas
+            </h4>
+            <span class="bg-amber-200 text-amber-900 text-[11px] font-bold px-2.5 py-0.5 rounded-full self-start sm:self-auto">Nossa maior carência no momento!</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Tem habilidade com arte, artesanato, música, teatro ou atividades manuais? Conduza uma oficina criativa para engajar, ensinar e divertir as crianças durante o evento mensal.
+          </p>
+        </div>
+
+        <!-- LEITURA E JOGOS -->
+        <div class="bg-slate-50 border border-slate-200 p-4 sm:p-5 rounded-2xl space-y-1">
+          <h4 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2">
+            <i class="ph ph-book-open text-sky-600 text-lg"></i> Voluntário de Leitura e Jogos
+          </h4>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Atue na mediação presencial, sentando-se com as crianças para incentivá-las a explorar os livros e ajudando-as a montar os quebra-cabeças com paciência, carinho e atenção individualizada.
+          </p>
+        </div>
+
+        <!-- CONTADOR DE HISTÓRIAS E SABERES -->
+        <div class="bg-slate-50 border border-slate-200 p-4 sm:p-5 rounded-2xl space-y-1">
+          <h4 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2">
+            <i class="ph ph-tree text-emerald-600 text-lg"></i> Voluntário Contador de Histórias e Saberes Ancestrais
+          </h4>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Mais do que ler livros, esta é a arte de compartilhar saberes ancestrais, vivências, causos e aventuras de vida. Valorizando a nossa identidade caiçara e a forte influência quilombola da comunidade de Tabatinga, você conecta as crianças à sabedoria oral e às raízes da nossa gente.
+          </p>
+        </div>
+
+        <!-- DOADOR DE ITENS OU FRUTAS -->
+        <div class="bg-slate-50 border border-slate-200 p-4 sm:p-5 rounded-2xl space-y-1">
+          <h4 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2">
+            <i class="ph ph-apple-logo text-rose-500 text-lg"></i> Voluntário Doador de Itens ou Frutas
+          </h4>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Apoie garantindo que nossa "Estação Lanche" tenha frutas frescas da época para a partilha coletiva e saudável, ou contribua com livros e jogos para enriquecer o acervo circulante.
+          </p>
+        </div>
+
+        <!-- ARRECADAÇÃO -->
+        <div class="bg-slate-50 border border-slate-200 p-4 sm:p-5 rounded-2xl space-y-1">
+          <h4 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2">
+            <i class="ph ph-hand-coins text-sky-600 text-lg"></i> Voluntário de Arrecadação
+          </h4>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Ajude a expandir nossa rede fortalecendo a captação de novos livros, jogos e apoiadores que possam somar forças com o projeto ao longo do ano.
+          </p>
+        </div>
+
+        <!-- ORGANIZAÇÃO E DIVULGAÇÃO -->
+        <div class="bg-slate-50 border border-slate-200 p-4 sm:p-5 rounded-2xl space-y-1">
+          <h4 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-2">
+            <i class="ph ph-megaphone text-indigo-600 text-lg"></i> Voluntário na Organização e Divulgação
+          </h4>
+          <p class="text-xs sm:text-sm text-slate-600 leading-relaxed">
+            Ajude a espalhar a notícia no bairro, montar o espaço no sábado de evento e colaborar com a logística geral para que tudo ocorra com perfeição, acolhimento e alegria.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- FORMULÁRIO DE INSCRIÇÃO -->
+      <form id="formVoluntarioSite" class="space-y-4 pt-4 border-t">
+        <h4 class="font-bold text-slate-800 text-base">Inscreva-se para Colaborar:</h4>
+        
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Nome Completo *</label>
+          <input type="text" id="volNome" required placeholder="Seu nome" class="w-full px-4 py-3 border rounded-xl text-sm focus:outline-emerald-500">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Contacto (WhatsApp) *</label>
+            <input type="tel" id="volFone" required placeholder="(12) 99999-9999" class="w-full px-4 py-3 border rounded-xl text-sm focus:outline-emerald-500">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Melhor forma de contacto *</label>
+            <select id="volPrefContato" class="w-full px-4 py-3 border rounded-xl text-sm bg-white focus:outline-emerald-500">
+              <option value="WhatsApp">WhatsApp</option>
+              <option value="Ligação">Ligação Telefônica</option>
+              <option value="E-mail">E-mail</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Selecione suas áreas de interesse para ajudar:</label>
+          <div class="space-y-2 text-xs sm:text-sm text-slate-700 pt-1">
+            <label class="flex items-center gap-2 cursor-pointer font-bold text-amber-900">
+              <input type="checkbox" id="volOficinas" class="rounded text-emerald-600 focus:ring-emerald-500"> Oficinas lúdicas ou artísticas (Maior carência atual!)
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="volLeitura" class="rounded text-emerald-600 focus:ring-emerald-500"> Leitura e Jogos
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="volSaberes" class="rounded text-emerald-600 focus:ring-emerald-500"> Contador de Histórias e Saberes (Caiçara / Quilombola)
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="volFrutas" class="rounded text-emerald-600 focus:ring-emerald-500"> Doador de Itens ou Frutas para o Lanche
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="volArrecadacao" class="rounded text-emerald-600 focus:ring-emerald-500"> Arrecadação de Livros e Jogos
+            </label>
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" id="volLogistica" class="rounded text-emerald-600 focus:ring-emerald-500"> Organização e Divulgação
+            </label>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Apresentação Pessoal / Intenções:</label>
+          <textarea id="volApresentacao" rows="3" placeholder="Fale um pouco sobre você..." class="w-full px-4 py-3 border rounded-xl text-sm focus:outline-emerald-500"></textarea>
+        </div>
+
+        <button type="submit" id="btnSalvarVoluntario" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-xl transition-all text-sm shadow-sm flex items-center justify-center gap-2">
+          <i class="ph ph-paper-plane-tilt text-lg"></i>
+          <span>Enviar Inscrição de Voluntário</span>
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <!-- 7. SOBRE O PROJETO -->
+  <main id="secaoSobre" class="max-w-5xl mx-auto px-4 py-8 flex-1 w-full hidden space-y-6">
+    <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-emerald-200 space-y-8">
+      
+      <div class="border-b pb-4">
+        <span class="bg-emerald-100 text-emerald-800 text-xs font-bold px-3 py-1 rounded-full">Iniciativa Comunitária</span>
+        <h3 class="text-2xl sm:text-3xl font-bold font-heading text-slate-800 mt-2">Sobre o Projeto Tabatinga Lê &amp; Brinca</h3>
+        <p class="text-sm text-slate-500 mt-1">Iniciativa sociocultural, 100% voluntária e sem fins lucrativos, voltada para crianças dos 0 aos 14 anos.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-2xl flex items-start gap-3">
+          <span class="w-7 h-7 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0">1</span>
+          <div class="text-xs text-emerald-900">
+            <strong class="block font-bold mb-0.5">Democratização do Acesso</strong>
+            Circulação contínua de livros e jogos de qualidade entre as famílias.
+          </div>
+        </div>
+        <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-2xl flex items-start gap-3">
+          <span class="w-7 h-7 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0">2</span>
+          <div class="text-xs text-emerald-900">
+            <strong class="block font-bold mb-0.5">Estímulo Analógico</strong>
+            Oferecer alternativas saudáveis ao uso excessivo de telas.
+          </div>
+        </div>
+        <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-2xl flex items-start gap-3">
+          <span class="w-7 h-7 rounded-full bg-emerald-600 text-white font-bold flex items-center justify-center text-xs flex-shrink-0">3</span>
+          <div class="text-xs text-emerald-900">
+            <strong class="block font-bold mb-0.5">Integração Comunitária</strong>
+            Encontros mensais presenciais repletos de afeto e aprendizado.
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-4">
+        <h4 class="text-xl font-bold font-heading text-slate-800">Impacto Escolar, Cognitivo e Criatividade na Vida Adulta</h4>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs sm:text-sm">
+          <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-2">
+            <div class="w-10 h-10 rounded-xl bg-sky-100 text-sky-700 flex items-center justify-center text-xl font-bold">
+              <i class="ph ph-book-open"></i>
+            </div>
+            <h5 class="font-bold text-slate-800 text-base font-heading">Desempenho Escolar</h5>
+            <p class="text-slate-600 leading-relaxed">
+              O contato com livros estimula a fluência leitora e fortalece a <strong>interpretação de textos</strong>, competência transversal essencial para o sucesso em todas as disciplinas escolares e na resolução de problemas.
+            </p>
+          </div>
+
+          <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-2">
+            <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl font-bold">
+              <i class="ph ph-puzzle-piece"></i>
+            </div>
+            <h5 class="font-bold text-slate-800 text-base font-heading">Funções Cognitivas</h5>
+            <p class="text-slate-600 leading-relaxed">
+              Quebra-cabeças e leitura ativam o córtex pré-frontal, aprimorando a atenção sustentada, o planejamento espacial e a persistência diante de desafios progressivos.
+            </p>
+          </div>
+
+          <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-2">
+            <div class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center text-xl font-bold">
+              <i class="ph ph-lightbulb"></i>
+            </div>
+            <h5 class="font-bold text-slate-800 text-base font-heading">Criatividade &amp; Vida Adulta</h5>
+            <p class="text-slate-600 leading-relaxed">
+              O brincar analógico expande a flexibilidade mental. Pesquisas demonstram que exercitar a imaginação na infância estrutura bases sólidas para a <strong>resiliência, inovação e pensamento crítico na vida adulta</strong>.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-emerald-50 border border-emerald-200 p-6 rounded-3xl space-y-4">
+        <h4 class="text-xl font-bold font-heading text-emerald-900">Como Acontecem os Nossos Eventos Presenciais?</h4>
+        <p class="text-xs sm:text-sm text-emerald-900 leading-relaxed">
+          Realizamos nossos encontros <strong>1 sábado por mês, das 9h às 12h</strong>, com estações interativas:
+        </p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
+          <div class="bg-white p-3.5 rounded-xl border border-emerald-100 flex items-center gap-3">
+            <span class="text-xl">🔄</span>
+            <div><strong>Estação de Trocas:</strong> Feira presencial de livros e jogos.</div>
+          </div>
+          <div class="bg-white p-3.5 rounded-xl border border-emerald-100 flex items-center gap-3">
+            <span class="text-xl">🎁</span>
+            <div><strong>Estação de Doações:</strong> Entrega gratuita de itens.</div>
+          </div>
+          <div class="bg-white p-3.5 rounded-xl border border-emerald-100 flex items-center gap-3">
+            <span class="text-xl">🪵</span>
+            <div><strong>Contação de Histórias e Saberes:</strong> Causos e vivências caiçaras/quilombolas.</div>
+          </div>
+          <div class="bg-white p-3.5 rounded-xl border border-emerald-100 flex items-center gap-3">
+            <span class="text-xl">🎨</span>
+            <div><strong>Oficinas Criativas:</strong> Atividades artísticas propostas por voluntários.</div>
+          </div>
+          <div class="bg-white p-3.5 rounded-xl border border-emerald-100 flex items-center gap-3 sm:col-span-2">
+            <span class="text-xl">🍎</span>
+            <div><strong>Espaço Lanche:</strong> Disponibilização de frutas da época para um lanche saudável coletivo no local.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-amber-50 border border-amber-200 p-6 rounded-3xl space-y-3 text-center">
+        <h4 class="text-lg font-bold font-heading text-amber-900">Precisamos de Você! (Voluntários e Doadores)</h4>
+        <p class="text-xs sm:text-sm text-amber-900 max-w-2xl mx-auto leading-relaxed">
+          Contamos com o apoio de moradores dispostos a doar tempo na mediação das oficinas e contação de histórias, além de doadores de livros e quebra-cabeças. Venha fazer parte desta corrente do bem!
+        </p>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- 8. PAINEL DO ORGANIZADOR (ADMIN) -->
+  <main id="secaoAdmin" class="max-w-6xl mx-auto px-4 py-8 flex-1 w-full hidden space-y-8">
+    <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-indigo-200 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b pb-4">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-2xl font-bold">
+            <i class="ph ph-shield-check"></i>
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold font-heading text-slate-800">Painel do Organizador</h3>
+            <p class="text-xs sm:text-sm text-slate-500">Gestão comunitária do Tabatinga Lê &amp; Brinca (acesso restrito à coordenação).</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- MÉTRICAS DE IMPACTO -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="bg-sky-50 border border-sky-200 p-4 rounded-2xl">
+          <p class="text-[11px] font-bold text-sky-700 uppercase">Anúncios Ativos</p>
+          <p id="adminStatAtivos" class="text-2xl font-black text-sky-950 mt-1">0</p>
+        </div>
+        <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl">
+          <p class="text-[11px] font-bold text-amber-800 uppercase">Aguardando Confirmação</p>
+          <p id="adminStatPendentes" class="text-2xl font-black text-amber-950 mt-1">0</p>
+        </div>
+        <div class="bg-emerald-50 border border-emerald-200 p-4 rounded-2xl">
+          <p class="text-[11px] font-bold text-emerald-700 uppercase">Trocas/Doações Concluídas</p>
+          <p id="adminStatConcluidos" class="text-2xl font-black text-emerald-950 mt-1">0</p>
+        </div>
+        <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-2xl">
+          <p class="text-[11px] font-bold text-indigo-700 uppercase">Voluntários Inscritos</p>
+          <p id="adminStatVoluntarios" class="text-2xl font-black text-indigo-950 mt-1">0</p>
+        </div>
+      </div>
+
+      <!-- CONFIGURAR BANNER DO PRÓXIMO ENCONTRO -->
+      <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
+        <h4 class="font-bold text-slate-800 text-base font-heading flex items-center gap-2">
+          <i class="ph ph-calendar-plus text-indigo-600"></i> Atualizar Banner do Próximo Encontro Mensal
+        </h4>
+        <form id="formConfigEvento" class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">Data / Horário em Destaque</label>
+            <input type="text" id="cfgDataEvento" placeholder="Ex: Sábado, 14/11 (9h - 12h)" class="w-full px-3 py-2 border rounded-xl bg-white">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">Local do Encontro</label>
+            <input type="text" id="cfgLocalEvento" placeholder="Ex: Praça do Bairro Tabatinga" class="w-full px-3 py-2 border rounded-xl bg-white">
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block font-bold text-slate-600 mb-1">Subtítulo / Chamada do Evento</label>
+            <input type="text" id="cfgDescricaoEvento" placeholder="Ex: 1 Sábado por mês, das 9h às 12h • Rodas de leitura, quebra-cabeças, oficinas e frutas da época!" class="w-full px-3 py-2 border rounded-xl bg-white">
+          </div>
+          <div class="sm:col-span-2 flex justify-end">
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2.5 rounded-xl transition-all flex items-center gap-2 shadow-sm">
+              <i class="ph ph-floppy-disk"></i> Salvar Banner do Evento
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- LISTA DE VOLUNTÁRIOS INSCRITOS -->
+      <div class="space-y-3 pt-2">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <h4 class="font-bold text-slate-800 text-lg font-heading flex items-center gap-2">
+            <i class="ph ph-hands-praying text-emerald-600"></i> Voluntários Inscritos
+          </h4>
+          <select id="filtroAreaVoluntario" class="px-3 py-2 bg-slate-100 rounded-xl text-xs font-bold text-slate-700">
+            <option value="todos">Todas as áreas de atuação</option>
+            <option value="ajudaOficinas">🎨 Oficinas Lúdicas e Artísticas</option>
+            <option value="ajudaLeitura">📖 Leitura e Jogos</option>
+            <option value="ajudaSaberes">🪵 Contador de Histórias e Saberes</option>
+            <option value="ajudaFrutas">🍎 Doador de Itens ou Frutas</option>
+            <option value="ajudaArrecadacao">🤝 Arrecadação</option>
+            <option value="ajudaLogistica">📢 Organização e Divulgação</option>
+          </select>
+        </div>
+        <div id="listaAdminVoluntarios" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      </div>
+
+      <!-- MODERAÇÃO DE TODOS OS ANÚNCIOS -->
+      <div class="space-y-3 pt-4 border-t">
+        <h4 class="font-bold text-slate-800 text-lg font-heading flex items-center gap-2">
+          <i class="ph ph-list-magnifying-glass text-sky-600"></i> Moderação de Anúncios e Trocas
+        </h4>
+        <div id="listaAdminItens" class="space-y-2"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL DE DETALHES -->
+  <div id="modalDetalhes" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto relative">
+      <div class="flex items-center justify-between border-b pb-3">
+        <span id="detalheTipoBadge" class="text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full"></span>
+        <button type="button" id="fecharDetalhes" class="text-slate-400 hover:text-slate-600"><i class="ph ph-x text-xl"></i></button>
+      </div>
+
+      <div class="w-full h-72 bg-slate-900 rounded-2xl overflow-hidden relative flex items-center justify-center">
+        <img id="detalheImgPrincipal" src="" alt="Foto do Item" class="max-w-full max-h-full object-contain">
+      </div>
+
+      <div id="detalheContainerMiniaturas" class="flex gap-2 overflow-x-auto pb-1"></div>
+
+      <div>
+        <h3 id="detalheTitulo" class="text-xl font-bold font-heading text-slate-800 leading-snug"></h3>
+        <p class="text-xs text-slate-400 mt-0.5">Faixa Etária: <strong id="detalheEtaria" class="text-slate-600"></strong></p>
+      </div>
+
+      <div id="detalheBoxEspecifico" class="text-xs text-slate-600 space-y-1 bg-slate-50 p-3 rounded-xl border border-slate-100"></div>
+
+      <div class="border-t pt-3 flex items-center justify-between">
+        <p class="text-xs text-slate-500">Oferecido por: <strong id="detalheNome" class="text-slate-700"></strong></p>
+      </div>
+
+      <!-- ÁREA DE STATUS DE TROCA / BOTÃO EXCLUSIVO DO RECEBEDOR -->
+      <div id="detalheBoxConfirmacaoTroca" class="hidden"></div>
+
+      <div id="detalheBoxAcaoContato" class="space-y-2"></div>
+
+      <div id="detalheBoxGerenciarDono" class="hidden flex flex-col gap-2 pt-3 border-t border-slate-100">
+        <div id="boxBotoesEtapaDono"></div>
+        <div class="flex items-center gap-2">
+          <button type="button" id="btnDetalheEditar" class="flex-1 bg-amber-100 hover:bg-amber-200 text-amber-800 text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5"><i class="ph ph-pencil text-sm"></i> Editar Anúncio</button>
+          <button type="button" id="btnDetalheExcluir" class="flex-1 bg-red-100 hover:bg-red-200 text-red-700 text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5"><i class="ph ph-trash text-sm"></i> Excluir Anúncio</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ETAPA 1: DONO SELECIONA QUE O ITEM FOI TROCADO/ENTREGUE -->
+  <div id="modalIniciarTroca" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="text-xl font-bold font-heading text-slate-800 flex items-center gap-2">
+          <i class="ph ph-handshake text-emerald-600"></i> Marcar como Trocado (Etapa 1)
+        </h3>
+        <button type="button" id="fecharModalIniciarTroca" class="text-slate-400 hover:text-slate-600"><i class="ph ph-x text-xl"></i></button>
+      </div>
+
+      <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl text-xs text-amber-950 space-y-1">
+        <strong class="block font-bold">Como funciona a liberação do seu crédito:</strong>
+        <p>1. O seu anúncio ficará <strong>temporariamente indisponível</strong> no mural (reservado).</p>
+        <p>2. Assim que o morador recebedor clicar no botão <strong>"Confirmar Recebimento"</strong> na conta dele, o seu crédito será liberado automaticamente!</p>
+      </div>
+
+      <form id="formIniciarTroca" class="space-y-3">
+        <input type="hidden" id="trocaDocId" value="">
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Quem vai receber este item?</label>
+          <select id="selectRecebedorTroca" class="w-full px-3 py-2.5 border rounded-xl text-xs sm:text-sm bg-slate-50 font-bold text-slate-700 focus:outline-emerald-500">
+            <option value="qualquer">Qualquer morador (vou enviar o link de confirmação para ele)</option>
+          </select>
+          <p class="text-[11px] text-slate-400 mt-1">Se o vizinho já clicou em "Tenho interesse" ou tem conta no site, você pode selecioná-lo acima.</p>
+        </div>
+
+        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm shadow-sm flex items-center justify-center gap-2 transition-all">
+          <i class="ph ph-check-circle text-lg"></i>
+          <span>Reservar Item e Aguardar Confirmação</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL DE AUTENTICAÇÃO (COM LOGIN POR GOOGLE E E-MAIL/SENHA EVIDENTES) -->
+  <div id="modalAuth" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="text-xl font-bold font-heading text-slate-800">Aceder ao Livros Livres</h3>
+        <button type="button" id="fecharAuth" class="text-slate-400 hover:text-slate-600"><i class="ph ph-x text-xl"></i></button>
+      </div>
+      <p class="text-xs text-slate-500">Faça login com sua conta Google ou utilizando seu e-mail e senha.</p>
+      
+      <button type="button" id="btnLoginGoogle" class="w-full bg-slate-100 hover:bg-slate-200 border border-slate-300 text-slate-700 font-bold py-2.5 rounded-xl transition-all text-sm flex items-center justify-center gap-2 shadow-sm">
+        <i class="ph ph-google-logo text-lg text-red-500"></i>
+        <span>Continuar com o Google</span>
+      </button>
+
+      <div class="relative flex py-1 items-center">
+        <div class="flex-grow border-t border-slate-200"></div>
+        <span class="flex-shrink mx-3 text-slate-400 text-xs uppercase font-bold">ou via e-mail</span>
+        <div class="flex-grow border-t border-slate-200"></div>
+      </div>
+
+      <form id="formAuth" class="space-y-3">
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">E-mail</label>
+          <input type="email" id="authEmail" required placeholder="seuemail@exemplo.com" class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-sky-500">
+        </div>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Senha</label>
+          <input type="password" id="authSenha" required placeholder="Mínimo 6 caracteres" class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-sky-500">
+        </div>
+        <button type="submit" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-2.5 rounded-xl transition-all text-sm shadow-sm flex items-center justify-center gap-1.5">
+          <i class="ph ph-sign-in text-base"></i>
+          <span>Entrar / Criar Conta com E-mail</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL DE CADASTRO / EDIÇÃO -->
+  <div id="modalCadastro" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 id="tituloModalCadastro" class="text-xl font-bold font-heading text-slate-800">Cadastrar Item</h3>
+        <button type="button" id="fecharCadastro" class="text-slate-400 hover:text-slate-600"><i class="ph ph-x text-xl"></i></button>
+      </div>
+
+      <form id="formCadastro" class="space-y-3">
+        <input type="hidden" id="editDocId" value="">
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Finalidade do Anúncio</label>
+          <select id="selectFinalidade" class="w-full px-3 py-2 border rounded-xl text-sm font-bold text-sky-600 bg-sky-50 focus:outline-sky-500">
+            <option value="Troca">Quero Trocar</option>
+            <option value="Doação">Quero Doar Gratuitamente</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Categoria do Item</label>
+          <select id="selectTipo" class="w-full px-3 py-2 border rounded-xl text-sm font-bold text-slate-700 bg-slate-50 focus:outline-sky-500">
+            <option value="Livro">Livro Infantil/Juvenil</option>
+            <option value="Quebra-Cabeça">Quebra-Cabeça / Brinquedo</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Título</label>
+          <input type="text" id="inputTitulo" required placeholder="Ex: O Pequeno Príncipe / Quebra-Cabeça Dinossauros" class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-sky-500">
+        </div>
+
+        <div id="camposLivro" class="space-y-3">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Autor(es)</label>
+              <input type="text" id="inputAutor" placeholder="Ex: Antoine de Saint-Exupéry" class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-sky-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Editora</label>
+              <input type="text" id="inputEditora" placeholder="Ex: Companhia das Letrinhas" class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-sky-500">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1">Nº de Páginas</label>
+            <input type="number" id="inputPaginas" placeholder="Ex: 96" class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-sky-500">
+          </div>
+        </div>
+
+        <div id="camposQuebraCabeca" class="space-y-3 hidden">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Nº de Peças (se houver)</label>
+              <input type="number" id="inputPecas" placeholder="Ex: 100" class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-sky-500">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Material</label>
+              <select id="selectMaterial" class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-sky-500">
+                <option value="Papelão / Cartão">Papelão / Cartão</option>
+                <option value="MDF / Madeira">MDF / Madeira</option>
+                <option value="Plástico">Plástico</option>
+                <option value="EVA / Espuma">EVA / Espuma</option>
+                <option value="Outro">Outro</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Faixa Etária Recomendada</label>
+          <select id="selectEtaria" class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-sky-500">
+            <option value="0-3 anos">0-3 anos</option>
+            <option value="4-6 anos">4-6 anos</option>
+            <option value="7-9 anos">7-9 anos</option>
+            <option value="10+ anos">10+ anos</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Fotos do Item (Até 3 fotos)</label>
+          <input type="file" id="inputArquivoFoto" accept="image/*" multiple class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-sky-50 file:text-sky-700 hover:file:bg-sky-100 border rounded-xl p-1 cursor-pointer">
+          <p class="text-[10px] text-slate-400 mt-1">Selecione até 3 imagens (compressão automática para envio rápido).</p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Seu Nome / Apelido no Bairro</label>
+          <input type="text" id="inputNome" required placeholder="Ex: Maria (Mãe do Pedro)" class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-sky-500">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-600 mb-1">Como prefere ser contactado(a)?</label>
+          <select id="selectMeioContato" class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-sky-500">
+            <option value="whatsapp">WhatsApp</option>
+            <option value="email">E-mail</option>
+            <option value="sms">SMS (Mensagem de Texto)</option>
+          </select>
+        </div>
+
+        <div id="boxValorContato">
+          <label id="labelValorContato" class="block text-xs font-bold text-slate-600 mb-1">Seu WhatsApp (com DDD)</label>
+          <input type="text" id="inputValorContato" required placeholder="Ex: 12999998888" class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-sky-500">
+        </div>
+
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs space-y-2">
+          <h5 class="font-bold text-slate-700">Termos de Uso &amp; Convivência:</h5>
+          <ul class="list-disc list-inside text-slate-500 space-y-1 text-[11px]">
+            <li>Conteúdos estritamente gratuitos (proibido qualquer tipo de venda).</li>
+            <li>Respeito e cordialidade entre os vizinhos.</li>
+          </ul>
+          <label class="flex items-start gap-2 pt-1 cursor-pointer">
+            <input type="checkbox" id="checkTermos" required class="mt-0.5 rounded text-sky-500 focus:ring-sky-500">
+            <span class="text-[11px] font-bold text-slate-700">Li e aceito os Termos de Uso.</span>
+          </label>
+        </div>
+
+        <button type="submit" id="btnSalvarModal" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-2.5 rounded-xl transition-all text-sm shadow-sm flex items-center justify-center gap-2">
+          <span>Publicar no Livros Livres</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- RODAPÉ -->
+  <footer class="bg-white border-t py-6 text-center text-xs text-slate-400">
+    <p>Livros Livres &bull; Projeto Comunitário do Bairro Tabatinga</p>
+  </footer>
+
+  <!-- SCRIPT PRINCIPAL -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { 
+      getAuth, 
+      GoogleAuthProvider, 
+      signInWithPopup, 
+      createUserWithEmailAndPassword, 
+      signInWithEmailAndPassword, 
+      signOut, 
+      onAuthStateChanged 
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { 
+      getFirestore, 
+      collection, 
+      addDoc, 
+      setDoc,
+      getDoc,
+      updateDoc, 
+      deleteDoc, 
+      doc, 
+      onSnapshot,
+      arrayUnion
+    } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const IMGBB_API_KEY = "1eb29947126e9ca72b6d5bd2ad84df7c";
+    const ADMIN_EMAILS = ["jovemroots@gmail.com"];
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD_A8rjnE0v8A7b_X9me6MoYtaPW9WKg7k",
+      authDomain: "troca-de-livros-b608e.firebaseapp.com",
+      projectId: "troca-de-livros-b608e",
+      storageBucket: "troca-de-livros-b608e.firebasestorage.app",
+      messagingSenderId: "822090703270",
+      appId: "1:822090703270:web:406023c51db7937233af67"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const itensRef = collection(db, "itens");
+    const voluntariosRef = collection(db, "voluntarios");
+    const usuariosRef = collection(db, "usuarios");
+    const configEventoDocRef = doc(db, "configuracoes", "evento");
+
+    let usuarioAtual = null;
+    let dadosUsuarioAtual = {
+      creditosLivro: 0,
+      creditosJogo: 0,
+      bonusPrimeiroCadastro: false,
+      trocasRealizadas: 0
+    };
+    let unsubUsuario = null;
+    let unsubVoluntarios = null;
+    let todosUsuariosCache = {};
+
+    let dadosLocaisItens = {};
+    let dadosLocaisVoluntarios = {};
+    let categoriaFiltroAtual = 'todos';
+
+    // FUNÇÃO DE AVISOS VISUAIS (TOAST)
+    function mostrarAviso(mensagem, tipo = 'sucesso') {
+      const container = document.getElementById('toastContainer');
+      const cores = {
+        sucesso: 'bg-emerald-600 text-white border-emerald-700',
+        erro: 'bg-red-600 text-white border-red-700',
+        info: 'bg-sky-600 text-white border-sky-700',
+        alerta: 'bg-amber-400 text-slate-900 border-amber-500'
+      };
+      const icones = {
+        sucesso: 'ph-check-circle',
+        erro: 'ph-warning-circle',
+        info: 'ph-info',
+        alerta: 'ph-sparkle'
+      };
+      const toast = document.createElement('div');
+      toast.className = `pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-2xl shadow-xl border text-xs sm:text-sm font-bold transition-all duration-300 ${cores[tipo] || cores.info}`;
+      toast.innerHTML = `<i class="ph ${icones[tipo] || icones.info} text-lg flex-shrink-0"></i><span class="flex-1">${mensagem}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 4500);
+    }
+
+    function ehAdmin() {
+      return Boolean(usuarioAtual && usuarioAtual.email && ADMIN_EMAILS.includes(usuarioAtual.email.toLowerCase()));
+    }
+
+    // COMPRESSÃO DE IMAGEM NO NAVEGADOR ANTES DO UPLOAD
+    function comprimirImagem(arquivo, maxLargura = 1200, qualidade = 0.82) {
+      return new Promise((resolve) => {
+        if (!arquivo || !arquivo.type.startsWith('image/')) {
+          resolve(arquivo);
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const img = new Image();
+          img.onload = () => {
+            let larg = img.width;
+            let alt = img.height;
+            if (larg > maxLargura || alt > maxLargura) {
+              if (larg > alt) {
+                alt = Math.round((alt * maxLargura) / larg);
+                larg = maxLargura;
+              } else {
+                larg = Math.round((larg * maxLargura) / alt);
+                alt = maxLargura;
+              }
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = larg;
+            canvas.height = alt;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, larg, alt);
+            canvas.toBlob((blob) => {
+              if (blob) {
+                resolve(new File([blob], arquivo.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' }));
+              } else {
+                resolve(arquivo);
+              }
+            }, 'image/jpeg', qualidade);
+          };
+          img.onerror = () => resolve(arquivo);
+          img.src = ev.target.result;
+        };
+        reader.onerror = () => resolve(arquivo);
+        reader.readAsDataURL(arquivo);
+      });
+    }
+
+    // EVENTOS DE INTERFACE
+    document.getElementById('btnAbrirAuth').addEventListener('click', () => {
+      document.getElementById('modalAuth').classList.replace('hidden', 'flex');
+    });
+    document.getElementById('fecharAuth').addEventListener('click', () => {
+      document.getElementById('modalAuth').classList.replace('flex', 'hidden');
+    });
+
+    document.querySelectorAll('.btnCadastrarItemGlobal').forEach(btn => {
+      btn.addEventListener('click', abrirModalCadastro);
+    });
+    document.getElementById('btnCadastrarItem').addEventListener('click', abrirModalCadastro);
+    document.getElementById('fecharCadastro').addEventListener('click', () => {
+      document.getElementById('modalCadastro').classList.replace('flex', 'hidden');
+    });
+    document.getElementById('fecharDetalhes').addEventListener('click', () => {
+      document.getElementById('modalDetalhes').classList.replace('flex', 'hidden');
+    });
+    document.getElementById('fecharModalIniciarTroca').addEventListener('click', () => {
+      document.getElementById('modalIniciarTroca').classList.replace('flex', 'hidden');
+    });
+
+    // LIGAÇÃO DE ABAS
+    document.getElementById('btnAbaMural').addEventListener('click', () => alternarAbaPrincipal('mural'));
+    document.getElementById('btnAbaDoacoes').addEventListener('click', () => alternarAbaPrincipal('doacoes'));
+    document.getElementById('btnAbaMeusAnuncios').addEventListener('click', () => alternarAbaPrincipal('meus'));
+    document.getElementById('btnAbaPerfil').addEventListener('click', () => alternarAbaPrincipal('perfil'));
+    document.getElementById('btnAbaDoarNovos').addEventListener('click', () => alternarAbaPrincipal('doarNovos'));
+    document.getElementById('btnAbaVoluntarios').addEventListener('click', () => alternarAbaPrincipal('voluntarios'));
+    document.getElementById('btnAbaSobre').addEventListener('click', () => alternarAbaPrincipal('sobre'));
+    document.getElementById('btnAbaAdmin').addEventListener('click', () => alternarAbaPrincipal('admin'));
+
+    document.getElementById('filtroTodos').addEventListener('click', () => filtrarCategoria('todos'));
+    document.getElementById('filtroLivro').addEventListener('click', () => filtrarCategoria('Livro'));
+    document.getElementById('filtroJogo').addEventListener('click', () => filtrarCategoria('Quebra-Cabeça'));
+
+    document.getElementById('inputBuscaMural').addEventListener('input', renderizarMurais);
+    document.getElementById('selectFiltroEtariaMural').addEventListener('change', renderizarMurais);
+    document.getElementById('inputBuscaDoacoes').addEventListener('input', renderizarMurais);
+    document.getElementById('selectFiltroEtariaDoacoes').addEventListener('change', renderizarMurais);
+    document.getElementById('filtroAreaVoluntario').addEventListener('change', renderizarVoluntariosAdmin);
+
+    document.getElementById('selectTipo').addEventListener('change', alternarCamposEspecificos);
+    document.getElementById('selectMeioContato').addEventListener('change', alternarCampoContato);
+
+    // SINCRONIZAR CONFIGURAÇÃO DO BANNER DO EVENTO MENSAL
+    onSnapshot(configEventoDocRef, (snap) => {
+      if (snap.exists()) {
+        const cfg = snap.data();
+        if (cfg.dataEvento) document.getElementById('bannerData').innerText = cfg.dataEvento;
+        if (cfg.localEvento) document.getElementById('bannerLocal').innerText = cfg.localEvento;
+        if (cfg.descricaoEvento) document.getElementById('bannerDescricao').innerText = cfg.descricaoEvento;
+
+        document.getElementById('cfgDataEvento').value = cfg.dataEvento || '';
+        document.getElementById('cfgLocalEvento').value = cfg.localEvento || '';
+        document.getElementById('cfgDescricaoEvento').value = cfg.descricaoEvento || '';
+      }
+    });
+
+    document.getElementById('formConfigEvento').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!ehAdmin()) return;
+      try {
+        await setDoc(configEventoDocRef, {
+          dataEvento: document.getElementById('cfgDataEvento').value.trim() || 'Sábado Mensal (9h - 12h)',
+          localEvento: document.getElementById('cfgLocalEvento').value.trim() || 'Bairro Tabatinga',
+          descricaoEvento: document.getElementById('cfgDescricaoEvento').value.trim() || '1 Sábado por mês, das 9h às 12h • Rodas de leitura, quebra-cabeças, oficinas e frutas da época!',
+          atualizadoEm: new Date().toISOString()
+        }, { merge: true });
+        mostrarAviso("Banner do próximo encontro atualizado com sucesso!", "sucesso");
+      } catch (err) {
+        mostrarAviso("Erro ao atualizar banner: " + err.message, "erro");
+      }
+    });
+
+    // SINCRONIZAR LISTA DE USUÁRIOS (PARA SELEÇÃO DE RECEBEDOR E CRÉDITOS)
+    onSnapshot(usuariosRef, (snap) => {
+      todosUsuariosCache = {};
+      snap.forEach(d => { todosUsuariosCache[d.id] = d.data(); });
+    });
+
+    // ÚNICO LISTENER EM TEMPO REAL PARA OS ITENS DO MURAL (CORRIGE LEITURAS DUPLICADAS)
+    onSnapshot(itensRef, (snapshot) => {
+      dadosLocaisItens = {};
+      snapshot.forEach((docSnapshot) => {
+        dadosLocaisItens[docSnapshot.id] = docSnapshot.data();
+      });
+      renderizarMurais();
+      atualizarPainelCreditosEHistorico();
+      verificarLinkConfirmacaoURL();
+    });
+
+    // Formulário de Voluntário
+    document.getElementById('formVoluntarioSite').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btnVol = document.getElementById('btnSalvarVoluntario');
+      btnVol.disabled = true;
+      btnVol.innerText = "A enviar inscrição...";
+
+      try {
+        await addDoc(voluntariosRef, {
+          nome: document.getElementById('volNome').value,
+          telefone: document.getElementById('volFone').value,
+          preferenciaContato: document.getElementById('volPrefContato').value,
+          ajudaOficinas: document.getElementById('volOficinas').checked,
+          ajudaLeitura: document.getElementById('volLeitura').checked,
+          ajudaSaberes: document.getElementById('volSaberes').checked,
+          ajudaFrutas: document.getElementById('volFrutas').checked,
+          ajudaArrecadacao: document.getElementById('volArrecadacao').checked,
+          ajudaLogistica: document.getElementById('volLogistica').checked,
+          apresentacao: document.getElementById('volApresentacao').value,
+          criadoEm: new Date().toISOString()
+        });
+        mostrarAviso("Inscrição de voluntário enviada com sucesso! Muito obrigado pelo apoio.", "sucesso");
+        document.getElementById('formVoluntarioSite').reset();
+      } catch (err) {
+        mostrarAviso("Erro ao enviar inscrição: " + err.message, "erro");
+      } finally {
+        btnVol.disabled = false;
+        btnVol.innerHTML = '<i class="ph ph-paper-plane-tilt text-lg"></i><span>Enviar Inscrição de Voluntário</span>';
+      }
+    });
+
+    document.getElementById('btnLoginGoogle').addEventListener('click', async () => {
+      const provider = new GoogleAuthProvider();
+      try {
+        await signInWithPopup(auth, provider);
+        document.getElementById('modalAuth').classList.replace('flex', 'hidden');
+        mostrarAviso("Login realizado com sucesso!", "sucesso");
+      } catch (err) { mostrarAviso("Erro no login do Google: " + err.message, "erro"); }
+    });
+
+    document.getElementById('formAuth').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('authEmail').value;
+      const senha = document.getElementById('authSenha').value;
+      try {
+        await signInWithEmailAndPassword(auth, email, senha);
+        document.getElementById('modalAuth').classList.replace('flex', 'hidden');
+        mostrarAviso("Bem-vindo(a) de volta!", "sucesso");
+      } catch (err) {
+        if (err.code === 'auth/user-not-found' || err.code === 'auth/invalid-credential') {
+          try {
+            await createUserWithEmailAndPassword(auth, email, senha);
+            document.getElementById('modalAuth').classList.replace('flex', 'hidden');
+            mostrarAviso("Conta criada com sucesso! Cadastre seu 1º item para ganhar créditos de bônus.", "alerta");
+          } catch (createErr) { mostrarAviso("Erro ao criar conta: " + createErr.message, "erro"); }
+        } else { mostrarAviso("Erro de acesso: " + err.message, "erro"); }
+      }
+    });
+
+    document.getElementById('formCadastro').addEventListener('submit', salvarItem);
+    document.getElementById('formIniciarTroca').addEventListener('submit', confirmarEtapa1Dono);
+
+    onAuthStateChanged(auth, async (user) => {
+      usuarioAtual = user;
+      if (unsubUsuario) { unsubUsuario(); unsubUsuario = null; }
+      if (unsubVoluntarios) { unsubVoluntarios(); unsubVoluntarios = null; }
+
+      if (user) {
+        const userDocRef = doc(db, "usuarios", user.uid);
+        unsubUsuario = onSnapshot(userDocRef, async (snap) => {
+          if (snap.exists()) {
+            dadosUsuarioAtual = snap.data();
+          } else {
+            const inicial = {
+              uid: user.uid,
+              nome: user.displayName || user.email.split('@')[0],
+              email: user.email,
+              creditosLivro: 0,
+              creditosJogo: 0,
+              bonusPrimeiroCadastro: false,
+              trocasRealizadas: 0,
+              criadoEm: new Date().toISOString()
+            };
+            await setDoc(userDocRef, inicial);
+            dadosUsuarioAtual = inicial;
+          }
+          atualizarAreaAuth();
+          atualizarPainelCreditosEHistorico();
+        });
+
+        if (ehAdmin()) {
+          unsubVoluntarios = onSnapshot(voluntariosRef, (snap) => {
+            dadosLocaisVoluntarios = {};
+            snap.forEach(d => { dadosLocaisVoluntarios[d.id] = d.data(); });
+            document.getElementById('qtdVoluntariosBadge').innerText = Object.keys(dadosLocaisVoluntarios).length;
+            document.getElementById('adminStatVoluntarios').innerText = Object.keys(dadosLocaisVoluntarios).length;
+            renderizarVoluntariosAdmin();
+          });
+        }
+      } else {
+        dadosUsuarioAtual = { creditosLivro: 0, creditosJogo: 0, bonusPrimeiroCadastro: false, trocasRealizadas: 0 };
+      }
+
+      atualizarAreaAuth();
+      renderizarMurais();
+      atualizarPainelCreditosEHistorico();
+    });
+
+    function atualizarAreaAuth() {
+      const area = document.getElementById('areaAuth');
+      const btnAbaMeus = document.getElementById('btnAbaMeusAnuncios');
+      const btnAbaAdmin = document.getElementById('btnAbaAdmin');
+
+      if (usuarioAtual) {
+        btnAbaMeus.classList.remove('hidden');
+        if (ehAdmin()) {
+          btnAbaAdmin.classList.remove('hidden');
+        } else {
+          btnAbaAdmin.classList.add('hidden');
+        }
+
+        const cLivro = dadosUsuarioAtual.creditosLivro ?? 0;
+        const cJogo = dadosUsuarioAtual.creditosJogo ?? 0;
+
+        area.innerHTML = `
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="document.getElementById('btnAbaPerfil').click()" class="hidden md:flex items-center gap-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-xl text-xs font-bold text-emerald-900 transition-all" title="Seus Créditos">
+              <span>📖 ${cLivro}</span>
+              <span class="text-emerald-300">|</span>
+              <span>🧩 ${cJogo}</span>
+            </button>
+            <span class="text-xs font-bold text-slate-700 hidden sm:inline">${usuarioAtual.displayName || usuarioAtual.email}</span>
+            <button type="button" id="btnSair" class="bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold px-3 py-1.5 rounded-xl text-xs transition-all flex items-center gap-1">
+              <i class="ph ph-sign-out text-sm"></i>
+              <span>Sair</span>
+            </button>
+          </div>
+        `;
+        document.getElementById('btnSair').addEventListener('click', () => signOut(auth));
+      } else {
+        btnAbaMeus.classList.add('hidden');
+        btnAbaAdmin.classList.add('hidden');
+        area.innerHTML = `
+          <button type="button" id="btnAbrirAuthAlt" class="bg-sky-500 hover:bg-sky-600 text-white font-bold px-4 py-2 rounded-xl text-xs sm:text-sm transition-all flex items-center gap-1.5 shadow-sm">
+            <i class="ph ph-user text-base"></i>
+            <span>Entrar / Criar Conta</span>
+          </button>
+        `;
+        document.getElementById('btnAbrirAuthAlt').addEventListener('click', () => {
+          document.getElementById('modalAuth').classList.replace('hidden', 'flex');
+        });
+      }
+    }
+
+    function alternarAbaPrincipal(aba) {
+      const secaoMural = document.getElementById('secaoMuralGeral');
+      const secaoDoacoes = document.getElementById('secaoDoacoes');
+      const secaoMeus = document.getElementById('secaoMeusAnuncios');
+      const secaoPerfil = document.getElementById('secaoPerfil');
+      const secaoDoarNovos = document.getElementById('secaoDoarNovos');
+      const secaoVoluntarios = document.getElementById('secaoVoluntarios');
+      const secaoSobre = document.getElementById('secaoSobre');
+      const secaoAdmin = document.getElementById('secaoAdmin');
+
+      const btnMural = document.getElementById('btnAbaMural');
+      const btnDoacoes = document.getElementById('btnAbaDoacoes');
+      const btnMeus = document.getElementById('btnAbaMeusAnuncios');
+      const btnPerfil = document.getElementById('btnAbaPerfil');
+      const btnDoarNovos = document.getElementById('btnAbaDoarNovos');
+      const btnVoluntarios = document.getElementById('btnAbaVoluntarios');
+      const btnSobre = document.getElementById('btnAbaSobre');
+      const btnAdmin = document.getElementById('btnAbaAdmin');
+
+      [secaoMural, secaoDoacoes, secaoMeus, secaoPerfil, secaoDoarNovos, secaoVoluntarios, secaoSobre, secaoAdmin].forEach(s => s.classList.add('hidden'));
+
+      const baseClass = "px-4 py-2.5 rounded-t-xl text-slate-500 hover:text-slate-800 flex items-center gap-1.5 transition-all font-bold";
+      btnMural.className = baseClass;
+      btnDoacoes.className = baseClass;
+      if (btnMeus && !btnMeus.classList.contains('hidden')) btnMeus.className = baseClass;
+      btnPerfil.className = baseClass;
+      btnDoarNovos.className = baseClass;
+      btnVoluntarios.className = baseClass;
+      btnSobre.className = baseClass;
+      if (btnAdmin && !btnAdmin.classList.contains('hidden')) btnAdmin.className = baseClass;
+
+      if (aba === 'mural') {
+        secaoMural.classList.remove('hidden');
+        btnMural.className = "px-4 py-2.5 rounded-t-xl bg-white text-sky-600 border-t-2 border-sky-500 shadow-sm flex items-center gap-1.5 transition-all font-bold";
+      } else if (aba === 'doacoes') {
+        secaoDoacoes.classList.remove('hidden');
+        btnDoacoes.className = "px-4 py-2.5 rounded-t-xl bg-white text-rose-600 border-t-2 border-rose-500 shadow-sm flex items-center gap-1.5 transition-all font-bold";
+      } else if (aba === 'meus') {
+        secaoMeus.classList.remove('hidden');
+        btnMeus.className = "px-4 py-2.5 rounded-t-xl bg-white text-sky-600 border-t-2 border-sky-500 shadow-sm flex items-center gap-1.5 transition-all font-bold";
+      } else if (aba === 'perfil') {
+        secaoPerfil.classList.remove('hidden');
+        btnPerfil.className = "px-4 py-2.5 rounded-t-xl bg-white text-emerald-600 border-t-2 border-emerald-500 shadow-sm flex items-center gap-1.5 transition-all font-bold";
+      } else if (aba === 'doarNovos') {
+        secaoDoarNovos.classList.remove('hidden');
+        btnDoarNovos.className = "px-4 py-2.5 rounded-t-xl bg-white text-amber-600 border-t-2 border-amber-500 shadow-sm flex items-center gap-1.5 transition-all font-bold";
+      } else if (aba === 'voluntarios') {
+        secaoVoluntarios.classList.remove('hidden');
+        btnVoluntarios.className = "px-4 py-2.5 rounded-t-xl bg-white text-emerald-600 border-t-2 border-emerald-500 shadow-sm flex items-center gap-1.5 transition-all font-bold";
+      } else if (aba === 'sobre') {
+        secaoSobre.classList.remove('hidden');
+        btnSobre.className = "px-4 py-2.5 rounded-t-xl bg-white text-emerald-700 border-t-2 border-emerald-500 shadow-sm flex items-center gap-1.5 transition-all font-bold";
+      } else if (aba === 'admin' && ehAdmin()) {
+        secaoAdmin.classList.remove('hidden');
+        btnAdmin.className = "px-4 py-2.5 rounded-t-xl bg-white text-indigo-700 border-t-2 border-indigo-600 shadow-sm flex items-center gap-1.5 transition-all font-bold";
+      }
+    }
+
+    function filtrarCategoria(categoria) {
+      categoriaFiltroAtual = categoria;
+      const btnTodos = document.getElementById('filtroTodos');
+      const btnLivro = document.getElementById('filtroLivro');
+      const btnJogo = document.getElementById('filtroJogo');
+
+      [btnTodos, btnLivro, btnJogo].forEach(b => {
+        b.className = "px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all font-bold";
+      });
+
+      if (categoria === 'todos') btnTodos.className = "px-3 py-1.5 rounded-lg bg-white text-slate-800 shadow-sm transition-all font-bold";
+      if (categoria === 'Livro') btnLivro.className = "px-3 py-1.5 rounded-lg bg-white text-slate-800 shadow-sm transition-all font-bold";
+      if (categoria === 'Quebra-Cabeça') btnJogo.className = "px-3 py-1.5 rounded-lg bg-white text-slate-800 shadow-sm transition-all font-bold";
+
+      renderizarMurais();
+    }
+
+    function alternarCamposEspecificos() {
+      const tipo = document.getElementById('selectTipo').value;
+      const camposLivro = document.getElementById('camposLivro');
+      const camposQuebraCabeca = document.getElementById('camposQuebraCabeca');
+
+      if (tipo === 'Livro') {
+        camposLivro.classList.remove('hidden');
+        camposQuebraCabeca.classList.add('hidden');
+      } else {
+        camposLivro.classList.add('hidden');
+        camposQuebraCabeca.classList.remove('hidden');
+      }
+    }
+
+    function alternarCampoContato() {
+      const meio = document.getElementById('selectMeioContato').value;
+      const label = document.getElementById('labelValorContato');
+      const input = document.getElementById('inputValorContato');
+
+      if (meio === 'whatsapp') {
+        label.innerText = 'Seu WhatsApp (com DDD)';
+        input.type = 'tel'; input.placeholder = 'Ex: 12999998888';
+      } else if (meio === 'email') {
+        label.innerText = 'Seu E-mail de Contato';
+        input.type = 'email'; input.placeholder = 'Ex: seunome@email.com';
+      } else if (meio === 'sms') {
+        label.innerText = 'Seu Número de Celular para SMS (com DDD)';
+        input.type = 'tel'; input.placeholder = 'Ex: 12999998888';
+      }
+    }
+
+    function abrirModalCadastro() {
+      if (!usuarioAtual) { 
+        mostrarAviso("Por favor, faça login para cadastrar um item.", "info"); 
+        document.getElementById('modalAuth').classList.replace('hidden', 'flex');
+        return; 
+      }
+      document.getElementById('editDocId').value = '';
+      document.getElementById('formCadastro').reset();
+      if (usuarioAtual.displayName) {
+        document.getElementById('inputNome').value = usuarioAtual.displayName;
+      }
+      alternarCamposEspecificos();
+      document.getElementById('tituloModalCadastro').innerText = "Cadastrar Item";
+      document.getElementById('btnSalvarModal').innerText = "Publicar no Livros Livres";
+      alternarCampoContato();
+      document.getElementById('modalCadastro').classList.replace('hidden', 'flex');
+    }
+
+    // RENDERIZAÇÃO DE TODOS OS MURAIS E CONTADORES
+    function renderizarMurais() {
+      const mural = document.getElementById('muralItens');
+      const muralDoacoes = document.getElementById('muralDoacoes');
+      const muralMeus = document.getElementById('muralMeusItens');
+      const badgeMeus = document.getElementById('qtdMeusAnunciosBadge');
+      const badgeDoacoes = document.getElementById('qtdDoacoesBadge');
+      const badgeTrocas = document.getElementById('qtdTrocasBadge');
+
+      const termoBuscaMural = (document.getElementById('inputBuscaMural')?.value || '').toLowerCase().trim();
+      const etariaMural = document.getElementById('selectFiltroEtariaMural')?.value || 'todas';
+      const termoBuscaDoacoes = (document.getElementById('inputBuscaDoacoes')?.value || '').toLowerCase().trim();
+      const etariaDoacoes = document.getElementById('selectFiltroEtariaDoacoes')?.value || 'todas';
+
+      mural.innerHTML = '';
+      muralDoacoes.innerHTML = '';
+      muralMeus.innerHTML = '';
+
+      let contadorGeral = 0;
+      let contadorDoacoes = 0;
+      let contadorMeus = 0;
+      let totalAtivos = 0;
+      let totalPendentes = 0;
+      let totalConcluidos = 0;
+
+      const entries = Object.entries(dadosLocaisItens).sort((a, b) => {
+        return (b[1].criadoEm || '').localeCompare(a[1].criadoEm || '');
+      });
+
+      entries.forEach(([docId, item]) => {
+        if (item.status === 'concluido') {
+          totalConcluidos++;
+          return;
+        }
+        if (item.status === 'suspenso') return;
+        if (item.status === 'aguardando_confirmacao') {
+          totalPendentes++;
+        } else {
+          totalAtivos++;
+        }
+
+        const finalidade = item.finalidade || 'Troca';
+        const ehDono = usuarioAtual && usuarioAtual.uid === item.uidUsuario;
+
+        if (ehDono) {
+          contadorMeus++;
+          muralMeus.innerHTML += criarCardHTML(item, docId, true);
+        }
+
+        const textoItem = `${item.titulo || ''} ${item.autor || ''} ${item.editora || ''} ${item.nome || ''}`.toLowerCase();
+
+        if (finalidade === 'Doação') {
+          if (termoBuscaDoacoes && !textoItem.includes(termoBuscaDoacoes)) return;
+          if (etariaDoacoes !== 'todas' && item.etaria !== etariaDoacoes) return;
+          contadorDoacoes++;
+          muralDoacoes.innerHTML += criarCardHTML(item, docId, false);
+        } else {
+          if (categoriaFiltroAtual !== 'todos' && item.tipo !== categoriaFiltroAtual) return;
+          if (termoBuscaMural && !textoItem.includes(termoBuscaMural)) return;
+          if (etariaMural !== 'todas' && item.etaria !== etariaMural) return;
+          contadorGeral++;
+          mural.innerHTML += criarCardHTML(item, docId, false);
+        }
+      });
+
+      badgeMeus.innerText = contadorMeus;
+      badgeDoacoes.innerText = contadorDoacoes;
+      badgeTrocas.innerText = contadorGeral;
+
+      // Atualiza contadores de impacto e Admin
+      const impactoTexto = document.getElementById('bannerImpactoTexto');
+      if (impactoTexto) {
+        impactoTexto.innerText = `${totalConcluidos} ${totalConcluidos === 1 ? 'item já circulado' : 'itens já circulados'} + ${totalAtivos} disponíveis`;
+      }
+      document.getElementById('adminStatAtivos').innerText = totalAtivos;
+      document.getElementById('adminStatPendentes').innerText = totalPendentes;
+      document.getElementById('adminStatConcluidos').innerText = totalConcluidos;
+
+      if (contadorGeral === 0) {
+        mural.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400"><p>Nenhum item encontrado com estes filtros no Mural de Trocas.</p></div>`;
+      }
+      if (contadorDoacoes === 0) {
+        muralDoacoes.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400"><p>Nenhuma doação encontrada no momento. Seja o primeiro a doar!</p></div>`;
+      }
+      if (contadorMeus === 0) {
+        muralMeus.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 text-xs"><p>Você ainda não possui anúncios ativos.</p></div>`;
+      }
+
+      if (ehAdmin()) {
+        renderizarItensAdmin(entries);
+      }
+    }
+
+    function criarCardHTML(item, docId, modoDono = false) {
+      const fotos = item.fotosUrls && item.fotosUrls.length > 0 ? item.fotosUrls : (item.fotoUrl ? [item.fotoUrl] : []);
+      const finalidade = item.finalidade || 'Troca';
+      const aguardando = item.status === 'aguardando_confirmacao';
+      
+      let fotoHTML = '';
+      if (fotos.length > 0) {
+        fotoHTML = `
+          <div class="w-full h-44 mb-3 rounded-xl bg-slate-900 relative flex items-center justify-center overflow-hidden">
+            <img src="${fotos[0]}" alt="${item.titulo}" class="max-w-full max-h-full object-contain ${aguardando ? 'opacity-50' : ''}">
+            ${aguardando ? `<span class="absolute inset-x-2 bottom-2 bg-amber-400 text-slate-900 text-[10px] font-extrabold px-2.5 py-1 rounded-lg text-center shadow">⏳ Reservado • Aguardando Recebedor</span>` : ''}
+          </div>
+        `;
+      } else {
+        fotoHTML = `
+          <div class="w-full h-44 mb-3 rounded-xl bg-slate-100 relative flex items-center justify-center text-slate-400">
+            <i class="ph ph-image text-3xl"></i>
+            ${aguardando ? `<span class="absolute inset-x-2 bottom-2 bg-amber-400 text-slate-900 text-[10px] font-extrabold px-2.5 py-1 rounded-lg text-center shadow">⏳ Reservado • Aguardando Recebedor</span>` : ''}
+          </div>
+        `;
+      }
+
+      const badgeFinalidadeHTML = finalidade === 'Doação' 
+        ? `<span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-rose-100 text-rose-700 flex items-center gap-1"><i class="ph ph-heart"></i> Doação</span>`
+        : `<span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-sky-100 text-sky-700">${item.tipo === 'Quebra-Cabeça' ? '🧩 Troca' : '📖 Troca'}</span>`;
+
+      let acaoRapidaDono = '';
+      if (modoDono) {
+        if (!aguardando) {
+          acaoRapidaDono = `
+            <button type="button" onclick="event.stopPropagation(); abrirModalEtapa1('${docId}')" class="mt-2 w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 shadow-sm">
+              <i class="ph ph-handshake text-sm"></i> Marcar como Trocado (Etapa 1)
+            </button>
+          `;
+        } else {
+          acaoRapidaDono = `
+            <div class="mt-2 space-y-1.5">
+              <button type="button" onclick="event.stopPropagation(); copiarOuEnviarLinkConfirmacao('${docId}')" class="w-full bg-amber-400 hover:bg-amber-500 text-slate-900 text-[11px] font-bold py-2 px-3 rounded-xl flex items-center justify-center gap-1">
+                <i class="ph ph-whatsapp-logo text-sm"></i> Enviar Link ao Recebedor
+              </button>
+              <button type="button" onclick="event.stopPropagation(); cancelarReservaTroca('${docId}')" class="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 text-[11px] font-bold py-1.5 px-3 rounded-xl">
+                Cancelar Reserva
+              </button>
+            </div>
+          `;
+        }
+      }
+
+      return `
+        <div onclick="abrirDetalhes('${docId}')" class="bg-white rounded-2xl border ${aguardando ? 'border-amber-300 bg-amber-50/20' : 'border-slate-200'} p-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between cursor-pointer group">
+          <div>
+            ${fotoHTML}
+            <div class="flex items-center justify-between mb-1">
+              ${badgeFinalidadeHTML}
+              <span class="text-xs text-slate-400 font-bold">${item.etaria}</span>
+            </div>
+            <h4 class="font-bold text-slate-800 text-base font-heading leading-snug group-hover:text-sky-600 transition-colors">${item.titulo}</h4>
+            <p class="text-xs text-slate-500 mt-1">Por: <strong class="text-slate-700">${item.nome}</strong></p>
+          </div>
+          <div>
+            ${acaoRapidaDono}
+            <div class="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between text-xs text-sky-600 font-bold">
+              <span>${aguardando ? 'Ver status da troca' : 'Ver detalhes &amp; contacto'}</span>
+              <i class="ph ph-arrow-right"></i>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // ATUALIZAR SALDO DE CRÉDITOS, PENDÊNCIAS DE CONFIRMAÇÃO E HISTÓRICO
+    function atualizarPainelCreditosEHistorico() {
+      const avisoDeslogado = document.getElementById('avisoPerfilDeslogado');
+      const statusBonus = document.getElementById('statusBonusPrimeiroCadastro');
+      const saldoLivroEl = document.getElementById('saldoCreditoLivro');
+      const saldoJogoEl = document.getElementById('saldoCreditoJogo');
+      const barraLivroEl = document.getElementById('barraCreditoLivro');
+      const barraJogoEl = document.getElementById('barraCreditoJogo');
+
+      const cLivro = Math.min(10, Math.max(0, dadosUsuarioAtual.creditosLivro || 0));
+      const cJogo = Math.min(10, Math.max(0, dadosUsuarioAtual.creditosJogo || 0));
+
+      saldoLivroEl.innerText = cLivro;
+      saldoJogoEl.innerText = cJogo;
+      barraLivroEl.style.width = `${(cLivro / 10) * 100}%`;
+      barraJogoEl.style.width = `${(cJogo / 10) * 100}%`;
+
+      if (!usuarioAtual) {
+        avisoDeslogado.classList.remove('hidden');
+        statusBonus.innerHTML = `<span class="bg-amber-100 text-amber-800 font-bold px-3 py-1 rounded-full">Faça login para ganhar o bônus de 1º cadastro</span>`;
+      } else {
+        avisoDeslogado.classList.add('hidden');
+        if (dadosUsuarioAtual.bonusPrimeiroCadastro) {
+          statusBonus.innerHTML = `<span class="bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full flex items-center gap-1"><i class="ph ph-check-circle"></i> Bônus de 1º Cadastro Recebido (+1 Livro / +1 Jogo)</span>`;
+        } else {
+          statusBonus.innerHTML = `<span class="bg-amber-100 text-amber-900 font-bold px-3 py-1 rounded-full flex items-center gap-1 animate-pulse"><i class="ph ph-gift"></i> Cadastre seu 1º item para ganhar +1 Livro e +1 Jogo!</span>`;
+        }
+      }
+
+      // Verificar itens aguardando confirmação onde o usuário logado é o recebedor (ou demonstrou interesse)
+      const alertaGlobal = document.getElementById('alertaConfirmacaoGlobal');
+      const boxMeus = document.getElementById('boxConfirmacoesRecebedorMeus');
+      const boxPerfil = document.getElementById('boxConfirmacoesRecebedorPerfil');
+      const badgePerfil = document.getElementById('badgePendenciasPerfil');
+
+      alertaGlobal.classList.add('hidden');
+      boxMeus.classList.add('hidden');
+      boxPerfil.classList.add('hidden');
+      badgePerfil.classList.add('hidden');
+
+      if (!usuarioAtual) return;
+
+      const pendentesParaMim = Object.entries(dadosLocaisItens).filter(([id, item]) => {
+        if (item.status !== 'aguardando_confirmacao') return false;
+        if (item.uidUsuario === usuarioAtual.uid) return false;
+        if (item.recebedorUid === usuarioAtual.uid) return true;
+        const interessados = item.interessados || [];
+        return item.recebedorUid === 'qualquer' && interessados.some(i => i.uid === usuarioAtual.uid);
+      });
+
+      if (pendentesParaMim.length > 0) {
+        badgePerfil.classList.remove('hidden');
+        const cardsConfirmacao = pendentesParaMim.map(([docId, item]) => `
+          <div class="bg-emerald-50 border-2 border-emerald-400 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 shadow-sm">
+            <div>
+              <span class="bg-emerald-600 text-white text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full">Etapa 2 • Confirmação do Recebedor</span>
+              <h4 class="font-bold text-slate-800 text-base font-heading mt-1">Você recebeu "${item.titulo}" de ${item.nome}?</h4>
+              <p class="text-xs text-slate-600">Clique no botão exclusivo ao lado para confirmar que o item chegou até você e liberar +1 crédito de ${item.tipo === 'Quebra-Cabeça' ? 'Jogo Livre' : 'Livro Livre'} para ${item.nome}!</p>
+            </div>
+            <button type="button" onclick="confirmarRecebimentoEtapa2('${docId}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-3 rounded-xl text-xs sm:text-sm shadow-md flex items-center gap-2 whitespace-nowrap transition-all">
+              <i class="ph ph-check-fat text-lg"></i>
+              <span>Confirmar que Recebi!</span>
+            </button>
+          </div>
+        `).join('');
+
+        alertaGlobal.innerHTML = `<div class="space-y-2">${cardsConfirmacao}</div>`;
+        alertaGlobal.classList.remove('hidden');
+        boxMeus.innerHTML = `<div class="space-y-2">${cardsConfirmacao}</div>`;
+        boxMeus.classList.remove('hidden');
+        boxPerfil.innerHTML = `<div class="space-y-2">${cardsConfirmacao}</div>`;
+        boxPerfil.classList.remove('hidden');
+      }
+
+      // Histórico de trocas concluídas do usuário
+      const meuHistorico = Object.entries(dadosLocaisItens).filter(([id, item]) => {
+        return item.status === 'concluido' && (item.uidUsuario === usuarioAtual.uid || item.recebedorUid === usuarioAtual.uid);
+      });
+
+      const listaHistEl = document.getElementById('listaHistoricoUsuario');
+      if (meuHistorico.length === 0) {
+        listaHistEl.innerHTML = `<p class="text-xs text-slate-400">Nenhuma troca ou doação concluída ainda.</p>`;
+      } else {
+        listaHistEl.innerHTML = meuHistorico.map(([id, item]) => {
+          const foiDoador = item.uidUsuario === usuarioAtual.uid;
+          return `
+            <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl flex items-center justify-between gap-2">
+              <div>
+                <strong class="text-slate-800 font-bold">${item.titulo}</strong>
+                <span class="text-slate-400"> • ${item.tipo} (${item.finalidade || 'Troca'})</span>
+                <p class="text-[11px] text-slate-500">${foiDoador ? `Entregue para: ${item.recebedorNome || 'Vizinho da comunidade'}` : `Recebido de: ${item.nome}`}</p>
+              </div>
+              <span class="px-2.5 py-1 rounded-full text-[11px] font-bold ${foiDoador ? 'bg-emerald-100 text-emerald-800' : 'bg-sky-100 text-sky-800'}">
+                ${foiDoador ? '+1 Crédito Gerado' : 'Item Recebido'}
+              </span>
+            </div>
+          `;
+        }).join('');
+      }
+    }
+
+    // VERIFICAR SE O MORADOR ABRIU UM LINK DIRETO DE CONFIRMAÇÃO (?confirmar=DOC_ID)
+    let linkConfirmacaoVerificado = false;
+    function verificarLinkConfirmacaoURL() {
+      if (linkConfirmacaoVerificado) return;
+      const params = new URLSearchParams(window.location.search);
+      const docIdConfirmar = params.get('confirmar');
+      if (docIdConfirmar && dadosLocaisItens[docIdConfirmar]) {
+        linkConfirmacaoVerificado = true;
+        window.abrirDetalhes(docIdConfirmar);
+      }
+    }
+
+    // REGISTRAR INTERESSE DO MORADOR NO ITEM
+    window.registrarInteresse = async function(docId) {
+      if (!usuarioAtual) {
+        document.getElementById('modalAuth').classList.replace('hidden', 'flex');
+        return;
+      }
+      const item = dadosLocaisItens[docId];
+      if (!item || item.uidUsuario === usuarioAtual.uid) return;
+      try {
+        await updateDoc(doc(db, "itens", docId), {
+          interessados: arrayUnion({
+            uid: usuarioAtual.uid,
+            nome: usuarioAtual.displayName || usuarioAtual.email.split('@')[0],
+            email: usuarioAtual.email
+          })
+        });
+      } catch (e) { /* silencioso */ }
+    };
+
+    // ETAPA 1: ABRIR MODAL PARA O DONO MARCAR COMO TROCADO
+    window.abrirModalEtapa1 = function(docId) {
+      const item = dadosLocaisItens[docId];
+      if (!item) return;
+
+      document.getElementById('trocaDocId').value = docId;
+      const select = document.getElementById('selectRecebedorTroca');
+      select.innerHTML = `<option value="qualquer">Qualquer morador (vou enviar o link de confirmação no WhatsApp)</option>`;
+
+      const interessados = item.interessados || [];
+      const jaAdicionados = new Set();
+
+      interessados.forEach(intUser => {
+        if (intUser.uid && intUser.uid !== usuarioAtual.uid && !jaAdicionados.has(intUser.uid)) {
+          jaAdicionados.add(intUser.uid);
+          select.innerHTML += `<option value="${intUser.uid}" data-nome="${intUser.nome}">⭐ ${intUser.nome} (${intUser.email || 'Interessado neste anúncio'})</option>`;
+        }
+      });
+
+      Object.values(todosUsuariosCache).forEach(u => {
+        if (u.uid && u.uid !== usuarioAtual.uid && !jaAdicionados.has(u.uid)) {
+          jaAdicionados.add(u.uid);
+          select.innerHTML += `<option value="${u.uid}" data-nome="${u.nome || u.email}">${u.nome || u.email}</option>`;
+        }
+      });
+
+      document.getElementById('modalDetalhes').classList.replace('flex', 'hidden');
+      document.getElementById('modalIniciarTroca').classList.replace('hidden', 'flex');
+    };
+
+    async function confirmarEtapa1Dono(e) {
+      e.preventDefault();
+      const docId = document.getElementById('trocaDocId').value;
+      const select = document.getElementById('selectRecebedorTroca');
+      const recebedorUid = select.value;
+      const recebedorNome = select.options[select.selectedIndex]?.getAttribute('data-nome') || 'Morador da Comunidade';
+
+      try {
+        await updateDoc(doc(db, "itens", docId), {
+          status: 'aguardando_confirmacao',
+          recebedorUid: recebedorUid,
+          recebedorNome: recebedorNome,
+          reservadoEm: new Date().toISOString()
+        });
+        document.getElementById('modalIniciarTroca').classList.replace('flex', 'hidden');
+        mostrarAviso("Etapa 1 concluída! O item está reservado aguardando a confirmação do recebedor.", "alerta");
+      } catch (err) {
+        mostrarAviso("Erro ao reservar anúncio: " + err.message, "erro");
+      }
+    }
+
+    window.cancelarReservaTroca = async function(docId) {
+      try {
+        await updateDoc(doc(db, "itens", docId), {
+          status: 'ativo',
+          recebedorUid: '',
+          recebedorNome: ''
+        });
+        mostrarAviso("Reserva cancelada! O anúncio voltou a ficar disponível no mural.", "info");
+      } catch (err) {
+        mostrarAviso("Erro ao cancelar reserva: " + err.message, "erro");
+      }
+    };
+
+    window.copiarOuEnviarLinkConfirmacao = function(docId) {
+      const item = dadosLocaisItens[docId];
+      if (!item) return;
+      const urlConfirmacao = `${window.location.origin}${window.location.pathname}?confirmar=${docId}`;
+      const msg = encodeURIComponent(`Olá! Marquei o item "${item.titulo}" como entregue no Livros Livres (Tabatinga Lê e Brinca). Por favor, acesse este link e clique no botão "Confirmar que Recebi" para concluir nossa troca: ${urlConfirmacao}`);
+      window.open(`https://wa.me/?text=${msg}`, '_blank');
+    };
+
+    // ETAPA 2: BOTÃO EXCLUSIVO DO RECEBEDOR PARA CONFIRMAR E LIBERAR O CRÉDITO DO DONO
+    window.confirmarRecebimentoEtapa2 = async function(docId) {
+      if (!usuarioAtual) {
+        mostrarAviso("Faça login para confirmar o recebimento deste item!", "alerta");
+        document.getElementById('modalAuth').classList.replace('hidden', 'flex');
+        return;
+      }
+
+      const item = dadosLocaisItens[docId];
+      if (!item) return;
+
+      if (item.uidUsuario === usuarioAtual.uid) {
+        mostrarAviso("Apenas o morador que recebeu o item pode confirmar o recebimento!", "erro");
+        return;
+      }
+
+      if (item.recebedorUid && item.recebedorUid !== 'qualquer' && item.recebedorUid !== usuarioAtual.uid) {
+        mostrarAviso(`Este item está reservado para confirmação de ${item.recebedorNome}.`, "erro");
+        return;
+      }
+
+      try {
+        // 1. Atualiza o status do anúncio para concluído
+        await updateDoc(doc(db, "itens", docId), {
+          status: 'concluido',
+          recebedorUid: usuarioAtual.uid,
+          recebedorNome: usuarioAtual.displayName || usuarioAtual.email.split('@')[0],
+          concluidoEm: new Date().toISOString()
+        });
+
+        // 2. Libera +1 crédito na categoria correspondente para o Dono do anúncio (respeitando teto de 10)
+        const donoRef = doc(db, "usuarios", item.uidUsuario);
+        const donoSnap = await getDoc(donoRef);
+        const campoCredito = item.tipo === 'Quebra-Cabeça' ? 'creditosJogo' : 'creditosLivro';
+
+        if (donoSnap.exists()) {
+          const dadosDono = donoSnap.data();
+          const saldoAtualDono = dadosDono[campoCredito] || 0;
+          const novoSaldoDono = Math.min(10, saldoAtualDono + 1);
+          await updateDoc(donoRef, {
+            [campoCredito]: novoSaldoDono,
+            trocasRealizadas: (dadosDono.trocasRealizadas || 0) + 1,
+            atualizadoEm: new Date().toISOString()
+          });
+        } else {
+          await setDoc(donoRef, {
+            uid: item.uidUsuario,
+            nome: item.nome,
+            email: item.emailUsuario || '',
+            creditosLivro: item.tipo === 'Livro' ? 1 : 0,
+            creditosJogo: item.tipo === 'Quebra-Cabeça' ? 1 : 0,
+            bonusPrimeiroCadastro: true,
+            trocasRealizadas: 1,
+            atualizadoEm: new Date().toISOString()
+          });
+        }
+
+        // 3. Atualiza histórico (e desconta 1 crédito se for Troca e o recebedor tiver saldo > 0)
+        const recebedorRef = doc(db, "usuarios", usuarioAtual.uid);
+        const saldoAtualRec = dadosUsuarioAtual[campoCredito] || 0;
+        const ehTroca = (item.finalidade || 'Troca') === 'Troca';
+        const novoSaldoRec = ehTroca ? Math.max(0, saldoAtualRec - 1) : saldoAtualRec;
+
+        await setDoc(recebedorRef, {
+          [campoCredito]: novoSaldoRec,
+          trocasRealizadas: (dadosUsuarioAtual.trocasRealizadas || 0) + 1,
+          atualizadoEm: new Date().toISOString()
+        }, { merge: true });
+
+        document.getElementById('modalDetalhes').classList.replace('flex', 'hidden');
+        mostrarAviso(`🎉 Recebimento confirmado! +1 crédito de ${item.tipo === 'Quebra-Cabeça' ? 'Jogo Livre' : 'Livro Livre'} foi liberado para ${item.nome}!`, "sucesso");
+      } catch (err) {
+        mostrarAviso("Erro ao confirmar recebimento: " + err.message, "erro");
+      }
+    };
+
+    window.abrirDetalhes = function(docId) {
+      const item = dadosLocaisItens[docId];
+      if (!item) return;
+
+      const fotos = item.fotosUrls && item.fotosUrls.length > 0 ? item.fotosUrls : (item.fotoUrl ? [item.fotoUrl] : []);
+      const finalidade = item.finalidade || 'Troca';
+      const aguardando = item.status === 'aguardando_confirmacao';
+      const ehDono = usuarioAtual && usuarioAtual.uid === item.uidUsuario;
+      
+      const badge = document.getElementById('detalheTipoBadge');
+      if (aguardando) {
+        badge.innerText = "⏳ Reservado • Aguardando Confirmação";
+        badge.className = "text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-amber-100 text-amber-800";
+      } else if (finalidade === 'Doação') {
+        badge.innerText = "Doação Gratuita";
+        badge.className = "text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-rose-100 text-rose-700";
+      } else {
+        badge.innerText = "Item para Troca";
+        badge.className = "text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-sky-100 text-sky-700";
+      }
+
+      const imgPrincipal = document.getElementById('detalheImgPrincipal');
+      imgPrincipal.src = fotos[0] || '';
+
+      const containerMini = document.getElementById('detalheContainerMiniaturas');
+      containerMini.innerHTML = '';
+      if (fotos.length > 1) {
+        containerMini.classList.remove('hidden');
+        fotos.forEach((f) => {
+          containerMini.innerHTML += `
+            <div onclick="document.getElementById('detalheImgPrincipal').src='${f}'" class="w-16 h-16 rounded-xl bg-slate-900 border-2 border-transparent hover:border-sky-500 cursor-pointer overflow-hidden flex items-center justify-center flex-shrink-0">
+              <img src="${f}" class="max-w-full max-h-full object-contain">
+            </div>
+          `;
+        });
+      } else {
+        containerMini.classList.add('hidden');
+      }
+
+      document.getElementById('detalheTitulo').innerText = item.titulo;
+      document.getElementById('detalheEtaria').innerText = item.etaria;
+
+      const boxEsp = document.getElementById('detalheBoxEspecifico');
+      if (item.tipo === 'Livro') {
+        boxEsp.innerHTML = `
+          ${item.autor ? `<p><strong>Autor(es):</strong> ${item.autor}</p>` : ''}
+          ${item.editora ? `<p><strong>Editora:</strong> ${item.editora}</p>` : ''}
+          ${item.paginas ? `<p><strong>Nº de Páginas:</strong> ${item.paginas}</p>` : ''}
+        `;
+      } else {
+        boxEsp.innerHTML = `
+          ${item.pecas ? `<p><strong>Nº de Peças:</strong> ${item.pecas} pcs</p>` : ''}
+          ${item.material ? `<p><strong>Material:</strong> ${item.material}</p>` : ''}
+        `;
+      }
+
+      document.getElementById('detalheNome').innerText = item.nome;
+
+      // CAIXA DE CONFIRMAÇÃO DE TROCA (ETAPA 2 - BOTÃO EXCLUSIVO DO RECEBEDOR)
+      const boxConfirmacao = document.getElementById('detalheBoxConfirmacaoTroca');
+      if (aguardando) {
+        boxConfirmacao.classList.remove('hidden');
+        const podeConfirmar = !ehDono && (!item.recebedorUid || item.recebedorUid === 'qualquer' || (usuarioAtual && item.recebedorUid === usuarioAtual.uid));
+        if (podeConfirmar) {
+          boxConfirmacao.innerHTML = `
+            <div class="bg-emerald-50 border-2 border-emerald-400 p-4 rounded-2xl space-y-2 text-center">
+              <span class="bg-emerald-600 text-white text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full">Etapa 2 • Botão Exclusivo do Recebedor</span>
+              <p class="text-xs text-emerald-950 font-bold">Você recebeu este item de ${item.nome}?</p>
+              <button type="button" onclick="confirmarRecebimentoEtapa2('${docId}')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm shadow-md flex items-center justify-center gap-2 transition-all">
+                <i class="ph ph-check-fat text-lg"></i>
+                <span>Confirmar que Recebi o Item!</span>
+              </button>
+            </div>
+          `;
+        } else {
+          boxConfirmacao.innerHTML = `
+            <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl text-xs text-amber-900">
+              <strong>⏳ Item temporariamente indisponível:</strong> Este anúncio já foi marcado como trocado pelo dono e aguarda a confirmação final do morador recebedor.
+            </div>
+          `;
+        }
+      } else {
+        boxConfirmacao.classList.add('hidden');
+        boxConfirmacao.innerHTML = '';
+      }
+
+      // AÇÕES DE CONTATO
+      const boxAcao = document.getElementById('detalheBoxAcaoContato');
+      if (aguardando && !ehDono) {
+        boxAcao.innerHTML = '';
+      } else if (usuarioAtual) {
+        const meio = item.meioContato || 'whatsapp';
+        const contatoVal = item.contatoValor || item.whatsapp || '';
+        const acaoTexto = finalidade === 'Doação' ? 'receber a doação' : 'combinar a troca';
+
+        let btnContatoHTML = '';
+        if (meio === 'whatsapp') {
+          const msg = encodeURIComponent(`Olá ${item.nome}! Vi o seu anúncio "${item.titulo}" no Livros Livres e gostaria de ${acaoTexto}!`);
+          btnContatoHTML = `<a onclick="registrarInteresse('${docId}')" href="https://wa.me/55${contatoVal.replace(/\D/g, '')}?text=${msg}" target="_blank" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-sm"><i class="ph ph-whatsapp-logo text-xl"></i> Contactar via WhatsApp</a>`;
+        } else if (meio === 'email') {
+          const assunto = encodeURIComponent(`Interesse no item: ${item.titulo} (Livros Livres)`);
+          const corpo = encodeURIComponent(`Olá ${item.nome}!\n\nVi seu anúncio "${item.titulo}" no site Livros Livres e gostaria de ${acaoTexto}!`);
+          btnContatoHTML = `<a onclick="registrarInteresse('${docId}')" href="mailto:${contatoVal}?subject=${assunto}&body=${corpo}" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-sm"><i class="ph ph-envelope-simple text-xl"></i> Contactar via E-mail</a>`;
+        } else if (meio === 'sms') {
+          const msgSMS = encodeURIComponent(`Olá ${item.nome}! Vi seu anúncio "${item.titulo}" no Livros Livres e tenho interesse!`);
+          btnContatoHTML = `<a onclick="registrarInteresse('${docId}')" href="sms:+55${contatoVal.replace(/\D/g, '')}?body=${msgSMS}" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-sm"><i class="ph ph-chat-circle-text text-xl"></i> Contactar via SMS</a>`;
+        }
+
+        const btnInteresse = !ehDono ? `
+          <button type="button" onclick="registrarInteresse('${docId}'); mostrarAviso('Seu interesse foi registrado para ${item.nome}!', 'sucesso');" class="w-full bg-sky-50 hover:bg-sky-100 text-sky-700 border border-sky-200 font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5">
+            <i class="ph ph-hand-waving text-base"></i> Registrar Meu Interesse na Troca
+          </button>
+        ` : '';
+
+        boxAcao.innerHTML = btnContatoHTML + btnInteresse;
+      } else {
+        boxAcao.innerHTML = `<button type="button" onclick="document.getElementById('modalDetalhes').classList.replace('flex', 'hidden'); document.getElementById('modalAuth').classList.replace('hidden', 'flex');" class="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 rounded-xl text-sm border border-slate-300 flex items-center justify-center gap-2"><i class="ph ph-lock text-sky-500 text-lg"></i> Faça Login para Ver o Contacto</button>`;
+      }
+
+      // GERENCIAMENTO DO DONO DO ANÚNCIO
+      const boxDono = document.getElementById('detalheBoxGerenciarDono');
+      const boxBotoesEtapaDono = document.getElementById('boxBotoesEtapaDono');
+
+      if (ehDono) {
+        boxDono.classList.remove('hidden');
+        if (!aguardando) {
+          boxBotoesEtapaDono.innerHTML = `
+            <button type="button" onclick="abrirModalEtapa1('${docId}')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold py-3 rounded-xl flex items-center justify-center gap-2 shadow-sm mb-1">
+              <i class="ph ph-handshake text-lg"></i> Marcar como Trocado / Entregue (Etapa 1)
+            </button>
+          `;
+        } else {
+          boxBotoesEtapaDono.innerHTML = `
+            <div class="bg-amber-50 border border-amber-200 p-3 rounded-xl space-y-2 mb-1">
+              <p class="text-xs text-amber-900 font-bold">⏳ Aguardando confirmação do recebedor (${item.recebedorNome || 'Morador'})</p>
+              <div class="flex gap-2">
+                <button type="button" onclick="copiarOuEnviarLinkConfirmacao('${docId}')" class="flex-1 bg-amber-400 hover:bg-amber-500 text-slate-900 text-xs font-bold py-2 rounded-xl flex items-center justify-center gap-1">
+                  <i class="ph ph-whatsapp-logo"></i> Enviar Link ao Recebedor
+                </button>
+                <button type="button" onclick="cancelarReservaTroca('${docId}'); document.getElementById('modalDetalhes').classList.replace('flex', 'hidden');" class="bg-white border border-slate-300 text-slate-600 text-xs font-bold px-3 py-2 rounded-xl">
+                  Cancelar Reserva
+                </button>
+              </div>
+            </div>
+          `;
+        }
+
+        document.getElementById('btnDetalheEditar').onclick = () => {
+          document.getElementById('modalDetalhes').classList.replace('flex', 'hidden');
+          prepararEdicao(docId);
+        };
+        document.getElementById('btnDetalheExcluir').onclick = () => {
+          document.getElementById('modalDetalhes').classList.replace('flex', 'hidden');
+          excluirAnuncio(docId);
+        };
+      } else {
+        boxDono.classList.add('hidden');
+      }
+
+      document.getElementById('modalDetalhes').classList.replace('hidden', 'flex');
+    };
+
+    async function salvarItem(e) {
+      e.preventDefault();
+      if (!usuarioAtual) { mostrarAviso("Faça login para cadastrar um item.", "erro"); return; }
+
+      const docIdEdicao = document.getElementById('editDocId').value;
+      const meio = document.getElementById('selectMeioContato').value;
+      const valorContato = document.getElementById('inputValorContato').value;
+      const arquivosFotos = document.getElementById('inputArquivoFoto').files;
+      const btnSalvar = document.getElementById('btnSalvarModal');
+
+      btnSalvar.disabled = true;
+      btnSalvar.innerText = "A comprimir e enviar fotos...";
+
+      let fotosUrlsFinais = docIdEdicao && dadosLocaisItens[docIdEdicao] ? (dadosLocaisItens[docIdEdicao].fotosUrls || []) : [];
+
+      try {
+        if (arquivosFotos && arquivosFotos.length > 0) {
+          fotosUrlsFinais = [];
+          const numFotos = Math.min(arquivosFotos.length, 3);
+
+          for (let i = 0; i < numFotos; i++) {
+            const fotoComprimida = await comprimirImagem(arquivosFotos[i]);
+            const formData = new FormData();
+            formData.append("image", fotoComprimida);
+
+            const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+              method: "POST",
+              body: formData
+            });
+
+            const data = await res.json();
+            if (data.success) {
+              fotosUrlsFinais.push(data.data.url);
+            } else {
+              throw new Error("Falha no upload para o servidor de imagens.");
+            }
+          }
+        }
+
+        const tipo = document.getElementById('selectTipo').value;
+
+        const dadosItem = {
+          finalidade: document.getElementById('selectFinalidade').value,
+          titulo: document.getElementById('inputTitulo').value,
+          tipo: tipo,
+          autor: tipo === 'Livro' ? document.getElementById('inputAutor').value : '',
+          editora: tipo === 'Livro' ? document.getElementById('inputEditora').value : '',
+          paginas: tipo === 'Livro' ? document.getElementById('inputPaginas').value : '',
+          pecas: tipo === 'Quebra-Cabeça' ? document.getElementById('inputPecas').value : '',
+          material: tipo === 'Quebra-Cabeça' ? document.getElementById('selectMaterial').value : '',
+          etaria: document.getElementById('selectEtaria').value,
+          fotosUrls: fotosUrlsFinais,
+          fotoUrl: fotosUrlsFinais[0] || '',
+          nome: document.getElementById('inputNome').value,
+          meioContato: meio,
+          contatoValor: valorContato,
+          whatsapp: meio === 'whatsapp' ? valorContato.replace(/\D/g, '') : '',
+          uidUsuario: usuarioAtual.uid,
+          emailUsuario: usuarioAtual.email,
+          atualizadoEm: new Date().toISOString()
+        };
+
+        if (docIdEdicao) {
+          await updateDoc(doc(db, "itens", docIdEdicao), dadosItem);
+          mostrarAviso("Anúncio atualizado com sucesso!", "sucesso");
+        } else {
+          dadosItem.status = 'ativo';
+          dadosItem.criadoEm = new Date().toISOString();
+          await addDoc(itensRef, dadosItem);
+
+          // REGRA DE BÔNUS DE PRIMEIRO CADASTRO (+1 Livro Livre e +1 Jogo Livre)
+          if (!dadosUsuarioAtual.bonusPrimeiroCadastro) {
+            const userRef = doc(db, "usuarios", usuarioAtual.uid);
+            const novoLivro = Math.min(10, (dadosUsuarioAtual.creditosLivro || 0) + 1);
+            const novoJogo = Math.min(10, (dadosUsuarioAtual.creditosJogo || 0) + 1);
+            await setDoc(userRef, {
+              uid: usuarioAtual.uid,
+              nome: dadosItem.nome || usuarioAtual.displayName || usuarioAtual.email,
+              email: usuarioAtual.email,
+              creditosLivro: novoLivro,
+              creditosJogo: novoJogo,
+              bonusPrimeiroCadastro: true,
+              atualizadoEm: new Date().toISOString()
+            }, { merge: true });
+            mostrarAviso("🎉 1º Item Cadastrado! Você ganhou +1 crédito de Livro Livre e +1 de Jogo Livre de bônus!", "alerta");
+          } else {
+            mostrarAviso("Item publicado com sucesso! Você ganhará +1 crédito assim que a troca for confirmada pelo recebedor.", "sucesso");
+          }
+        }
+        document.getElementById('modalCadastro').classList.replace('flex', 'hidden');
+      } catch (err) {
+        mostrarAviso("Não foi possível salvar o anúncio: " + err.message, "erro");
+      } finally {
+        btnSalvar.disabled = false;
+        btnSalvar.innerText = "Publicar no Livros Livres";
+      }
+    }
+
+    function prepararEdicao(docId) {
+      const item = dadosLocaisItens[docId];
+      if (!item) return;
+
+      document.getElementById('editDocId').value = docId;
+      document.getElementById('selectFinalidade').value = item.finalidade || 'Troca';
+      document.getElementById('selectTipo').value = item.tipo || 'Livro';
+      alternarCamposEspecificos();
+
+      document.getElementById('inputTitulo').value = item.titulo || '';
+      document.getElementById('inputAutor').value = item.autor || '';
+      document.getElementById('inputEditora').value = item.editora || '';
+      document.getElementById('inputPaginas').value = item.paginas || '';
+      document.getElementById('inputPecas').value = item.pecas || '';
+      document.getElementById('selectMaterial').value = item.material || 'Papelão / Cartão';
+      document.getElementById('selectEtaria').value = item.etaria || '0-3 anos';
+      document.getElementById('inputNome').value = item.nome || '';
+      document.getElementById('selectMeioContato').value = item.meioContato || 'whatsapp';
+      alternarCampoContato();
+      document.getElementById('inputValorContato').value = item.contatoValor || item.whatsapp || '';
+
+      document.getElementById('tituloModalCadastro').innerText = "Editar Anúncio";
+      document.getElementById('btnSalvarModal').innerText = "Salvar Alterações";
+      document.getElementById('checkTermos').checked = true;
+
+      document.getElementById('modalCadastro').classList.replace('hidden', 'flex');
+    }
+
+    window.excluirAnuncio = async function(docId) {
+      if (confirm("Tem certeza de que deseja excluir este anúncio permanentemente?")) {
+        try {
+          await deleteDoc(doc(db, "itens", docId));
+          mostrarAviso("Anúncio excluído com sucesso!", "info");
+        } catch (err) { mostrarAviso("Erro ao excluir anúncio: " + err.message, "erro"); }
+      }
+    };
+
+    // FUNÇÕES EXCLUSIVAS DO PAINEL DO ORGANIZADOR (ADMIN)
+    function renderizarVoluntariosAdmin() {
+      const container = document.getElementById('listaAdminVoluntarios');
+      const areaFiltro = document.getElementById('filtroAreaVoluntario').value;
+      if (!container) return;
+
+      const entries = Object.entries(dadosLocaisVoluntarios).filter(([id, v]) => {
+        if (areaFiltro === 'todos') return true;
+        return Boolean(v[areaFiltro]);
+      });
+
+      if (entries.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-400 col-span-full py-4">Nenhum voluntário inscrito para este filtro.</p>`;
+        return;
+      }
+
+      container.innerHTML = entries.map(([id, v]) => {
+        const areas = [];
+        if (v.ajudaOficinas) areas.push('🎨 Oficinas');
+        if (v.ajudaLeitura) areas.push('📖 Leitura e Jogos');
+        if (v.ajudaSaberes) areas.push('🪵 Histórias/Saberes');
+        if (v.ajudaFrutas) areas.push('🍎 Frutas/Itens');
+        if (v.ajudaArrecadacao) areas.push('🤝 Arrecadação');
+        if (v.ajudaLogistica) areas.push('📢 Organização');
+
+        const foneLimpo = (v.telefone || '').replace(/\D/g, '');
+        return `
+          <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-2 flex flex-col justify-between">
+            <div class="space-y-1.5">
+              <div class="flex items-center justify-between">
+                <strong class="text-sm font-bold text-slate-800">${v.nome}</strong>
+                <span class="text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full">${v.preferenciaContato || 'WhatsApp'}</span>
+              </div>
+              <p class="text-xs text-slate-600 font-bold">${v.telefone || ''}</p>
+              <div class="flex flex-wrap gap-1 pt-1">
+                ${areas.map(a => `<span class="text-[10px] bg-white border border-slate-200 px-2 py-0.5 rounded-lg font-bold text-slate-700">${a}</span>`).join('')}
+              </div>
+              ${v.apresentacao ? `<p class="text-xs text-slate-500 italic bg-white p-2.5 rounded-xl border border-slate-100 mt-1">"${v.apresentacao}"</p>` : ''}
+            </div>
+            <div class="flex items-center gap-2 pt-2 border-t border-slate-200/60">
+              ${foneLimpo ? `<a href="https://wa.me/55${foneLimpo}" target="_blank" class="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold py-2 rounded-xl flex items-center justify-center gap-1"><i class="ph ph-whatsapp-logo"></i> Chamar no WhatsApp</a>` : ''}
+              <button type="button" onclick="excluirVoluntarioAdmin('${id}')" class="bg-red-100 hover:bg-red-200 text-red-700 text-xs font-bold px-3 py-2 rounded-xl"><i class="ph ph-trash"></i></button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.excluirVoluntarioAdmin = async function(id) {
+      if (!ehAdmin()) return;
+      if (confirm("Deseja remover esta inscrição de voluntário?")) {
+        await deleteDoc(doc(db, "voluntarios", id));
+        mostrarAviso("Inscrição removida.", "info");
+      }
+    };
+
+    function renderizarItensAdmin(entries) {
+      const container = document.getElementById('listaAdminItens');
+      if (!container) return;
+      if (entries.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-400">Nenhum anúncio cadastrado.</p>`;
+        return;
+      }
+      container.innerHTML = entries.map(([id, item]) => {
+        const statusBadge = item.status === 'concluido'
+          ? 'bg-emerald-100 text-emerald-800'
+          : item.status === 'aguardando_confirmacao'
+          ? 'bg-amber-100 text-amber-800'
+          : item.status === 'suspenso'
+          ? 'bg-red-100 text-red-800'
+          : 'bg-sky-100 text-sky-800';
+
+        return `
+          <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+            <div>
+              <span class="px-2 py-0.5 rounded-full font-bold text-[10px] uppercase ${statusBadge}">${item.status || 'ativo'}</span>
+              <strong class="text-slate-800 ml-1">${item.titulo}</strong>
+              <span class="text-slate-500"> • por ${item.nome} (${item.emailUsuario || ''})</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button type="button" onclick="alternarSuspensaoAdmin('${id}', '${item.status || 'ativo'}')" class="px-2.5 py-1.5 rounded-lg font-bold ${item.status === 'suspenso' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+                ${item.status === 'suspenso' ? 'Reativar' : 'Suspender'}
+              </button>
+              <button type="button" onclick="excluirAnuncio('${id}')" class="px-2.5 py-1.5 rounded-lg font-bold bg-red-100 text-red-700">
+                Excluir
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.alternarSuspensaoAdmin = async function(id, statusAtual) {
+      if (!ehAdmin()) return;
+      const novoStatus = statusAtual === 'suspenso' ? 'ativo' : 'suspenso';
+      await updateDoc(doc(db, "itens", id), { status: novoStatus });
+      mostrarAviso(`Status do anúncio alterado para ${novoStatus}.`, "info");
+    };
+  </script>
+</body>
+</html>

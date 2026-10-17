@@ -1,0 +1,6 @@
+# Backups locais e arquivos temporários
+index1.html
+.netlify/
+node_modules/
+.DS_Store
+Thumbs.db
