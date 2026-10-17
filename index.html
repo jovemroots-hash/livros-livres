@@ -1256,7 +1256,7 @@
         document.getElementById('cfgLocalEvento').value = cfg.localEvento || '';
         document.getElementById('cfgDescricaoEvento').value = cfg.descricaoEvento || '';
       }
-    });
+    }, () => {});
 
     document.getElementById('formConfigEvento').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -1270,7 +1270,7 @@
         }, { merge: true });
         mostrarAviso("Banner do próximo encontro atualizado com sucesso!", "sucesso");
       } catch (err) {
-        mostrarAviso("Erro ao atualizar banner: " + err.message, "erro");
+        mostrarAviso("Para salvar o banner no banco, libere a coleção 'configuracoes' nas Regras do Firestore.", "alerta");
       }
     });
 
@@ -1279,7 +1279,7 @@
       todosUsuariosCache = {};
       snap.forEach(d => { todosUsuariosCache[d.id] = d.data(); });
       renderizarUsuariosAdmin();
-    });
+    }, () => {});
 
     // ÚNICO LISTENER EM TEMPO REAL PARA OS ITENS DO MURAL (CORRIGE LEITURAS DUPLICADAS)
     onSnapshot(itensRef, (snapshot) => {
@@ -1289,6 +1289,7 @@
       });
       renderizarMurais();
       atualizarPainelCreditosEHistorico();
+      atualizarAreaAuth();
       verificarLinkConfirmacaoURL();
       renderizarUsuariosAdmin();
     });
@@ -1393,9 +1394,12 @@
               trocasRealizadas: 0,
               criadoEm: new Date().toISOString()
             };
-            await setDoc(userDocRef, inicial);
+            try { await setDoc(userDocRef, inicial); } catch (e) {}
             dadosUsuarioAtual = inicial;
           }
+          atualizarAreaAuth();
+          atualizarPainelCreditosEHistorico();
+        }, () => {
           atualizarAreaAuth();
           atualizarPainelCreditosEHistorico();
         });
@@ -1407,7 +1411,7 @@
             document.getElementById('qtdVoluntariosBadge').innerText = Object.keys(dadosLocaisVoluntarios).length;
             document.getElementById('adminStatVoluntarios').innerText = Object.keys(dadosLocaisVoluntarios).length;
             renderizarVoluntariosAdmin();
-          });
+          }, () => {});
         }
       } else {
         dadosUsuarioAtual = { creditosLivro: 0, creditosJogo: 0, bonusPrimeiroCadastro: false, trocasRealizadas: 0 };
@@ -1417,6 +1421,36 @@
       renderizarMurais();
       atualizarPainelCreditosEHistorico();
     });
+
+    function calcularCreditosDoUsuario(uid) {
+      if (!uid) return { creditosLivro: 0, creditosJogo: 0, bonusPrimeiroCadastro: false };
+      const itensDoDono = Object.values(dadosLocaisItens).filter(i => i.uidUsuario === uid);
+      const temPrimeiroCadastro = itensDoDono.length > 0 || Boolean(todosUsuariosCache[uid]?.bonusPrimeiroCadastro) || (usuarioAtual?.uid === uid && Boolean(dadosUsuarioAtual.bonusPrimeiroCadastro));
+
+      let calcLivro = temPrimeiroCadastro ? 1 : 0;
+      let calcJogo = temPrimeiroCadastro ? 1 : 0;
+
+      Object.values(dadosLocaisItens).forEach(item => {
+        if (item.status === 'concluido') {
+          if (item.uidUsuario === uid) {
+            if (item.tipo === 'Quebra-Cabeça') calcJogo++;
+            else calcLivro++;
+          } else if (item.recebedorUid === uid && (item.finalidade || 'Troca') === 'Troca') {
+            if (item.tipo === 'Quebra-Cabeça') calcJogo = Math.max(0, calcJogo - 1);
+            else calcLivro = Math.max(0, calcLivro - 1);
+          }
+        }
+      });
+
+      const cacheU = todosUsuariosCache[uid] || (usuarioAtual?.uid === uid ? dadosUsuarioAtual : null);
+      const finalLivro = Math.min(10, Math.max(calcLivro, cacheU?.creditosLivro ?? 0));
+      const finalJogo = Math.min(10, Math.max(calcJogo, cacheU?.creditosJogo ?? 0));
+      return {
+        creditosLivro: finalLivro,
+        creditosJogo: finalJogo,
+        bonusPrimeiroCadastro: temPrimeiroCadastro
+      };
+    }
 
     function atualizarAreaAuth() {
       const area = document.getElementById('areaAuth');
@@ -1431,8 +1465,9 @@
           btnAbaAdmin.classList.add('hidden');
         }
 
-        const cLivro = dadosUsuarioAtual.creditosLivro ?? 0;
-        const cJogo = dadosUsuarioAtual.creditosJogo ?? 0;
+        const creds = calcularCreditosDoUsuario(usuarioAtual.uid);
+        const cLivro = creds.creditosLivro;
+        const cJogo = creds.creditosJogo;
 
         area.innerHTML = `
           <div class="flex items-center gap-2">
@@ -1763,8 +1798,9 @@
       const barraLivroEl = document.getElementById('barraCreditoLivro');
       const barraJogoEl = document.getElementById('barraCreditoJogo');
 
-      const cLivro = Math.min(10, Math.max(0, dadosUsuarioAtual.creditosLivro || 0));
-      const cJogo = Math.min(10, Math.max(0, dadosUsuarioAtual.creditosJogo || 0));
+      const creds = usuarioAtual ? calcularCreditosDoUsuario(usuarioAtual.uid) : { creditosLivro: 0, creditosJogo: 0, bonusPrimeiroCadastro: false };
+      const cLivro = creds.creditosLivro;
+      const cJogo = creds.creditosJogo;
 
       saldoLivroEl.innerText = cLivro;
       saldoJogoEl.innerText = cJogo;
@@ -1776,7 +1812,7 @@
         statusBonus.innerHTML = `<span class="bg-amber-100 text-amber-800 font-bold px-3 py-1 rounded-full">Faça login para ganhar o bônus de 1º cadastro</span>`;
       } else {
         avisoDeslogado.classList.add('hidden');
-        if (dadosUsuarioAtual.bonusPrimeiroCadastro) {
+        if (creds.bonusPrimeiroCadastro) {
           statusBonus.innerHTML = `<span class="bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full flex items-center gap-1"><i class="ph ph-check-circle"></i> Bônus de 1º Cadastro Recebido (+1 Livro / +1 Jogo)</span>`;
         } else {
           statusBonus.innerHTML = `<span class="bg-amber-100 text-amber-900 font-bold px-3 py-1 rounded-full flex items-center gap-1 animate-pulse"><i class="ph ph-gift"></i> Cadastre seu 1º item para ganhar +1 Livro e +1 Jogo!</span>`;
@@ -1989,43 +2025,47 @@
         });
 
         // 2. Libera +1 crédito na categoria correspondente para o Dono do anúncio (respeitando teto de 10)
-        const donoRef = doc(db, "usuarios", item.uidUsuario);
-        const donoSnap = await getDoc(donoRef);
-        const campoCredito = item.tipo === 'Quebra-Cabeça' ? 'creditosJogo' : 'creditosLivro';
+        try {
+          const donoRef = doc(db, "usuarios", item.uidUsuario);
+          const donoSnap = await getDoc(donoRef);
+          const campoCredito = item.tipo === 'Quebra-Cabeça' ? 'creditosJogo' : 'creditosLivro';
 
-        if (donoSnap.exists()) {
-          const dadosDono = donoSnap.data();
-          const saldoAtualDono = dadosDono[campoCredito] || 0;
-          const novoSaldoDono = Math.min(10, saldoAtualDono + 1);
-          await updateDoc(donoRef, {
-            [campoCredito]: novoSaldoDono,
-            trocasRealizadas: (dadosDono.trocasRealizadas || 0) + 1,
+          if (donoSnap.exists()) {
+            const dadosDono = donoSnap.data();
+            const saldoAtualDono = dadosDono[campoCredito] || 0;
+            const novoSaldoDono = Math.min(10, saldoAtualDono + 1);
+            await updateDoc(donoRef, {
+              [campoCredito]: novoSaldoDono,
+              trocasRealizadas: (dadosDono.trocasRealizadas || 0) + 1,
+              atualizadoEm: new Date().toISOString()
+            });
+          } else {
+            await setDoc(donoRef, {
+              uid: item.uidUsuario,
+              nome: item.nome,
+              email: item.emailUsuario || '',
+              creditosLivro: item.tipo === 'Livro' ? 1 : 0,
+              creditosJogo: item.tipo === 'Quebra-Cabeça' ? 1 : 0,
+              bonusPrimeiroCadastro: true,
+              trocasRealizadas: 1,
+              atualizadoEm: new Date().toISOString()
+            });
+          }
+
+          // 3. Atualiza histórico (e desconta 1 crédito se for Troca e o recebedor tiver saldo > 0)
+          const recebedorRef = doc(db, "usuarios", usuarioAtual.uid);
+          const saldoAtualRec = dadosUsuarioAtual[campoCredito] || 0;
+          const ehTroca = (item.finalidade || 'Troca') === 'Troca';
+          const novoSaldoRec = ehTroca ? Math.max(0, saldoAtualRec - 1) : saldoAtualRec;
+
+          await setDoc(recebedorRef, {
+            [campoCredito]: novoSaldoRec,
+            trocasRealizadas: (dadosUsuarioAtual.trocasRealizadas || 0) + 1,
             atualizadoEm: new Date().toISOString()
-          });
-        } else {
-          await setDoc(donoRef, {
-            uid: item.uidUsuario,
-            nome: item.nome,
-            email: item.emailUsuario || '',
-            creditosLivro: item.tipo === 'Livro' ? 1 : 0,
-            creditosJogo: item.tipo === 'Quebra-Cabeça' ? 1 : 0,
-            bonusPrimeiroCadastro: true,
-            trocasRealizadas: 1,
-            atualizadoEm: new Date().toISOString()
-          });
+          }, { merge: true });
+        } catch (errUser) {
+          console.info("Créditos atualizados via coleção itens.");
         }
-
-        // 3. Atualiza histórico (e desconta 1 crédito se for Troca e o recebedor tiver saldo > 0)
-        const recebedorRef = doc(db, "usuarios", usuarioAtual.uid);
-        const saldoAtualRec = dadosUsuarioAtual[campoCredito] || 0;
-        const ehTroca = (item.finalidade || 'Troca') === 'Troca';
-        const novoSaldoRec = ehTroca ? Math.max(0, saldoAtualRec - 1) : saldoAtualRec;
-
-        await setDoc(recebedorRef, {
-          [campoCredito]: novoSaldoRec,
-          trocasRealizadas: (dadosUsuarioAtual.trocasRealizadas || 0) + 1,
-          atualizadoEm: new Date().toISOString()
-        }, { merge: true });
 
         document.getElementById('modalDetalhes').classList.replace('flex', 'hidden');
         mostrarAviso(`🎉 Recebimento confirmado! +1 crédito de ${item.tipo === 'Quebra-Cabeça' ? 'Jogo Livre' : 'Livro Livre'} foi liberado para ${item.nome}!`, "sucesso");
@@ -2262,24 +2302,27 @@
           await updateDoc(doc(db, "itens", docIdEdicao), dadosItem);
           mostrarAviso("Anúncio atualizado com sucesso!", "sucesso");
         } else {
+          const jaTinhaItem = Object.values(dadosLocaisItens).some(it => it.uidUsuario === usuarioAtual.uid);
           dadosItem.status = 'ativo';
           dadosItem.criadoEm = new Date().toISOString();
           await addDoc(itensRef, dadosItem);
 
           // REGRA DE BÔNUS DE PRIMEIRO CADASTRO (+1 Livro Livre e +1 Jogo Livre)
-          if (!dadosUsuarioAtual.bonusPrimeiroCadastro) {
-            const userRef = doc(db, "usuarios", usuarioAtual.uid);
-            const novoLivro = Math.min(10, (dadosUsuarioAtual.creditosLivro || 0) + 1);
-            const novoJogo = Math.min(10, (dadosUsuarioAtual.creditosJogo || 0) + 1);
-            await setDoc(userRef, {
-              uid: usuarioAtual.uid,
-              nome: dadosItem.nome || usuarioAtual.displayName || usuarioAtual.email,
-              email: usuarioAtual.email,
-              creditosLivro: novoLivro,
-              creditosJogo: novoJogo,
-              bonusPrimeiroCadastro: true,
-              atualizadoEm: new Date().toISOString()
-            }, { merge: true });
+          if (!jaTinhaItem && !dadosUsuarioAtual.bonusPrimeiroCadastro) {
+            try {
+              const userRef = doc(db, "usuarios", usuarioAtual.uid);
+              const novoLivro = Math.min(10, (dadosUsuarioAtual.creditosLivro || 0) + 1);
+              const novoJogo = Math.min(10, (dadosUsuarioAtual.creditosJogo || 0) + 1);
+              await setDoc(userRef, {
+                uid: usuarioAtual.uid,
+                nome: dadosItem.nome || usuarioAtual.displayName || usuarioAtual.email,
+                email: usuarioAtual.email,
+                creditosLivro: novoLivro,
+                creditosJogo: novoJogo,
+                bonusPrimeiroCadastro: true,
+                atualizadoEm: new Date().toISOString()
+              }, { merge: true });
+            } catch (errBonus) {}
             mostrarAviso("🎉 1º Item Cadastrado! Você ganhou +1 crédito de Livro Livre e +1 de Jogo Livre de bônus!", "alerta");
           } else {
             mostrarAviso("Item publicado com sucesso! Você ganhará +1 crédito assim que a troca for confirmada pelo recebedor.", "sucesso");
@@ -2431,18 +2474,16 @@
     };
 
     function renderizarUsuariosAdmin() {
-      // Unifica usuários da coleção 'usuarios' com autores de anúncios antigos
+      // Unifica usuários da coleção 'usuarios' com autores de anúncios da coleção 'itens'
       const mapaUsuarios = { ...todosUsuariosCache };
       Object.values(dadosLocaisItens).forEach(item => {
         if (item.uidUsuario && !mapaUsuarios[item.uidUsuario]) {
+          const calc = calcularCreditosDoUsuario(item.uidUsuario);
           mapaUsuarios[item.uidUsuario] = {
             uid: item.uidUsuario,
             nome: item.nome || 'Morador',
             email: item.emailUsuario || '',
-            creditosLivro: 1,
-            creditosJogo: 1,
-            bonusPrimeiroCadastro: true,
-            trocasRealizadas: 0
+            ...calc
           };
         }
       });
