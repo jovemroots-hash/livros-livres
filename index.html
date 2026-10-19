@@ -60,8 +60,8 @@
           <span id="qtdMeusAnunciosBadge" class="bg-sky-200 text-sky-800 text-[10px] px-2 py-0.5 rounded-full font-bold">0</span>
         </button>
         <button id="btnAbaPerfil" type="button" class="px-4 py-2.5 rounded-t-xl text-slate-500 hover:text-slate-800 flex items-center gap-1.5 transition-all font-bold">
-          <i class="ph ph-wallet text-base text-emerald-600"></i>
-          <span>Meu Perfil &amp; Créditos</span>
+          <i class="ph ph-users-three text-base text-emerald-600"></i>
+          <span>👦👧 Filhos, Avatar &amp; Créditos</span>
           <span id="badgePendenciasPerfil" class="hidden bg-amber-400 text-slate-900 text-[10px] px-2 py-0.5 rounded-full font-extrabold animate-pulse">!</span>
         </button>
         <button id="btnAbaDoarNovos" type="button" class="px-4 py-2.5 rounded-t-xl text-slate-500 hover:text-slate-800 flex items-center gap-1.5 transition-all font-bold">
@@ -124,10 +124,16 @@
         <p class="text-slate-500 text-sm">Sabe aquele livro incrível que você já leu, que marcou a infância, e que agora descansa na estante? Ou aquele quebra-cabeça impecável que merece novos desafios?</p>
       </div>
 
-      <button id="btnCadastrarItem" type="button" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold px-5 py-2.5 rounded-xl text-sm transition-all flex items-center gap-2 shadow-sm w-full sm:w-auto justify-center flex-shrink-0">
-        <i class="ph ph-plus-circle text-lg"></i>
-        <span>Cadastrar Novo Item</span>
-      </button>
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full sm:w-auto flex-shrink-0">
+        <button type="button" onclick="abrirModalFilhoAvatar()" class="bg-sky-500 hover:bg-sky-600 text-white font-bold px-4 py-2.5 rounded-xl text-sm transition-all flex items-center gap-2 shadow-sm justify-center">
+          <i class="ph ph-smiley text-lg"></i>
+          <span>👦👧 Criar Avatar dos Filhos</span>
+        </button>
+        <button id="btnCadastrarItem" type="button" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold px-5 py-2.5 rounded-xl text-sm transition-all flex items-center gap-2 shadow-sm justify-center">
+          <i class="ph ph-plus-circle text-lg"></i>
+          <span>Cadastrar Novo Item</span>
+        </button>
+      </div>
     </div>
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
@@ -1827,32 +1833,49 @@
     }
 
     // FUNÇÕES DE INTERFACE DO CRIADOR DE AVATAR E SUBPERFIL
+    window.selecionarCorPele = function(cor) {
+      configAvatarTemp.pele = cor;
+      window.atualizarPreviewAvatar();
+    };
+    window.selecionarCorCabelo = function(cor) {
+      configAvatarTemp.cabeloCor = cor;
+      window.atualizarPreviewAvatar();
+    };
+    window.selecionarCorFundo = function(cor) {
+      configAvatarTemp.fundo = cor;
+      window.atualizarPreviewAvatar();
+    };
+    window.selecionarMascote = function(ic) {
+      configAvatarTemp.icone = ic;
+      window.atualizarPreviewAvatar();
+    };
+
     function renderizarSeletoresCoresEMascotes() {
       const divPele = document.getElementById('seletorTomPele');
       if (divPele) {
         divPele.innerHTML = TONS_PELE.map(cor => `
-          <button type="button" onclick="configAvatarTemp.pele='${cor}'; atualizarPreviewAvatar();" class="w-8 h-8 rounded-full border-2 ${configAvatarTemp.pele === cor ? 'border-sky-600 scale-110 ring-2 ring-sky-300' : 'border-white'} shadow-sm transition-all" style="background-color: ${cor};"></button>
+          <button type="button" onclick="selecionarCorPele('${cor}')" class="w-8 h-8 rounded-full border-2 cursor-pointer ${configAvatarTemp.pele === cor ? 'border-sky-600 scale-110 ring-2 ring-sky-300' : 'border-white hover:scale-105'} shadow-sm transition-all" style="background-color: ${cor};"></button>
         `).join('');
       }
 
       const divCabelo = document.getElementById('seletorCorCabelo');
       if (divCabelo) {
         divCabelo.innerHTML = CORES_CABELO.map(cor => `
-          <button type="button" onclick="configAvatarTemp.cabeloCor='${cor}'; atualizarPreviewAvatar();" class="w-8 h-8 rounded-full border-2 ${configAvatarTemp.cabeloCor === cor ? 'border-sky-600 scale-110 ring-2 ring-sky-300' : 'border-white'} shadow-sm transition-all" style="background-color: ${cor};"></button>
+          <button type="button" onclick="selecionarCorCabelo('${cor}')" class="w-8 h-8 rounded-full border-2 cursor-pointer ${configAvatarTemp.cabeloCor === cor ? 'border-sky-600 scale-110 ring-2 ring-sky-300' : 'border-white hover:scale-105'} shadow-sm transition-all" style="background-color: ${cor};"></button>
         `).join('');
       }
 
       const divFundo = document.getElementById('seletorCorFundoAvatar');
       if (divFundo) {
         divFundo.innerHTML = CORES_FUNDO_AVATAR.map(cor => `
-          <button type="button" onclick="configAvatarTemp.fundo='${cor}'; atualizarPreviewAvatar();" class="w-8 h-8 rounded-full border-2 ${configAvatarTemp.fundo === cor ? 'border-slate-800 scale-110 ring-2 ring-slate-300' : 'border-white'} shadow-sm transition-all" style="background-color: ${cor};"></button>
+          <button type="button" onclick="selecionarCorFundo('${cor}')" class="w-8 h-8 rounded-full border-2 cursor-pointer ${configAvatarTemp.fundo === cor ? 'border-slate-800 scale-110 ring-2 ring-slate-300' : 'border-white hover:scale-105'} shadow-sm transition-all" style="background-color: ${cor};"></button>
         `).join('');
       }
 
       const divMascotes = document.getElementById('seletorIconeMascote');
       if (divMascotes) {
         divMascotes.innerHTML = MASCOTES_INFANTIS.map(ic => `
-          <button type="button" onclick="configAvatarTemp.icone='${ic}'; atualizarPreviewAvatar();" class="h-11 rounded-xl border ${configAvatarTemp.icone === ic ? 'border-sky-500 bg-sky-100 scale-105' : 'border-slate-200 bg-white'} text-2xl flex items-center justify-center hover:bg-sky-50 transition-all">${ic}</button>
+          <button type="button" onclick="selecionarMascote('${ic}')" class="h-11 rounded-xl border cursor-pointer ${configAvatarTemp.icone === ic ? 'border-sky-500 bg-sky-100 scale-105' : 'border-slate-200 bg-white'} text-2xl flex items-center justify-center hover:bg-sky-50 transition-all">${ic}</button>
         `).join('');
       }
     }
@@ -2241,7 +2264,7 @@
             </button>
           `
           : `
-            <button type="button" onclick="abrirModalFilhoAvatar()" class="hidden lg:flex items-center gap-1 bg-sky-50 hover:bg-sky-100 border border-sky-200 px-2.5 py-1.5 rounded-xl text-[11px] font-bold text-sky-700 transition-all">
+            <button type="button" onclick="abrirModalFilhoAvatar()" class="flex items-center gap-1 bg-sky-50 hover:bg-sky-100 border border-sky-200 px-2.5 py-1.5 rounded-xl text-[11px] font-bold text-sky-700 transition-all">
               <i class="ph ph-smiley"></i>
               <span>+ Filho(a)</span>
             </button>
