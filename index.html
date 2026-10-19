@@ -265,15 +265,34 @@
     </div>
   </main>
 
-  <!-- 4. MEU PERFIL & CRÉDITOS -->
+  <!-- 4. MEU PERFIL, SUBPERFIS DOS FILHOS & CRÉDITOS -->
   <main id="secaoPerfil" class="max-w-4xl mx-auto px-4 py-8 flex-1 w-full hidden space-y-6">
+    <!-- SUBPERFIS DOS FILHOS & CRIADOR DE AVATAR -->
+    <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-sky-200 space-y-5">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4">
+        <div>
+          <span class="bg-sky-100 text-sky-800 text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full">Novo • Para Famílias com 1 ou mais Crianças</span>
+          <h3 class="text-2xl font-bold font-heading text-slate-800 flex items-center gap-2 mt-1">
+            <i class="ph ph-users-three text-sky-500"></i> Subperfis dos Filhos &amp; Avatares
+          </h3>
+          <p class="text-xs text-slate-500 mt-0.5">Crie um subperfil com avatar personalizado para cada filho(a)! Cada criança tem seu próprio saldo individual de créditos <strong>Livro Livre</strong> e <strong>Jogo Livre</strong>.</p>
+        </div>
+        <button type="button" onclick="abrirModalFilhoAvatar()" class="bg-sky-500 hover:bg-sky-600 text-white font-bold px-4 py-2.5 rounded-xl text-xs sm:text-sm shadow-sm flex items-center justify-center gap-2 whitespace-nowrap transition-all">
+          <i class="ph ph-plus-circle text-lg"></i>
+          <span>Adicionar Filho(a) &amp; Avatar</span>
+        </button>
+      </div>
+
+      <div id="listaSubperfisFilhos" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+    </div>
+
     <div class="bg-white p-6 sm:p-8 rounded-3xl shadow-sm border border-emerald-200 space-y-6">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b pb-4">
         <div>
           <h3 class="text-2xl font-bold font-heading text-slate-800 flex items-center gap-2">
-            <i class="ph ph-wallet text-emerald-600"></i> Painel de Créditos e Saldo
+            <i class="ph ph-wallet text-emerald-600"></i> <span id="tituloPainelCreditosAtivo">Painel de Créditos e Saldo</span>
           </h3>
-          <p class="text-xs text-slate-500 mt-1">Gerencie suas moedas de troca (separadas por categoria, com teto de 10 unidades cada).</p>
+          <p id="subtituloPainelCreditosAtivo" class="text-xs text-slate-500 mt-1">Gerencie as moedas de troca do subperfil selecionado (separadas por categoria, com teto de 10 unidades cada).</p>
         </div>
         <div id="statusBonusPrimeiroCadastro" class="text-xs"></div>
       </div>
@@ -281,8 +300,8 @@
       <!-- AVISO PARA QUEM NÃO ESTÁ LOGADO -->
       <div id="avisoPerfilDeslogado" class="hidden bg-sky-50 border border-sky-200 p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3">
         <div class="text-xs text-sky-900">
-          <strong class="font-bold block text-sm">Faça login para acompanhar seus créditos em tempo real!</strong>
-          Todo morador começa com 0 e ganha <strong>+1 Livro Livre e +1 Jogo Livre de bônus</strong> logo no primeiro item cadastrado.
+          <strong class="font-bold block text-sm">Faça login para criar os subperfis dos seus filhos e acompanhar os créditos!</strong>
+          Cada criança começa com 0 e ganha <strong>+1 Livro Livre e +1 Jogo Livre de bônus</strong> logo no seu primeiro item cadastrado.
         </div>
         <button type="button" onclick="document.getElementById('modalAuth').classList.replace('hidden', 'flex')" class="bg-sky-500 hover:bg-sky-600 text-white font-bold px-4 py-2 rounded-xl text-xs whitespace-nowrap shadow-sm">
           Entrar / Criar Conta
@@ -294,20 +313,20 @@
 
       <div class="bg-emerald-50 border border-emerald-200 p-5 rounded-2xl space-y-3 text-xs text-emerald-950">
         <h4 class="font-bold text-sm text-emerald-900 flex items-center gap-1.5">
-          <i class="ph ph-info text-base text-emerald-600"></i> Como funcionam as Moedas e a Liberação de Créditos?
+          <i class="ph ph-info text-base text-emerald-600"></i> Como funcionam as Moedas de cada Filho(a)?
         </h4>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
           <div class="bg-white p-3 rounded-xl border border-emerald-100">
             <strong class="block text-emerald-800 font-bold mb-1">🎁 Bônus de 1º Cadastro</strong>
-            Comece com 0 e, ao cadastrar seu <strong>1º item</strong> no site, ganhe automaticamente <strong>+1 Livro Livre e +1 Jogo Livre</strong>!
+            Cada filho(a) começa com 0 e, ao ter seu <strong>1º item</strong> cadastrado, ganha automaticamente <strong>+1 Livro Livre e +1 Jogo Livre</strong>!
           </div>
           <div class="bg-white p-3 rounded-xl border border-emerald-100">
             <strong class="block text-emerald-800 font-bold mb-1">🤝 Troca em 2 Etapas</strong>
-            Você marca o item como trocado (Etapa 1) e, quando o recebedor confirma pelo botão exclusivo (Etapa 2), você ganha <strong>+1 crédito</strong>!
+            Você marca o item da criança como trocado (Etapa 1) e, quando o vizinho confirma o recebimento (Etapa 2), o filho(a) ganha <strong>+1 crédito</strong>!
           </div>
           <div class="bg-white p-3 rounded-xl border border-emerald-100">
             <strong class="block text-emerald-800 font-bold mb-1">🛡️ Teto Máximo de 10</strong>
-            Cada morador pode acumular no máximo <strong>10 créditos por categoria</strong> para incentivar a circulação.
+            Cada subperfil de criança pode acumular no máximo <strong>10 créditos por categoria</strong> para incentivar a circulação.
           </div>
         </div>
       </div>
@@ -933,6 +952,20 @@
       <form id="formCadastro" class="space-y-3">
         <input type="hidden" id="editDocId" value="">
 
+        <!-- SELEÇÃO DO SUBPERFIL DO FILHO(A) -->
+        <div class="bg-sky-50/80 border border-sky-200 p-3 rounded-2xl space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-bold text-sky-900">👦👧 De qual filho(a) é este item?</label>
+            <button type="button" onclick="document.getElementById('modalCadastro').classList.replace('flex', 'hidden'); abrirModalFilhoAvatar();" class="text-[11px] font-bold text-sky-600 hover:underline flex items-center gap-0.5">
+              <i class="ph ph-plus-circle"></i> + Novo Filho(a)
+            </button>
+          </div>
+          <select id="selectFilhoCadastro" class="w-full px-3 py-2 border border-sky-200 rounded-xl text-xs sm:text-sm font-bold text-slate-700 bg-white focus:outline-sky-500">
+            <option value="">Família Geral (Sem subperfil específico)</option>
+          </select>
+          <p class="text-[10px] text-sky-700">O avatar da criança aparecerá no anúncio e o crédito da troca irá direto para o saldo dela!</p>
+        </div>
+
         <div>
           <label class="block text-xs font-bold text-slate-600 mb-1">Finalidade do Anúncio</label>
           <select id="selectFinalidade" class="w-full px-3 py-2 border rounded-xl text-sm font-bold text-sky-600 bg-sky-50 focus:outline-sky-500">
@@ -1007,8 +1040,8 @@
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-600 mb-1">Seu Nome / Apelido no Bairro</label>
-          <input type="text" id="inputNome" required placeholder="Ex: Maria (Mãe do Pedro)" class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-sky-500">
+          <label class="block text-xs font-bold text-slate-600 mb-1">Seu Nome / Apelido no Bairro (Responsável)</label>
+          <input type="text" id="inputNome" required placeholder="Ex: Thiago (Pai do Dante e do Tito)" class="w-full px-3 py-2 border rounded-xl text-sm focus:outline-sky-500">
         </div>
 
         <div>
@@ -1041,6 +1074,165 @@
           <span>Publicar no Livros Livres</span>
         </button>
       </form>
+    </div>
+  </div>
+
+  <!-- MODAL CRIAR / EDITAR SUBPERFIL DO FILHO(A) & CRIADOR DE AVATAR -->
+  <div id="modalFilhoAvatar" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[92vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b pb-3">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-sky-100 text-sky-700">Família Tabatinga Lê e Brinca</span>
+          <h3 id="tituloModalFilho" class="text-xl font-bold font-heading text-slate-800 mt-0.5">Criar Subperfil &amp; Avatar</h3>
+        </div>
+        <button type="button" onclick="document.getElementById('modalFilhoAvatar').classList.replace('flex', 'hidden')" class="text-slate-400 hover:text-slate-600"><i class="ph ph-x text-xl"></i></button>
+      </div>
+
+      <form id="formFilhoAvatar" class="space-y-4">
+        <input type="hidden" id="filhoEditId" value="">
+
+        <!-- PREVIEW DO AVATAR AO VIVO -->
+        <div class="bg-gradient-to-br from-sky-50 via-emerald-50 to-amber-50 border border-sky-200 p-4 rounded-2xl flex flex-col items-center gap-2.5">
+          <div id="previewAvatarContainer" class="w-28 h-28 rounded-full shadow-md flex items-center justify-center overflow-hidden border-4 border-white"></div>
+          <div class="flex flex-wrap items-center justify-center gap-2">
+            <button type="button" id="btnModoPersonagem" onclick="alternarModoAvatar('personagem')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-600 text-white shadow-sm transition-all">
+              🎨 Montar Personagem
+            </button>
+            <button type="button" id="btnModoMascote" onclick="alternarModoAvatar('mascote')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 transition-all">
+              🦖 Escolher Mascote
+            </button>
+            <button type="button" onclick="sortearAvatarAleatorio()" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-amber-400 hover:bg-amber-500 text-slate-900 shadow-sm flex items-center gap-1 transition-all">
+              <i class="ph ph-dice-five text-sm"></i> Sortear!
+            </button>
+          </div>
+        </div>
+
+        <!-- DADOS DA CRIANÇA -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nome ou Apelido da Criança</label>
+            <input type="text" id="inputNomeFilho" required placeholder="Ex: Dante / Tito" class="w-full px-3 py-2 border rounded-xl text-sm font-bold text-slate-800 focus:outline-sky-500">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Faixa Etária da Criança</label>
+            <select id="selectEtariaFilho" class="w-full px-3 py-2 border rounded-xl text-sm font-bold text-slate-700 focus:outline-sky-500">
+              <option value="0-3 anos">0-3 anos</option>
+              <option value="4-6 anos">4-6 anos</option>
+              <option value="7-9 anos">7-9 anos</option>
+              <option value="10+ anos">10+ anos</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- OPÇÕES DO MONTADOR DE PERSONAGEM -->
+        <div id="painelOpcoesPersonagem" class="space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs">
+          <div>
+            <label class="block font-bold text-slate-600 mb-1.5">Tom de Pele:</label>
+            <div id="seletorTomPele" class="flex flex-wrap gap-2"></div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block font-bold text-slate-600 mb-1">Estilo de Cabelo:</label>
+              <select id="selectCabeloEstilo" onchange="atualizarConfigAvatarDaUI()" class="w-full px-2.5 py-2 border rounded-xl bg-white font-bold text-slate-700">
+                <option value="curto">Curto Clássico</option>
+                <option value="cacheado">Cacheado / Black Power</option>
+                <option value="longo">Longo Solto</option>
+                <option value="mariaChiquinha">Maria-Chiquinha</option>
+                <option value="topete">Topete Radical</option>
+                <option value="franja">Franjinha</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-600 mb-1">Expressão do Rostinho:</label>
+              <select id="selectExpressaoAvatar" onchange="atualizarConfigAvatarDaUI()" class="w-full px-2.5 py-2 border rounded-xl bg-white font-bold text-slate-700">
+                <option value="sorriso">Sorriso Feliz 😊</option>
+                <option value="rindo">Super Animado 😄</option>
+                <option value="estrelas">Olhos de Estrela 🤩</option>
+                <option value="piscando">Piscadinha 😉</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-600 mb-1.5">Cor do Cabelo:</label>
+            <div id="seletorCorCabelo" class="flex flex-wrap gap-2"></div>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-600 mb-1">Acessório Especial:</label>
+            <select id="selectAcessorioAvatar" onchange="atualizarConfigAvatarDaUI()" class="w-full px-2.5 py-2 border rounded-xl bg-white font-bold text-slate-700">
+              <option value="nenhum">Sem acessório</option>
+              <option value="oculosRedondo">👓 Óculos de Leitor</option>
+              <option value="oculosSol">🕶️ Óculos de Sol</option>
+              <option value="coroa">👑 Coroa Dourada</option>
+              <option value="laco">🎀 Lacinho Colorido</option>
+              <option value="bone">🧢 Boné de Aventura</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- OPÇÕES DE MASCOTES INFANTIS -->
+        <div id="painelOpcoesMascote" class="hidden space-y-3 bg-slate-50 p-4 rounded-2xl border border-slate-200 text-xs">
+          <label class="block font-bold text-slate-600">Escolha o Mascote Favorito da Criança:</label>
+          <div id="seletorIconeMascote" class="grid grid-cols-6 gap-2"></div>
+        </div>
+
+        <!-- COR DE FUNDO DO AVATAR -->
+        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 text-xs">
+          <label class="block font-bold text-slate-600 mb-1.5">Cor de Fundo do Avatar:</label>
+          <div id="seletorCorFundoAvatar" class="flex flex-wrap gap-2"></div>
+        </div>
+
+        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm shadow-md flex items-center justify-center gap-2 transition-all">
+          <i class="ph ph-check-circle text-lg"></i>
+          <span>Salvar Subperfil &amp; Avatar da Criança</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL PASSO A PASSO PARA ATIVAR O LOGIN DO FACEBOOK NO FIREBASE -->
+  <div id="modalGuiaFacebook" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-xs text-slate-600 leading-relaxed">
+      <div class="flex items-center justify-between border-b pb-3">
+        <h3 class="text-lg font-bold font-heading text-slate-800 flex items-center gap-2">
+          <i class="ph ph-facebook-logo text-[#1877F2] text-2xl"></i> Como Ativar o Login com Facebook
+        </h3>
+        <button type="button" onclick="document.getElementById('modalGuiaFacebook').classList.replace('flex', 'hidden')" class="text-slate-400 hover:text-slate-600"><i class="ph ph-x text-xl"></i></button>
+      </div>
+      <div class="bg-amber-50 border border-amber-200 p-3.5 rounded-2xl text-amber-950">
+        <strong>Por que ainda não abriu?</strong> O botão no site já está pronto, mas o Facebook exige que você crie uma chave gratuita no painel da Meta e cole no seu Firebase. Siga os 3 passos abaixo:
+      </div>
+      <div class="space-y-3">
+        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-1.5">
+          <strong class="text-slate-800 block text-sm">Passo 1: Criar o App no Meta for Developers</strong>
+          <p>1. Acesse <a href="https://developers.facebook.com/apps/create/" target="_blank" class="text-sky-600 font-bold underline">developers.facebook.com/apps/create</a> e clique em <strong>Criar Aplicativo</strong>.</p>
+          <p>2. Escolha <strong>"Permitir que as pessoas entrem com a conta do Facebook"</strong> (ou <em>Consumidor</em>) e dê o nome <strong>Livros Livres</strong>.</p>
+          <p>3. No menu lateral <strong>Configurações do App &gt; Básico</strong>, preencha:</p>
+          <ul class="list-disc list-inside space-y-1 text-[11px] bg-white p-2.5 rounded-xl border">
+            <li><strong>Domínios do App:</strong> <code>livroslivres.netlify.app</code></li>
+            <li><strong>URL da Política de Privacidade:</strong> <code>https://livroslivres.netlify.app/?privacidade=1</code></li>
+            <li><strong>URL de Exclusão de Dados:</strong> <code>https://livroslivres.netlify.app/?privacidade=1</code></li>
+          </ul>
+          <p>4. Copie o <strong>ID do Aplicativo</strong> e a <strong>Chave Secreta do Aplicativo</strong> e mude a chavinha no topo de <em>Desenvolvimento</em> para <strong>Ao Vivo (Publicado)</strong>.</p>
+        </div>
+
+        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-1.5">
+          <strong class="text-slate-800 block text-sm">Passo 2: Colar no Firebase Authentication</strong>
+          <p>1. Abra o seu <a href="https://console.firebase.google.com/project/troca-de-livros-b608e/authentication/providers" target="_blank" class="text-sky-600 font-bold underline">Painel do Firebase Authentication</a>.</p>
+          <p>2. Clique em <strong>Adicionar novo provedor &gt; Facebook &gt; Ativar</strong>.</p>
+          <p>3. Cole o <strong>ID do app</strong> e a <strong>Chave secreta do app</strong> e clique em <strong>Salvar</strong>.</p>
+        </div>
+
+        <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-200 space-y-1.5">
+          <strong class="text-slate-800 block text-sm">Passo 3: Colar o Link de Redirecionamento na Meta</strong>
+          <p>No menu lateral da Meta (<strong>Login do Facebook &gt; Configurações</strong>), no campo <strong>URIs de redirecionamento OAuth válidos</strong>, cole exatamente este endereço:</p>
+          <div class="bg-white p-2 rounded-xl border font-mono text-[11px] text-slate-800 select-all">
+            https://troca-de-livros-b608e.firebaseapp.com/__/auth/handler
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1344,7 +1536,9 @@
         if (err.code === 'auth/account-exists-with-different-credential') {
           mostrarAviso("Este e-mail já está vinculado ao login pelo Google ou Senha. Entre usando o Google ou E-mail.", "alerta");
         } else if (err.code === 'auth/operation-not-allowed') {
-          mostrarAviso("O login com Facebook precisa ser ativado no painel do Firebase Authentication.", "alerta");
+          document.getElementById('modalAuth').classList.replace('flex', 'hidden');
+          document.getElementById('modalGuiaFacebook').classList.replace('hidden', 'flex');
+          mostrarAviso("Veja o passo a passo na tela para ativar a chave do Facebook no Firebase!", "alerta");
         } else {
           mostrarAviso("Erro no login do Facebook: " + err.message, "erro");
         }
@@ -1364,7 +1558,7 @@
           try {
             await createUserWithEmailAndPassword(auth, email, senha);
             document.getElementById('modalAuth').classList.replace('flex', 'hidden');
-            mostrarAviso("Conta criada com sucesso! Cadastre seu 1º item para ganhar créditos de bônus.", "alerta");
+            mostrarAviso("Conta criada com sucesso! Crie o subperfil dos seus filhos e cadastre seu 1º item.", "alerta");
           } catch (createErr) { mostrarAviso("Erro ao criar conta: " + createErr.message, "erro"); }
         } else { mostrarAviso("Erro de acesso: " + err.message, "erro"); }
       }
@@ -1372,6 +1566,573 @@
 
     document.getElementById('formCadastro').addEventListener('submit', salvarItem);
     document.getElementById('formIniciarTroca').addEventListener('submit', confirmarEtapa1Dono);
+
+    // =========================================================================
+    // SISTEMA DE SUBPERFIS DOS FILHOS, CRIADOR DE AVATAR E CRÉDITOS INDIVIDUAIS
+    // =========================================================================
+    const TONS_PELE = ['#FFDBAC', '#F1C27D', '#E0AC69', '#C68642', '#8D5524', '#5C3816'];
+    const CORES_CABELO = ['#1E1B18', '#5C3A21', '#D49B35', '#B54425', '#2563EB', '#DB2777'];
+    const CORES_FUNDO_AVATAR = ['#BAE6FD', '#A7F3D0', '#FDE68A', '#FECDD3', '#DDD6FE', '#FED7AA', '#C7D2FE', '#FBCFE8'];
+    const MASCOTES_INFANTIS = ['🦖', '🦄', '🦉', '🦁', '🚀', '🐼', '🦊', '🦋', '🐬', '🐶', '🐱', '🐸', '🐢', '🧜‍♀️', '🦸', '🧚', '🐯', '🐨'];
+
+    let configAvatarTemp = {
+      modo: 'personagem',
+      pele: '#F1C27D',
+      cabeloEstilo: 'curto',
+      cabeloCor: '#1E1B18',
+      expressao: 'sorriso',
+      acessorio: 'nenhum',
+      icone: '🦖',
+      fundo: '#BAE6FD'
+    };
+
+    window.gerarAvatarHTML = function(cfg, classesTamanho = 'w-12 h-12', tamanhoEmoji = 'text-2xl') {
+      const c = cfg || configAvatarTemp;
+      const fundo = c.fundo || '#BAE6FD';
+      if (c.modo === 'mascote') {
+        return `<div class="${classesTamanho} rounded-full flex items-center justify-center select-none shadow-inner flex-shrink-0" style="background-color: ${fundo};"><span class="${tamanhoEmoji}">${c.icone || '🦖'}</span></div>`;
+      }
+
+      const pele = c.pele || '#F1C27D';
+      const cabCor = c.cabeloCor || '#1E1B18';
+      const estilo = c.cabeloEstilo || 'curto';
+      const expr = c.expressao || 'sorriso';
+      const acess = c.acessorio || 'nenhum';
+
+      // Camada de cabelo
+      let cabeloSVG = '';
+      if (estilo === 'curto') {
+        cabeloSVG = `<path d="M24 44 C24 22, 76 22, 76 44 C72 34, 28 34, 24 44 Z" fill="${cabCor}"/>`;
+      } else if (estilo === 'cacheado') {
+        cabeloSVG = `
+          <circle cx="26" cy="36" r="12" fill="${cabCor}"/>
+          <circle cx="38" cy="24" r="13" fill="${cabCor}"/>
+          <circle cx="52" cy="22" r="14" fill="${cabCor}"/>
+          <circle cx="65" cy="26" r="13" fill="${cabCor}"/>
+          <circle cx="74" cy="38" r="12" fill="${cabCor}"/>
+        `;
+      } else if (estilo === 'longo') {
+        cabeloSVG = `
+          <path d="M20 42 C20 18, 80 18, 80 42 L82 78 C72 78, 70 60, 70 48 C65 34, 35 34, 30 48 C30 60, 28 78, 18 78 Z" fill="${cabCor}"/>
+        `;
+      } else if (estilo === 'mariaChiquinha') {
+        cabeloSVG = `
+          <circle cx="16" cy="42" r="10" fill="${cabCor}"/>
+          <circle cx="84" cy="42" r="10" fill="${cabCor}"/>
+          <path d="M24 44 C24 22, 76 22, 76 44 C66 34, 34 34, 24 44 Z" fill="${cabCor}"/>
+        `;
+      } else if (estilo === 'topete') {
+        cabeloSVG = `
+          <path d="M25 44 C25 26, 45 12, 65 18 C60 28, 75 28, 75 44 C65 34, 35 34, 25 44 Z" fill="${cabCor}"/>
+        `;
+      } else if (estilo === 'franja') {
+        cabeloSVG = `
+          <path d="M23 45 C23 20, 77 20, 77 45 L68 42 L62 35 L56 42 L44 42 L38 35 L32 42 Z" fill="${cabCor}"/>
+        `;
+      }
+
+      // Olhos e Expressão
+      let olhosSVG = `<circle cx="39" cy="52" r="3.5" fill="#1E293B"/><circle cx="61" cy="52" r="3.5" fill="#1E293B"/>`;
+      if (expr === 'piscando') {
+        olhosSVG = `<circle cx="39" cy="52" r="3.5" fill="#1E293B"/><path d="M56 52 Q61 47 66 52" stroke="#1E293B" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+      } else if (expr === 'estrelas') {
+        olhosSVG = `<text x="33" y="56" font-size="11">⭐</text><text x="55" y="56" font-size="11">⭐</text>`;
+      }
+
+      let bocaSVG = `<path d="M40 63 Q50 71 60 63" stroke="#1E293B" stroke-width="3" fill="none" stroke-linecap="round"/>`;
+      if (expr === 'rindo') {
+        bocaSVG = `<path d="M39 61 Q50 74 61 61 Z" fill="#E11D48"/>`;
+      }
+
+      // Acessórios
+      let acessSVG = '';
+      if (acess === 'oculosRedondo') {
+        acessSVG = `
+          <circle cx="39" cy="52" r="8" stroke="#0F172A" stroke-width="2.5" fill="none"/>
+          <circle cx="61" cy="52" r="8" stroke="#0F172A" stroke-width="2.5" fill="none"/>
+          <line x1="47" y1="52" x2="53" y2="52" stroke="#0F172A" stroke-width="2.5"/>
+        `;
+      } else if (acess === 'oculosSol') {
+        acessSVG = `
+          <rect x="29" y="46" width="18" height="11" rx="3" fill="#0F172A"/>
+          <rect x="53" y="46" width="18" height="11" rx="3" fill="#0F172A"/>
+          <line x1="47" y1="50" x2="53" y2="50" stroke="#0F172A" stroke-width="3"/>
+        `;
+      } else if (acess === 'coroa') {
+        acessSVG = `<polygon points="32,26 38,13 50,22 62,13 68,26" fill="#FACC15" stroke="#CA8A04" stroke-width="1.5"/>`;
+      } else if (acess === 'laco') {
+        acessSVG = `
+          <path d="M62 26 L74 20 L72 32 Z" fill="#F43F5E"/>
+          <path d="M62 26 L52 18 L50 30 Z" fill="#F43F5E"/>
+          <circle cx="62" cy="26" r="3.5" fill="#BE123C"/>
+        `;
+      } else if (acess === 'bone') {
+        acessSVG = `
+          <path d="M24 38 C24 20, 76 20, 76 38 Z" fill="#0284C7"/>
+          <path d="M45 34 L86 38 C86 41, 65 41, 45 38 Z" fill="#0369A1"/>
+        `;
+      }
+
+      return `
+        <div class="${classesTamanho} rounded-full overflow-hidden flex items-center justify-center shadow-inner flex-shrink-0" style="background-color: ${fundo};">
+          <svg viewBox="0 0 100 100" class="w-full h-full">
+            <!-- Camiseta -->
+            <path d="M22 98 C22 76, 78 76, 78 98 Z" fill="#0EA5E9"/>
+            <!-- Pescoço e Rosto -->
+            <rect x="43" y="68" width="14" height="14" rx="4" fill="${pele}"/>
+            <circle cx="24" cy="54" r="6" fill="${pele}"/>
+            <circle cx="76" cy="54" r="6" fill="${pele}"/>
+            <circle cx="50" cy="52" r="25" fill="${pele}"/>
+            <!-- Bochechas -->
+            <circle cx="33" cy="58" r="4" fill="#F43F5E" opacity="0.25"/>
+            <circle cx="67" cy="58" r="4" fill="#F43F5E" opacity="0.25"/>
+            <!-- Olhos e Sorriso -->
+            ${olhosSVG}
+            ${bocaSVG}
+            <!-- Cabelo -->
+            ${cabeloSVG}
+            <!-- Acessório -->
+            ${acessSVG}
+          </svg>
+        </div>
+      `;
+    };
+
+    function obterFilhosDoUsuario(uid) {
+      if (!uid) return [];
+      // 1. Verifica no documento do usuário
+      const cacheUser = (usuarioAtual && usuarioAtual.uid === uid) ? dadosUsuarioAtual : todosUsuariosCache[uid];
+      if (cacheUser && Array.isArray(cacheUser.filhos) && cacheUser.filhos.length > 0) {
+        return cacheUser.filhos;
+      }
+      // 2. Verifica nos itens publicados pelo usuário (sincronização automática via Firestore 'itens')
+      const itemComFilhos = Object.values(dadosLocaisItens).find(it => it.uidUsuario === uid && Array.isArray(it.perfisFilhosUsuario) && it.perfisFilhosUsuario.length > 0);
+      if (itemComFilhos) {
+        return itemComFilhos.perfisFilhosUsuario;
+      }
+      // 3. Verifica no localStorage local
+      try {
+        const salvoLocal = localStorage.getItem('livrosLivres_filhos_' + uid);
+        if (salvoLocal) {
+          const parsed = JSON.parse(salvoLocal);
+          if (Array.isArray(parsed)) return parsed;
+        }
+      } catch (e) {}
+      return [];
+    }
+
+    function obterFilhoAtivoId(uid) {
+      if (!uid) return '';
+      const filhos = obterFilhosDoUsuario(uid);
+      if (filhos.length === 0) return '';
+      try {
+        const ativoSalvo = localStorage.getItem('livrosLivres_filhoAtivo_' + uid);
+        if (ativoSalvo && filhos.some(f => f.id === ativoSalvo)) return ativoSalvo;
+      } catch (e) {}
+      if (dadosUsuarioAtual.filhoAtivoId && filhos.some(f => f.id === dadosUsuarioAtual.filhoAtivoId)) {
+        return dadosUsuarioAtual.filhoAtivoId;
+      }
+      return filhos[0].id;
+    }
+
+    function obterFilhoAtivo(uid) {
+      const filhos = obterFilhosDoUsuario(uid);
+      if (filhos.length === 0) return null;
+      const idAtivo = obterFilhoAtivoId(uid);
+      return filhos.find(f => f.id === idAtivo) || filhos[0];
+    }
+
+    async function salvarListaFilhosNoBanco(listaFilhos, filhoAtivoId) {
+      if (!usuarioAtual) return;
+      const uid = usuarioAtual.uid;
+      dadosUsuarioAtual.filhos = listaFilhos;
+      dadosUsuarioAtual.filhoAtivoId = filhoAtivoId;
+      try {
+        localStorage.setItem('livrosLivres_filhos_' + uid, JSON.stringify(listaFilhos));
+        localStorage.setItem('livrosLivres_filhoAtivo_' + uid, filhoAtivoId || '');
+      } catch (e) {}
+
+      // Tenta gravar na coleção 'usuarios'
+      try {
+        await setDoc(doc(db, "usuarios", uid), {
+          uid: uid,
+          filhos: listaFilhos,
+          filhoAtivoId: filhoAtivoId || '',
+          atualizadoEm: new Date().toISOString()
+        }, { merge: true });
+      } catch (e) {}
+
+      // Sincroniza também nos anúncios do morador na coleção 'itens' para funcionar em qualquer aparelho
+      try {
+        const meusItensEntries = Object.entries(dadosLocaisItens).filter(([id, it]) => it.uidUsuario === uid);
+        for (const [docId, it] of meusItensEntries) {
+          const filhoVinc = listaFilhos.find(f => f.id === it.filhoId);
+          const payloadUpdate = { perfisFilhosUsuario: listaFilhos };
+          if (filhoVinc) {
+            payloadUpdate.filhoNome = filhoVinc.nome;
+            payloadUpdate.filhoAvatar = filhoVinc.avatar;
+            payloadUpdate.filhoEtaria = filhoVinc.etaria;
+          }
+          await updateDoc(doc(db, "itens", docId), payloadUpdate);
+        }
+      } catch (e) {}
+    }
+
+    // CÁLCULO INDIVIDUAL DE CRÉDITOS POR FILHO (OU GERAL SE AINDA NÃO TIVER SUBPERFIL)
+    function calcularCreditosDoFilho(uid, filhoId) {
+      if (!uid) return { creditosLivro: 0, creditosJogo: 0, bonusPrimeiroCadastro: false };
+      const filhos = obterFilhosDoUsuario(uid);
+      if (!filhoId || filhos.length === 0) {
+        return calcularCreditosDoUsuario(uid);
+      }
+
+      const ehPrimeiroFilho = filhos[0]?.id === filhoId;
+      const filhoObj = filhos.find(f => f.id === filhoId);
+
+      // Itens vinculados a este filho (itens antigos sem filhoId contam para o 1º filho cadastrado)
+      const itensDesteFilho = Object.values(dadosLocaisItens).filter(i => {
+        if (i.uidUsuario !== uid) return false;
+        if (i.filhoId === filhoId) return true;
+        if (!i.filhoId && ehPrimeiroFilho) return true;
+        return false;
+      });
+
+      const temPrimeiroCadastro = itensDesteFilho.length > 0 || Boolean(filhoObj?.bonusPrimeiroCadastro);
+      let calcLivro = temPrimeiroCadastro ? 1 : 0;
+      let calcJogo = temPrimeiroCadastro ? 1 : 0;
+
+      Object.values(dadosLocaisItens).forEach(item => {
+        if (item.status === 'concluido') {
+          const pertenceAoFilhoDoador = item.uidUsuario === uid && (item.filhoId === filhoId || (!item.filhoId && ehPrimeiroFilho));
+          const pertenceAoFilhoRecebedor = item.recebedorUid === uid && (item.recebedorFilhoId === filhoId || (!item.recebedorFilhoId && ehPrimeiroFilho));
+
+          if (pertenceAoFilhoDoador) {
+            if (item.tipo === 'Quebra-Cabeça') calcJogo++;
+            else calcLivro++;
+          } else if (pertenceAoFilhoRecebedor && (item.finalidade || 'Troca') === 'Troca') {
+            if (item.tipo === 'Quebra-Cabeça') calcJogo = Math.max(0, calcJogo - 1);
+            else calcLivro = Math.max(0, calcLivro - 1);
+          }
+        }
+      });
+
+      const finalLivro = Math.min(10, Math.max(calcLivro, filhoObj?.creditosLivro ?? 0));
+      const finalJogo = Math.min(10, Math.max(calcJogo, filhoObj?.creditosJogo ?? 0));
+
+      return {
+        creditosLivro: finalLivro,
+        creditosJogo: finalJogo,
+        bonusPrimeiroCadastro: temPrimeiroCadastro
+      };
+    }
+
+    // FUNÇÕES DE INTERFACE DO CRIADOR DE AVATAR E SUBPERFIL
+    function renderizarSeletoresCoresEMascotes() {
+      const divPele = document.getElementById('seletorTomPele');
+      if (divPele) {
+        divPele.innerHTML = TONS_PELE.map(cor => `
+          <button type="button" onclick="configAvatarTemp.pele='${cor}'; atualizarPreviewAvatar();" class="w-8 h-8 rounded-full border-2 ${configAvatarTemp.pele === cor ? 'border-sky-600 scale-110 ring-2 ring-sky-300' : 'border-white'} shadow-sm transition-all" style="background-color: ${cor};"></button>
+        `).join('');
+      }
+
+      const divCabelo = document.getElementById('seletorCorCabelo');
+      if (divCabelo) {
+        divCabelo.innerHTML = CORES_CABELO.map(cor => `
+          <button type="button" onclick="configAvatarTemp.cabeloCor='${cor}'; atualizarPreviewAvatar();" class="w-8 h-8 rounded-full border-2 ${configAvatarTemp.cabeloCor === cor ? 'border-sky-600 scale-110 ring-2 ring-sky-300' : 'border-white'} shadow-sm transition-all" style="background-color: ${cor};"></button>
+        `).join('');
+      }
+
+      const divFundo = document.getElementById('seletorCorFundoAvatar');
+      if (divFundo) {
+        divFundo.innerHTML = CORES_FUNDO_AVATAR.map(cor => `
+          <button type="button" onclick="configAvatarTemp.fundo='${cor}'; atualizarPreviewAvatar();" class="w-8 h-8 rounded-full border-2 ${configAvatarTemp.fundo === cor ? 'border-slate-800 scale-110 ring-2 ring-slate-300' : 'border-white'} shadow-sm transition-all" style="background-color: ${cor};"></button>
+        `).join('');
+      }
+
+      const divMascotes = document.getElementById('seletorIconeMascote');
+      if (divMascotes) {
+        divMascotes.innerHTML = MASCOTES_INFANTIS.map(ic => `
+          <button type="button" onclick="configAvatarTemp.icone='${ic}'; atualizarPreviewAvatar();" class="h-11 rounded-xl border ${configAvatarTemp.icone === ic ? 'border-sky-500 bg-sky-100 scale-105' : 'border-slate-200 bg-white'} text-2xl flex items-center justify-center hover:bg-sky-50 transition-all">${ic}</button>
+        `).join('');
+      }
+    }
+
+    window.atualizarPreviewAvatar = function() {
+      const container = document.getElementById('previewAvatarContainer');
+      if (container) {
+        container.innerHTML = gerarAvatarHTML(configAvatarTemp, 'w-full h-full', 'text-5xl');
+      }
+      renderizarSeletoresCoresEMascotes();
+    };
+
+    window.alternarModoAvatar = function(modo) {
+      configAvatarTemp.modo = modo;
+      const btnPers = document.getElementById('btnModoPersonagem');
+      const btnMasc = document.getElementById('btnModoMascote');
+      const painelPers = document.getElementById('painelOpcoesPersonagem');
+      const painelMasc = document.getElementById('painelOpcoesMascote');
+
+      if (modo === 'personagem') {
+        btnPers.className = "px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-600 text-white shadow-sm transition-all";
+        btnMasc.className = "px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 transition-all";
+        painelPers.classList.remove('hidden');
+        painelMasc.classList.add('hidden');
+      } else {
+        btnMasc.className = "px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-600 text-white shadow-sm transition-all";
+        btnPers.className = "px-3 py-1.5 rounded-xl text-xs font-bold bg-white text-slate-600 border border-slate-200 transition-all";
+        painelMasc.classList.remove('hidden');
+        painelPers.classList.add('hidden');
+      }
+      atualizarPreviewAvatar();
+    };
+
+    window.atualizarConfigAvatarDaUI = function() {
+      configAvatarTemp.cabeloEstilo = document.getElementById('selectCabeloEstilo').value;
+      configAvatarTemp.expressao = document.getElementById('selectExpressaoAvatar').value;
+      configAvatarTemp.acessorio = document.getElementById('selectAcessorioAvatar').value;
+      atualizarPreviewAvatar();
+    };
+
+    window.sortearAvatarAleatorio = function() {
+      const estilos = ['curto', 'cacheado', 'longo', 'mariaChiquinha', 'topete', 'franja'];
+      const expressoes = ['sorriso', 'rindo', 'estrelas', 'piscando'];
+      const acessorios = ['nenhum', 'oculosRedondo', 'oculosSol', 'coroa', 'laco', 'bone'];
+
+      configAvatarTemp.pele = TONS_PELE[Math.floor(Math.random() * TONS_PELE.length)];
+      configAvatarTemp.cabeloCor = CORES_CABELO[Math.floor(Math.random() * CORES_CABELO.length)];
+      configAvatarTemp.fundo = CORES_FUNDO_AVATAR[Math.floor(Math.random() * CORES_FUNDO_AVATAR.length)];
+      configAvatarTemp.cabeloEstilo = estilos[Math.floor(Math.random() * estilos.length)];
+      configAvatarTemp.expressao = expressoes[Math.floor(Math.random() * expressoes.length)];
+      configAvatarTemp.acessorio = acessorios[Math.floor(Math.random() * acessorios.length)];
+      configAvatarTemp.icone = MASCOTES_INFANTIS[Math.floor(Math.random() * MASCOTES_INFANTIS.length)];
+
+      document.getElementById('selectCabeloEstilo').value = configAvatarTemp.cabeloEstilo;
+      document.getElementById('selectExpressaoAvatar').value = configAvatarTemp.expressao;
+      document.getElementById('selectAcessorioAvatar').value = configAvatarTemp.acessorio;
+      atualizarPreviewAvatar();
+    };
+
+    window.abrirModalFilhoAvatar = function(filhoId = '') {
+      if (!usuarioAtual) {
+        mostrarAviso("Faça login primeiro para criar os subperfis e avatares dos seus filhos!", "info");
+        document.getElementById('modalAuth').classList.replace('hidden', 'flex');
+        return;
+      }
+
+      const filhos = obterFilhosDoUsuario(usuarioAtual.uid);
+      const existente = filhos.find(f => f.id === filhoId);
+
+      document.getElementById('filhoEditId').value = existente ? existente.id : '';
+      document.getElementById('tituloModalFilho').innerText = existente ? `Editar Perfil de ${existente.nome}` : 'Criar Subperfil & Avatar da Criança';
+      document.getElementById('inputNomeFilho').value = existente ? existente.nome : '';
+      document.getElementById('selectEtariaFilho').value = existente ? existente.etaria : '4-6 anos';
+
+      if (existente && existente.avatar) {
+        configAvatarTemp = { ...existente.avatar };
+      } else {
+        sortearAvatarAleatorio();
+      }
+
+      document.getElementById('selectCabeloEstilo').value = configAvatarTemp.cabeloEstilo || 'curto';
+      document.getElementById('selectExpressaoAvatar').value = configAvatarTemp.expressao || 'sorriso';
+      document.getElementById('selectAcessorioAvatar').value = configAvatarTemp.acessorio || 'nenhum';
+      alternarModoAvatar(configAvatarTemp.modo || 'personagem');
+
+      document.getElementById('modalFilhoAvatar').classList.replace('hidden', 'flex');
+    };
+
+    document.getElementById('formFilhoAvatar').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!usuarioAtual) return;
+
+      const editId = document.getElementById('filhoEditId').value;
+      const nomeFilho = document.getElementById('inputNomeFilho').value.trim();
+      const etariaFilho = document.getElementById('selectEtariaFilho').value;
+      if (!nomeFilho) return;
+
+      const filhosAtuais = [...obterFilhosDoUsuario(usuarioAtual.uid)];
+      let idAtivo = obterFilhoAtivoId(usuarioAtual.uid);
+
+      if (editId) {
+        const idx = filhosAtuais.findIndex(f => f.id === editId);
+        if (idx >= 0) {
+          filhosAtuais[idx] = {
+            ...filhosAtuais[idx],
+            nome: nomeFilho,
+            etaria: etariaFilho,
+            avatar: { ...configAvatarTemp }
+          };
+        }
+      } else {
+        const novoId = 'filho_' + Date.now();
+        // Se o pai/mãe já tinha itens publicados e este é o 1º filho criado, já herda o bônus
+        const jaTemItens = Object.values(dadosLocaisItens).some(it => it.uidUsuario === usuarioAtual.uid);
+        const recebeBonusInicial = filhosAtuais.length === 0 && jaTemItens;
+        filhosAtuais.push({
+          id: novoId,
+          nome: nomeFilho,
+          etaria: etariaFilho,
+          avatar: { ...configAvatarTemp },
+          creditosLivro: recebeBonusInicial ? 1 : 0,
+          creditosJogo: recebeBonusInicial ? 1 : 0,
+          bonusPrimeiroCadastro: recebeBonusInicial,
+          criadoEm: new Date().toISOString()
+        });
+        idAtivo = novoId;
+      }
+
+      await salvarListaFilhosNoBanco(filhosAtuais, idAtivo);
+      document.getElementById('modalFilhoAvatar').classList.replace('flex', 'hidden');
+      atualizarAreaAuth();
+      atualizarPainelCreditosEHistorico();
+      renderizarMurais();
+      mostrarAviso(`Subperfil e Avatar de ${nomeFilho} salvos com sucesso!`, "sucesso");
+    });
+
+    window.selecionarFilhoAtivo = async function(filhoId, filtrarMuralIdade = false) {
+      if (!usuarioAtual) return;
+      const filhos = obterFilhosDoUsuario(usuarioAtual.uid);
+      const filho = filhos.find(f => f.id === filhoId);
+      if (!filho) return;
+
+      await salvarListaFilhosNoBanco(filhos, filhoId);
+      atualizarAreaAuth();
+      atualizarPainelCreditosEHistorico();
+
+      if (filtrarMuralIdade) {
+        const selectEtariaMural = document.getElementById('selectFiltroEtariaMural');
+        if (selectEtariaMural) selectEtariaMural.value = filho.etaria;
+        alternarAbaPrincipal('mural');
+        renderizarMurais();
+        mostrarAviso(`Mural filtrado para a idade de ${filho.nome} (${filho.etaria})!`, "info");
+      } else {
+        mostrarAviso(`Subperfil ativo alterado para ${filho.nome}!`, "sucesso");
+      }
+    };
+
+    window.excluirSubperfilFilho = async function(filhoId) {
+      if (!usuarioAtual) return;
+      const filhos = obterFilhosDoUsuario(usuarioAtual.uid);
+      const alvo = filhos.find(f => f.id === filhoId);
+      if (!alvo) return;
+      if (!confirm(`Deseja remover o subperfil de ${alvo.nome}?`)) return;
+
+      const novaLista = filhos.filter(f => f.id !== filhoId);
+      const novoAtivo = novaLista[0]?.id || '';
+      await salvarListaFilhosNoBanco(novaLista, novoAtivo);
+      atualizarAreaAuth();
+      atualizarPainelCreditosEHistorico();
+      mostrarAviso(`Subperfil de ${alvo.nome} removido.`, "info");
+    };
+
+    function renderizarSubperfisFilhos() {
+      const container = document.getElementById('listaSubperfisFilhos');
+      if (!container) return;
+
+      if (!usuarioAtual) {
+        container.innerHTML = `
+          <div class="col-span-full bg-slate-50 border border-dashed border-slate-300 rounded-2xl p-6 text-center text-xs text-slate-500">
+            Faça login para criar os subperfis dos seus filhos (ex: Dante, Tito) com avatares personalizados e saldo individual de créditos!
+          </div>
+        `;
+        return;
+      }
+
+      const filhos = obterFilhosDoUsuario(usuarioAtual.uid);
+      const idAtivo = obterFilhoAtivoId(usuarioAtual.uid);
+
+      if (filhos.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full bg-sky-50/60 border-2 border-dashed border-sky-200 rounded-2xl p-6 text-center space-y-3">
+            <p class="text-sm font-bold text-slate-700">Você ainda não adicionou os subperfis dos seus filhos!</p>
+            <p class="text-xs text-slate-500 max-w-md mx-auto">Pais com 1 ou mais crianças podem criar um perfil para cada filho(a), montar um avatar divertido e acompanhar os créditos individuais de leitura e jogos de cada criança.</p>
+            <button type="button" onclick="abrirModalFilhoAvatar()" class="bg-sky-500 hover:bg-sky-600 text-white font-bold px-5 py-2.5 rounded-xl text-xs shadow-sm inline-flex items-center gap-2">
+              <i class="ph ph-smiley text-base"></i> Criar 1º Subperfil e Avatar
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filhos.map(f => {
+        const ehAtivo = f.id === idAtivo;
+        const creds = calcularCreditosDoFilho(usuarioAtual.uid, f.id);
+        return `
+          <div class="rounded-2xl border-2 ${ehAtivo ? 'border-sky-500 bg-sky-50/40 shadow-sm' : 'border-slate-200 bg-slate-50/60'} p-4 flex flex-col justify-between gap-3 transition-all">
+            <div class="flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3">
+                ${gerarAvatarHTML(f.avatar, 'w-14 h-14 border-2 border-white shadow', 'text-3xl')}
+                <div>
+                  <div class="flex items-center gap-1.5">
+                    <h4 class="font-bold text-slate-800 text-base font-heading">${f.nome}</h4>
+                    ${ehAtivo ? `<span class="bg-sky-600 text-white text-[10px] font-bold uppercase px-2 py-0.5 rounded-full">Perfil Ativo</span>` : ''}
+                  </div>
+                  <p class="text-xs text-slate-500 font-bold">Faixa Etária: ${f.etaria}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-1">
+                <button type="button" onclick="abrirModalFilhoAvatar('${f.id}')" class="p-2 rounded-xl bg-white border border-slate-200 text-slate-600 hover:text-sky-600 text-xs" title="Editar Avatar e Nome">
+                  <i class="ph ph-pencil-simple"></i>
+                </button>
+                <button type="button" onclick="excluirSubperfilFilho('${f.id}')" class="p-2 rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-red-600 text-xs" title="Excluir Subperfil">
+                  <i class="ph ph-trash"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- SALDO INDIVIDUAL DESTE FILHO -->
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div class="bg-emerald-50 border border-emerald-200 px-3 py-2 rounded-xl flex items-center justify-between">
+                <span class="font-bold text-emerald-800">📖 Livro Livre</span>
+                <strong class="text-sm font-black text-emerald-900">${creds.creditosLivro}/10</strong>
+              </div>
+              <div class="bg-amber-50 border border-amber-200 px-3 py-2 rounded-xl flex items-center justify-between">
+                <span class="font-bold text-amber-800">🧩 Jogo Livre</span>
+                <strong class="text-sm font-black text-amber-900">${creds.creditosJogo}/10</strong>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-2 pt-1">
+              ${!ehAtivo ? `
+                <button type="button" onclick="selecionarFilhoAtivo('${f.id}', false)" class="flex-1 bg-sky-500 hover:bg-sky-600 text-white font-bold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1">
+                  <i class="ph ph-check-circle"></i> Usar Perfil de ${f.nome}
+                </button>
+              ` : ''}
+              <button type="button" onclick="selecionarFilhoAtivo('${f.id}', true)" class="flex-1 bg-white hover:bg-slate-100 text-sky-700 border border-sky-200 font-bold py-2 px-3 rounded-xl text-xs flex items-center justify-center gap-1">
+                <i class="ph ph-funnel"></i> Ver Itens para ${f.etaria}
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function popularSelectFilhosNoCadastro(filhoSelecionadoId = '') {
+      const select = document.getElementById('selectFilhoCadastro');
+      if (!select || !usuarioAtual) return;
+      const filhos = obterFilhosDoUsuario(usuarioAtual.uid);
+      const padraoId = filhoSelecionadoId || obterFilhoAtivoId(usuarioAtual.uid);
+
+      select.innerHTML = `<option value="">Família Geral (Sem subperfil específico)</option>`;
+      filhos.forEach(f => {
+        const sel = f.id === padraoId ? 'selected' : '';
+        select.innerHTML += `<option value="${f.id}" data-etaria="${f.etaria}" ${sel}>👦👧 ${f.nome} (${f.etaria})</option>`;
+      });
+
+      select.onchange = () => {
+        const opt = select.options[select.selectedIndex];
+        const etariaSug = opt?.getAttribute('data-etaria');
+        if (etariaSug) {
+          document.getElementById('selectEtaria').value = etariaSug;
+        }
+      };
+
+      // Se já tiver um filho pré-selecionado num novo cadastro, sugere a faixa etária dele
+      if (padraoId && !document.getElementById('editDocId').value) {
+        const fAtivo = filhos.find(f => f.id === padraoId);
+        if (fAtivo?.etaria) document.getElementById('selectEtaria').value = fAtivo.etaria;
+      }
+    }
 
     onAuthStateChanged(auth, async (user) => {
       usuarioAtual = user;
@@ -1465,13 +2226,31 @@
           btnAbaAdmin.classList.add('hidden');
         }
 
-        const creds = calcularCreditosDoUsuario(usuarioAtual.uid);
+        const filhoAtivo = obterFilhoAtivo(usuarioAtual.uid);
+        const creds = filhoAtivo
+          ? calcularCreditosDoFilho(usuarioAtual.uid, filhoAtivo.id)
+          : calcularCreditosDoUsuario(usuarioAtual.uid);
         const cLivro = creds.creditosLivro;
         const cJogo = creds.creditosJogo;
 
+        const badgeFilhoHTML = filhoAtivo
+          ? `
+            <button type="button" onclick="document.getElementById('btnAbaPerfil').click()" class="flex items-center gap-1.5 bg-sky-50 hover:bg-sky-100 border border-sky-200 pl-1 pr-2.5 py-1 rounded-full text-xs font-bold text-sky-900 transition-all" title="Trocar Subperfil de Filho(a)">
+              ${gerarAvatarHTML(filhoAtivo.avatar, 'w-6 h-6', 'text-sm')}
+              <span>${filhoAtivo.nome}</span>
+            </button>
+          `
+          : `
+            <button type="button" onclick="abrirModalFilhoAvatar()" class="hidden lg:flex items-center gap-1 bg-sky-50 hover:bg-sky-100 border border-sky-200 px-2.5 py-1.5 rounded-xl text-[11px] font-bold text-sky-700 transition-all">
+              <i class="ph ph-smiley"></i>
+              <span>+ Filho(a)</span>
+            </button>
+          `;
+
         area.innerHTML = `
           <div class="flex items-center gap-2">
-            <button type="button" onclick="document.getElementById('btnAbaPerfil').click()" class="hidden md:flex items-center gap-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-xl text-xs font-bold text-emerald-900 transition-all" title="Seus Créditos">
+            ${badgeFilhoHTML}
+            <button type="button" onclick="document.getElementById('btnAbaPerfil').click()" class="hidden md:flex items-center gap-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 px-3 py-1.5 rounded-xl text-xs font-bold text-emerald-900 transition-all" title="Créditos do Perfil Ativo">
               <span>📖 ${cLivro}</span>
               <span class="text-emerald-300">|</span>
               <span>🧩 ${cJogo}</span>
@@ -1616,6 +2395,7 @@
       if (usuarioAtual.displayName) {
         document.getElementById('inputNome').value = usuarioAtual.displayName;
       }
+      popularSelectFilhosNoCadastro();
       alternarCamposEspecificos();
       document.getElementById('tituloModalCadastro').innerText = "Cadastrar Item";
       document.getElementById('btnSalvarModal').innerText = "Publicar no Livros Livres";
@@ -1672,7 +2452,7 @@
           muralMeus.innerHTML += criarCardHTML(item, docId, true);
         }
 
-        const textoItem = `${item.titulo || ''} ${item.autor || ''} ${item.editora || ''} ${item.nome || ''}`.toLowerCase();
+        const textoItem = `${item.titulo || ''} ${item.autor || ''} ${item.editora || ''} ${item.nome || ''} ${item.filhoNome || ''}`.toLowerCase();
 
         if (finalidade === 'Doação') {
           if (termoBuscaDoacoes && !textoItem.includes(termoBuscaDoacoes)) return;
@@ -1767,6 +2547,18 @@
         }
       }
 
+      const infoAutorCard = item.filhoNome
+        ? `
+          <div class="flex items-center gap-2 mt-2 bg-sky-50/70 border border-sky-100 p-1.5 rounded-xl">
+            ${gerarAvatarHTML(item.filhoAvatar, 'w-7 h-7', 'text-base')}
+            <div class="leading-tight overflow-hidden">
+              <p class="text-[11px] font-extrabold text-sky-900 truncate">Cantinho de ${item.filhoNome}</p>
+              <p class="text-[10px] text-slate-500 truncate">Resp: ${item.nome}</p>
+            </div>
+          </div>
+        `
+        : `<p class="text-xs text-slate-500 mt-1">Por: <strong class="text-slate-700">${item.nome}</strong></p>`;
+
       return `
         <div onclick="abrirDetalhes('${docId}')" class="bg-white rounded-2xl border ${aguardando ? 'border-amber-300 bg-amber-50/20' : 'border-slate-200'} p-4 shadow-sm hover:shadow-md transition-all flex flex-col justify-between cursor-pointer group">
           <div>
@@ -1776,7 +2568,7 @@
               <span class="text-xs text-slate-400 font-bold">${item.etaria}</span>
             </div>
             <h4 class="font-bold text-slate-800 text-base font-heading leading-snug group-hover:text-sky-600 transition-colors">${item.titulo}</h4>
-            <p class="text-xs text-slate-500 mt-1">Por: <strong class="text-slate-700">${item.nome}</strong></p>
+            ${infoAutorCard}
           </div>
           <div>
             ${acaoRapidaDono}
@@ -1789,16 +2581,29 @@
       `;
     }
 
-    // ATUALIZAR SALDO DE CRÉDITOS, PENDÊNCIAS DE CONFIRMAÇÃO E HISTÓRICO
+    // ATUALIZAR SALDO DE CRÉDITOS, SUBPERFIS DOS FILHOS, PENDÊNCIAS DE CONFIRMAÇÃO E HISTÓRICO
     function atualizarPainelCreditosEHistorico() {
+      renderizarSubperfisFilhos();
+
       const avisoDeslogado = document.getElementById('avisoPerfilDeslogado');
       const statusBonus = document.getElementById('statusBonusPrimeiroCadastro');
       const saldoLivroEl = document.getElementById('saldoCreditoLivro');
       const saldoJogoEl = document.getElementById('saldoCreditoJogo');
       const barraLivroEl = document.getElementById('barraCreditoLivro');
       const barraJogoEl = document.getElementById('barraCreditoJogo');
+      const tituloPainel = document.getElementById('tituloPainelCreditosAtivo');
 
-      const creds = usuarioAtual ? calcularCreditosDoUsuario(usuarioAtual.uid) : { creditosLivro: 0, creditosJogo: 0, bonusPrimeiroCadastro: false };
+      const filhoAtivo = usuarioAtual ? obterFilhoAtivo(usuarioAtual.uid) : null;
+      const creds = usuarioAtual
+        ? (filhoAtivo ? calcularCreditosDoFilho(usuarioAtual.uid, filhoAtivo.id) : calcularCreditosDoUsuario(usuarioAtual.uid))
+        : { creditosLivro: 0, creditosJogo: 0, bonusPrimeiroCadastro: false };
+
+      if (tituloPainel) {
+        tituloPainel.innerText = filhoAtivo
+          ? `Saldo Individual de ${filhoAtivo.nome}`
+          : 'Painel de Créditos e Saldo';
+      }
+
       const cLivro = creds.creditosLivro;
       const cJogo = creds.creditosJogo;
 
@@ -1813,9 +2618,9 @@
       } else {
         avisoDeslogado.classList.add('hidden');
         if (creds.bonusPrimeiroCadastro) {
-          statusBonus.innerHTML = `<span class="bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full flex items-center gap-1"><i class="ph ph-check-circle"></i> Bônus de 1º Cadastro Recebido (+1 Livro / +1 Jogo)</span>`;
+          statusBonus.innerHTML = `<span class="bg-emerald-100 text-emerald-800 font-bold px-3 py-1 rounded-full flex items-center gap-1"><i class="ph ph-check-circle"></i> Bônus de 1º Item Ativo (+1 Livro / +1 Jogo)</span>`;
         } else {
-          statusBonus.innerHTML = `<span class="bg-amber-100 text-amber-900 font-bold px-3 py-1 rounded-full flex items-center gap-1 animate-pulse"><i class="ph ph-gift"></i> Cadastre seu 1º item para ganhar +1 Livro e +1 Jogo!</span>`;
+          statusBonus.innerHTML = `<span class="bg-amber-100 text-amber-900 font-bold px-3 py-1 rounded-full flex items-center gap-1 animate-pulse"><i class="ph ph-gift"></i> Cadastre o 1º item ${filhoAtivo ? `de ${filhoAtivo.nome}` : ''} para ganhar +1 Livro e +1 Jogo!</span>`;
         }
       }
 
@@ -1847,7 +2652,7 @@
             <div>
               <span class="bg-emerald-600 text-white text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full">Etapa 2 • Confirmação do Recebedor</span>
               <h4 class="font-bold text-slate-800 text-base font-heading mt-1">Você recebeu "${item.titulo}" de ${item.nome}?</h4>
-              <p class="text-xs text-slate-600">Clique no botão exclusivo ao lado para confirmar que o item chegou até você e liberar +1 crédito de ${item.tipo === 'Quebra-Cabeça' ? 'Jogo Livre' : 'Livro Livre'} para ${item.nome}!</p>
+              <p class="text-xs text-slate-600">Clique no botão exclusivo ao lado para confirmar que o item chegou até você e liberar +1 crédito de ${item.tipo === 'Quebra-Cabeça' ? 'Jogo Livre' : 'Livro Livre'} para ${item.filhoNome || item.nome}!</p>
             </div>
             <button type="button" onclick="confirmarRecebimentoEtapa2('${docId}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-3 rounded-xl text-xs sm:text-sm shadow-md flex items-center gap-2 whitespace-nowrap transition-all">
               <i class="ph ph-check-fat text-lg"></i>
@@ -1879,7 +2684,7 @@
             <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl flex items-center justify-between gap-2">
               <div>
                 <strong class="text-slate-800 font-bold">${item.titulo}</strong>
-                <span class="text-slate-400"> • ${item.tipo} (${item.finalidade || 'Troca'})</span>
+                <span class="text-slate-400"> • ${item.tipo} (${item.finalidade || 'Troca'}) ${item.filhoNome ? `• 👦👧 ${item.filhoNome}` : ''}</span>
                 <p class="text-[11px] text-slate-500">${foiDoador ? `Entregue para: ${item.recebedorNome || 'Vizinho da comunidade'}` : `Recebido de: ${item.nome}`}</p>
               </div>
               <span class="px-2.5 py-1 rounded-full text-[11px] font-bold ${foiDoador ? 'bg-emerald-100 text-emerald-800' : 'bg-sky-100 text-sky-800'}">
@@ -1994,7 +2799,7 @@
       window.open(`https://wa.me/?text=${msg}`, '_blank');
     };
 
-    // ETAPA 2: BOTÃO EXCLUSIVO DO RECEBEDOR PARA CONFIRMAR E LIBERAR O CRÉDITO DO DONO
+    // ETAPA 2: BOTÃO EXCLUSIVO DO RECEBEDOR PARA CONFIRMAR E LIBERAR O CRÉDITO DO DONO/FILHO
     window.confirmarRecebimentoEtapa2 = async function(docId) {
       if (!usuarioAtual) {
         mostrarAviso("Faça login para confirmar o recebimento deste item!", "alerta");
@@ -2015,12 +2820,15 @@
         return;
       }
 
+      const meuFilhoAtivo = obterFilhoAtivo(usuarioAtual.uid);
+
       try {
-        // 1. Atualiza o status do anúncio para concluído
+        // 1. Atualiza o status do anúncio para concluído (incluindo o subperfil recebedor)
         await updateDoc(doc(db, "itens", docId), {
           status: 'concluido',
           recebedorUid: usuarioAtual.uid,
-          recebedorNome: usuarioAtual.displayName || usuarioAtual.email.split('@')[0],
+          recebedorFilhoId: meuFilhoAtivo ? meuFilhoAtivo.id : '',
+          recebedorNome: meuFilhoAtivo ? `${meuFilhoAtivo.nome} (Resp: ${usuarioAtual.displayName || usuarioAtual.email.split('@')[0]})` : (usuarioAtual.displayName || usuarioAtual.email.split('@')[0]),
           concluidoEm: new Date().toISOString()
         });
 
@@ -2051,24 +2859,12 @@
               atualizadoEm: new Date().toISOString()
             });
           }
-
-          // 3. Atualiza histórico (e desconta 1 crédito se for Troca e o recebedor tiver saldo > 0)
-          const recebedorRef = doc(db, "usuarios", usuarioAtual.uid);
-          const saldoAtualRec = dadosUsuarioAtual[campoCredito] || 0;
-          const ehTroca = (item.finalidade || 'Troca') === 'Troca';
-          const novoSaldoRec = ehTroca ? Math.max(0, saldoAtualRec - 1) : saldoAtualRec;
-
-          await setDoc(recebedorRef, {
-            [campoCredito]: novoSaldoRec,
-            trocasRealizadas: (dadosUsuarioAtual.trocasRealizadas || 0) + 1,
-            atualizadoEm: new Date().toISOString()
-          }, { merge: true });
         } catch (errUser) {
           console.info("Créditos atualizados via coleção itens.");
         }
 
         document.getElementById('modalDetalhes').classList.replace('flex', 'hidden');
-        mostrarAviso(`🎉 Recebimento confirmado! +1 crédito de ${item.tipo === 'Quebra-Cabeça' ? 'Jogo Livre' : 'Livro Livre'} foi liberado para ${item.nome}!`, "sucesso");
+        mostrarAviso(`🎉 Recebimento confirmado! +1 crédito de ${item.tipo === 'Quebra-Cabeça' ? 'Jogo Livre' : 'Livro Livre'} foi liberado para ${item.filhoNome || item.nome}!`, "sucesso");
       } catch (err) {
         mostrarAviso("Erro ao confirmar recebimento: " + err.message, "erro");
       }
@@ -2130,7 +2926,18 @@
         `;
       }
 
-      document.getElementById('detalheNome').innerText = item.nome;
+      const detalheNomeEl = document.getElementById('detalheNome');
+      if (item.filhoNome) {
+        detalheNomeEl.innerHTML = `
+          <span class="inline-flex items-center gap-1.5 bg-sky-50 border border-sky-200 px-2.5 py-1 rounded-full">
+            ${gerarAvatarHTML(item.filhoAvatar, 'w-5 h-5', 'text-xs')}
+            <strong class="text-sky-900">${item.filhoNome}</strong>
+            <span class="text-slate-500 font-normal">(Resp: ${item.nome})</span>
+          </span>
+        `;
+      } else {
+        detalheNomeEl.innerText = item.nome;
+      }
 
       // CAIXA DE CONFIRMAÇÃO DE TROCA (ETAPA 2 - BOTÃO EXCLUSIVO DO RECEBEDOR)
       const boxConfirmacao = document.getElementById('detalheBoxConfirmacaoTroca');
@@ -2141,7 +2948,7 @@
           boxConfirmacao.innerHTML = `
             <div class="bg-emerald-50 border-2 border-emerald-400 p-4 rounded-2xl space-y-2 text-center">
               <span class="bg-emerald-600 text-white text-[10px] font-bold uppercase px-2.5 py-0.5 rounded-full">Etapa 2 • Botão Exclusivo do Recebedor</span>
-              <p class="text-xs text-emerald-950 font-bold">Você recebeu este item de ${item.nome}?</p>
+              <p class="text-xs text-emerald-950 font-bold">Você recebeu este item de ${item.filhoNome || item.nome}?</p>
               <button type="button" onclick="confirmarRecebimentoEtapa2('${docId}')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl text-sm shadow-md flex items-center justify-center gap-2 transition-all">
                 <i class="ph ph-check-fat text-lg"></i>
                 <span>Confirmar que Recebi o Item!</span>
@@ -2171,7 +2978,7 @@
 
         let btnContatoHTML = '';
         if (meio === 'whatsapp') {
-          const msg = encodeURIComponent(`Olá ${item.nome}! Vi o seu anúncio "${item.titulo}" no Livros Livres e gostaria de ${acaoTexto}!`);
+          const msg = encodeURIComponent(`Olá ${item.nome}! Vi o anúncio "${item.titulo}" ${item.filhoNome ? `(do cantinho de ${item.filhoNome}) ` : ''}no Livros Livres e gostaria de ${acaoTexto}!`);
           btnContatoHTML = `<a onclick="registrarInteresse('${docId}')" href="https://wa.me/55${contatoVal.replace(/\D/g, '')}?text=${msg}" target="_blank" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-xl text-sm flex items-center justify-center gap-2 shadow-sm"><i class="ph ph-whatsapp-logo text-xl"></i> Contactar via WhatsApp</a>`;
         } else if (meio === 'email') {
           const assunto = encodeURIComponent(`Interesse no item: ${item.titulo} (Livros Livres)`);
@@ -2246,6 +3053,10 @@
       const arquivosFotos = document.getElementById('inputArquivoFoto').files;
       const btnSalvar = document.getElementById('btnSalvarModal');
 
+      const filhoIdEscolhido = document.getElementById('selectFilhoCadastro')?.value || '';
+      const listaFilhosUsuario = obterFilhosDoUsuario(usuarioAtual.uid);
+      const filhoEscolhidoObj = listaFilhosUsuario.find(f => f.id === filhoIdEscolhido) || null;
+
       btnSalvar.disabled = true;
       btnSalvar.innerText = "A comprimir e enviar fotos...";
 
@@ -2295,6 +3106,11 @@
           whatsapp: meio === 'whatsapp' ? valorContato.replace(/\D/g, '') : '',
           uidUsuario: usuarioAtual.uid,
           emailUsuario: usuarioAtual.email,
+          filhoId: filhoEscolhidoObj ? filhoEscolhidoObj.id : '',
+          filhoNome: filhoEscolhidoObj ? filhoEscolhidoObj.nome : '',
+          filhoEtaria: filhoEscolhidoObj ? filhoEscolhidoObj.etaria : '',
+          filhoAvatar: filhoEscolhidoObj ? filhoEscolhidoObj.avatar : null,
+          perfisFilhosUsuario: listaFilhosUsuario,
           atualizadoEm: new Date().toISOString()
         };
 
@@ -2302,30 +3118,27 @@
           await updateDoc(doc(db, "itens", docIdEdicao), dadosItem);
           mostrarAviso("Anúncio atualizado com sucesso!", "sucesso");
         } else {
-          const jaTinhaItem = Object.values(dadosLocaisItens).some(it => it.uidUsuario === usuarioAtual.uid);
+          const jaTinhaItemParaEsteFilho = filhoEscolhidoObj
+            ? Object.values(dadosLocaisItens).some(it => it.uidUsuario === usuarioAtual.uid && it.filhoId === filhoEscolhidoObj.id)
+            : Object.values(dadosLocaisItens).some(it => it.uidUsuario === usuarioAtual.uid);
+
           dadosItem.status = 'ativo';
           dadosItem.criadoEm = new Date().toISOString();
           await addDoc(itensRef, dadosItem);
 
-          // REGRA DE BÔNUS DE PRIMEIRO CADASTRO (+1 Livro Livre e +1 Jogo Livre)
-          if (!jaTinhaItem && !dadosUsuarioAtual.bonusPrimeiroCadastro) {
-            try {
-              const userRef = doc(db, "usuarios", usuarioAtual.uid);
-              const novoLivro = Math.min(10, (dadosUsuarioAtual.creditosLivro || 0) + 1);
-              const novoJogo = Math.min(10, (dadosUsuarioAtual.creditosJogo || 0) + 1);
-              await setDoc(userRef, {
-                uid: usuarioAtual.uid,
-                nome: dadosItem.nome || usuarioAtual.displayName || usuarioAtual.email,
-                email: usuarioAtual.email,
-                creditosLivro: novoLivro,
-                creditosJogo: novoJogo,
-                bonusPrimeiroCadastro: true,
-                atualizadoEm: new Date().toISOString()
-              }, { merge: true });
-            } catch (errBonus) {}
-            mostrarAviso("🎉 1º Item Cadastrado! Você ganhou +1 crédito de Livro Livre e +1 de Jogo Livre de bônus!", "alerta");
+          // REGRA DE BÔNUS DE PRIMEIRO CADASTRO (+1 Livro Livre e +1 Jogo Livre para o filho ou morador)
+          if (!jaTinhaItemParaEsteFilho) {
+            if (filhoEscolhidoObj) {
+              filhoEscolhidoObj.bonusPrimeiroCadastro = true;
+              filhoEscolhidoObj.creditosLivro = Math.min(10, (filhoEscolhidoObj.creditosLivro || 0) + 1);
+              filhoEscolhidoObj.creditosJogo = Math.min(10, (filhoEscolhidoObj.creditosJogo || 0) + 1);
+              await salvarListaFilhosNoBanco(listaFilhosUsuario, filhoEscolhidoObj.id);
+              mostrarAviso(`🎉 1º Item de ${filhoEscolhidoObj.nome}! Ele(a) ganhou +1 crédito de Livro Livre e +1 de Jogo Livre de bônus!`, "alerta");
+            } else {
+              mostrarAviso("🎉 1º Item Cadastrado! Você ganhou +1 crédito de Livro Livre e +1 de Jogo Livre de bônus!", "alerta");
+            }
           } else {
-            mostrarAviso("Item publicado com sucesso! Você ganhará +1 crédito assim que a troca for confirmada pelo recebedor.", "sucesso");
+            mostrarAviso(`Item publicado com sucesso! ${filhoEscolhidoObj ? filhoEscolhidoObj.nome : 'Você'} ganhará +1 crédito assim que a troca for confirmada pelo recebedor.`, "sucesso");
           }
         }
         document.getElementById('modalCadastro').classList.replace('flex', 'hidden');
@@ -2342,6 +3155,7 @@
       if (!item) return;
 
       document.getElementById('editDocId').value = docId;
+      popularSelectFilhosNoCadastro(item.filhoId || '');
       document.getElementById('selectFinalidade').value = item.finalidade || 'Troca';
       document.getElementById('selectTipo').value = item.tipo || 'Livro';
       alternarCamposEspecificos();
