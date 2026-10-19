@@ -1350,8 +1350,54 @@
       }, 4500);
     }
 
+    // UNIFICAÇÃO AUTOMÁTICA DE CONTAS DO MESMO MORADOR (EX: LOGIN GOOGLE E LOGIN FACEBOOK)
+    function obterUidsUnificados(uidBase) {
+      const uid = uidBase || usuarioAtual?.uid;
+      if (!uid) return [];
+      const conj = new Set([uid]);
+
+      const docBase = (usuarioAtual && usuarioAtual.uid === uid) ? dadosUsuarioAtual : todosUsuariosCache[uid];
+      const nomeBase = (docBase?.nome || (usuarioAtual?.uid === uid ? usuarioAtual?.displayName : '') || '').trim().toLowerCase();
+      const emailBase = (docBase?.email || (usuarioAtual?.uid === uid ? usuarioAtual?.email : '') || '').trim().toLowerCase();
+
+      Object.entries(todosUsuariosCache).forEach(([outroUid, u]) => {
+        const uNome = (u.nome || '').trim().toLowerCase();
+        const uEmail = (u.email || '').trim().toLowerCase();
+        if ((emailBase && uEmail && emailBase === uEmail) || (nomeBase && uNome && nomeBase === uNome)) {
+          conj.add(outroUid);
+        }
+      });
+
+      Object.values(dadosLocaisItens).forEach(it => {
+        if (!it.uidUsuario) return;
+        const itEmail = (it.emailUsuario || '').trim().toLowerCase();
+        const itNome = (it.nome || '').trim().toLowerCase();
+        if (emailBase && itEmail && emailBase === itEmail) {
+          conj.add(it.uidUsuario);
+        } else if (nomeBase && itNome && (itNome === nomeBase || (nomeBase.split(' ')[0].length >= 4 && itNome.startsWith(nomeBase.split(' ')[0])))) {
+          if (emailBase === 'jovemroots@gmail.com' || itEmail === 'jovemroots@gmail.com' || itNome === nomeBase) {
+            conj.add(it.uidUsuario);
+          }
+        }
+      });
+
+      return Array.from(conj);
+    }
+
+    function pertenceAoUsuario(uidItem, uidBase) {
+      if (!uidItem) return false;
+      const uids = obterUidsUnificados(uidBase || usuarioAtual?.uid);
+      return uids.includes(uidItem);
+    }
+
     function ehAdmin() {
-      return Boolean(usuarioAtual && usuarioAtual.email && ADMIN_EMAILS.includes(usuarioAtual.email.toLowerCase()));
+      if (!usuarioAtual) return false;
+      if (usuarioAtual.email && ADMIN_EMAILS.includes(usuarioAtual.email.toLowerCase())) return true;
+      const uids = obterUidsUnificados(usuarioAtual.uid);
+      return uids.some(id => {
+        const em = (todosUsuariosCache[id]?.email || '').toLowerCase();
+        return em && ADMIN_EMAILS.includes(em);
+      });
     }
 
     // COMPRESSÃO DE IMAGEM NO NAVEGADOR ANTES DO UPLOAD
@@ -1476,6 +1522,9 @@
     onSnapshot(usuariosRef, (snap) => {
       todosUsuariosCache = {};
       snap.forEach(d => { todosUsuariosCache[d.id] = d.data(); });
+      atualizarAreaAuth();
+      atualizarPainelCreditosEHistorico();
+      renderizarMurais();
       renderizarUsuariosAdmin();
     }, () => {});
 
@@ -1706,38 +1755,68 @@
 
     function obterFilhosDoUsuario(uid) {
       if (!uid) return [];
-      // 1. Verifica no documento do usuário
-      const cacheUser = (usuarioAtual && usuarioAtual.uid === uid) ? dadosUsuarioAtual : todosUsuariosCache[uid];
-      if (cacheUser && Array.isArray(cacheUser.filhos) && cacheUser.filhos.length > 0) {
-        return cacheUser.filhos;
-      }
-      // 2. Verifica nos itens publicados pelo usuário (sincronização automática via Firestore 'itens')
-      const itemComFilhos = Object.values(dadosLocaisItens).find(it => it.uidUsuario === uid && Array.isArray(it.perfisFilhosUsuario) && it.perfisFilhosUsuario.length > 0);
-      if (itemComFilhos) {
-        return itemComFilhos.perfisFilhosUsuario;
-      }
-      // 3. Verifica no localStorage local
-      try {
-        const salvoLocal = localStorage.getItem('livrosLivres_filhos_' + uid);
-        if (salvoLocal) {
-          const parsed = JSON.parse(salvoLocal);
-          if (Array.isArray(parsed)) return parsed;
+      const uids = obterUidsUnificados(uid);
+      const mapaFilhos = new Map();
+
+      const adicionarLista = (lista) => {
+        if (!Array.isArray(lista)) return;
+        lista.forEach(f => {
+          if (f && f.id) {
+            mapaFilhos.set(f.id, f);
+          }
+        });
+      };
+
+      // 1. Verifica nos documentos unificados do usuário na coleção 'usuarios'
+      uids.forEach(id => {
+        const uDoc = (usuarioAtual && usuarioAtual.uid === id) ? dadosUsuarioAtual : todosUsuariosCache[id];
+        if (uDoc && Array.isArray(uDoc.filhos)) {
+          adicionarLista(uDoc.filhos);
         }
-      } catch (e) {}
-      return [];
+      });
+
+      // 2. Verifica nos itens publicados pelo usuário (sincronização automática via Firestore 'itens')
+      Object.values(dadosLocaisItens).forEach(it => {
+        if (uids.includes(it.uidUsuario) && Array.isArray(it.perfisFilhosUsuario)) {
+          adicionarLista(it.perfisFilhosUsuario);
+        }
+      });
+
+      // 3. Verifica no localStorage local para todos os UIDs unificados
+      uids.forEach(id => {
+        try {
+          const salvoLocal = localStorage.getItem('livrosLivres_filhos_' + id);
+          if (salvoLocal) {
+            adicionarLista(JSON.parse(salvoLocal));
+          }
+        } catch (e) {}
+      });
+
+      return Array.from(mapaFilhos.values());
     }
 
     function obterFilhoAtivoId(uid) {
       if (!uid) return '';
       const filhos = obterFilhosDoUsuario(uid);
       if (filhos.length === 0) return '';
-      try {
-        const ativoSalvo = localStorage.getItem('livrosLivres_filhoAtivo_' + uid);
-        if (ativoSalvo && filhos.some(f => f.id === ativoSalvo)) return ativoSalvo;
-      } catch (e) {}
+      const uids = obterUidsUnificados(uid);
+
+      for (const id of uids) {
+        try {
+          const ativoSalvo = localStorage.getItem('livrosLivres_filhoAtivo_' + id);
+          if (ativoSalvo && filhos.some(f => f.id === ativoSalvo)) return ativoSalvo;
+        } catch (e) {}
+      }
+
       if (dadosUsuarioAtual.filhoAtivoId && filhos.some(f => f.id === dadosUsuarioAtual.filhoAtivoId)) {
         return dadosUsuarioAtual.filhoAtivoId;
       }
+
+      for (const id of uids) {
+        const ativoCache = todosUsuariosCache[id]?.filhoAtivoId;
+        if (ativoCache && filhos.some(f => f.id === ativoCache)) return ativoCache;
+      }
+
       return filhos[0].id;
     }
 
@@ -1750,27 +1829,32 @@
 
     async function salvarListaFilhosNoBanco(listaFilhos, filhoAtivoId) {
       if (!usuarioAtual) return;
-      const uid = usuarioAtual.uid;
+      const uids = obterUidsUnificados(usuarioAtual.uid);
       dadosUsuarioAtual.filhos = listaFilhos;
       dadosUsuarioAtual.filhoAtivoId = filhoAtivoId;
-      try {
-        localStorage.setItem('livrosLivres_filhos_' + uid, JSON.stringify(listaFilhos));
-        localStorage.setItem('livrosLivres_filhoAtivo_' + uid, filhoAtivoId || '');
-      } catch (e) {}
 
-      // Tenta gravar na coleção 'usuarios'
-      try {
-        await setDoc(doc(db, "usuarios", uid), {
-          uid: uid,
-          filhos: listaFilhos,
-          filhoAtivoId: filhoAtivoId || '',
-          atualizadoEm: new Date().toISOString()
-        }, { merge: true });
-      } catch (e) {}
+      uids.forEach(id => {
+        try {
+          localStorage.setItem('livrosLivres_filhos_' + id, JSON.stringify(listaFilhos));
+          localStorage.setItem('livrosLivres_filhoAtivo_' + id, filhoAtivoId || '');
+        } catch (e) {}
+      });
+
+      // Grava na coleção 'usuarios' em todas as contas unificadas do morador (Google + Facebook)
+      for (const id of uids) {
+        try {
+          await setDoc(doc(db, "usuarios", id), {
+            uid: id,
+            filhos: listaFilhos,
+            filhoAtivoId: filhoAtivoId || '',
+            atualizadoEm: new Date().toISOString()
+          }, { merge: true });
+        } catch (e) {}
+      }
 
       // Sincroniza também nos anúncios do morador na coleção 'itens' para funcionar em qualquer aparelho
       try {
-        const meusItensEntries = Object.entries(dadosLocaisItens).filter(([id, it]) => it.uidUsuario === uid);
+        const meusItensEntries = Object.entries(dadosLocaisItens).filter(([id, it]) => uids.includes(it.uidUsuario));
         for (const [docId, it] of meusItensEntries) {
           const filhoVinc = listaFilhos.find(f => f.id === it.filhoId);
           const payloadUpdate = { perfisFilhosUsuario: listaFilhos };
@@ -1797,7 +1881,7 @@
 
       // Itens vinculados a este filho (itens antigos sem filhoId contam para o 1º filho cadastrado)
       const itensDesteFilho = Object.values(dadosLocaisItens).filter(i => {
-        if (i.uidUsuario !== uid) return false;
+        if (!pertenceAoUsuario(i.uidUsuario, uid)) return false;
         if (i.filhoId === filhoId) return true;
         if (!i.filhoId && ehPrimeiroFilho) return true;
         return false;
@@ -1809,8 +1893,8 @@
 
       Object.values(dadosLocaisItens).forEach(item => {
         if (item.status === 'concluido') {
-          const pertenceAoFilhoDoador = item.uidUsuario === uid && (item.filhoId === filhoId || (!item.filhoId && ehPrimeiroFilho));
-          const pertenceAoFilhoRecebedor = item.recebedorUid === uid && (item.recebedorFilhoId === filhoId || (!item.recebedorFilhoId && ehPrimeiroFilho));
+          const pertenceAoFilhoDoador = pertenceAoUsuario(item.uidUsuario, uid) && (item.filhoId === filhoId || (!item.filhoId && ehPrimeiroFilho));
+          const pertenceAoFilhoRecebedor = pertenceAoUsuario(item.recebedorUid, uid) && (item.recebedorFilhoId === filhoId || (!item.recebedorFilhoId && ehPrimeiroFilho));
 
           if (pertenceAoFilhoDoador) {
             if (item.tipo === 'Quebra-Cabeça') calcJogo++;
@@ -1989,7 +2073,7 @@
       } else {
         const novoId = 'filho_' + Date.now();
         // Se o pai/mãe já tinha itens publicados e este é o 1º filho criado, já herda o bônus
-        const jaTemItens = Object.values(dadosLocaisItens).some(it => it.uidUsuario === usuarioAtual.uid);
+        const jaTemItens = Object.values(dadosLocaisItens).some(it => pertenceAoUsuario(it.uidUsuario, usuarioAtual.uid));
         const recebeBonusInicial = filhosAtuais.length === 0 && jaTemItens;
         filhosAtuais.push({
           id: novoId,
@@ -2170,8 +2254,8 @@
           } else {
             const inicial = {
               uid: user.uid,
-              nome: user.displayName || user.email.split('@')[0],
-              email: user.email,
+              nome: user.displayName || (user.email ? user.email.split('@')[0] : 'Morador'),
+              email: user.email || '',
               creditosLivro: 0,
               creditosJogo: 0,
               bonusPrimeiroCadastro: false,
@@ -2208,27 +2292,37 @@
 
     function calcularCreditosDoUsuario(uid) {
       if (!uid) return { creditosLivro: 0, creditosJogo: 0, bonusPrimeiroCadastro: false };
-      const itensDoDono = Object.values(dadosLocaisItens).filter(i => i.uidUsuario === uid);
-      const temPrimeiroCadastro = itensDoDono.length > 0 || Boolean(todosUsuariosCache[uid]?.bonusPrimeiroCadastro) || (usuarioAtual?.uid === uid && Boolean(dadosUsuarioAtual.bonusPrimeiroCadastro));
+      const uids = obterUidsUnificados(uid);
+      const itensDoDono = Object.values(dadosLocaisItens).filter(i => uids.includes(i.uidUsuario));
+      const temPrimeiroCadastro = itensDoDono.length > 0 || uids.some(id => Boolean(todosUsuariosCache[id]?.bonusPrimeiroCadastro)) || (usuarioAtual?.uid === uid && Boolean(dadosUsuarioAtual.bonusPrimeiroCadastro));
 
       let calcLivro = temPrimeiroCadastro ? 1 : 0;
       let calcJogo = temPrimeiroCadastro ? 1 : 0;
 
       Object.values(dadosLocaisItens).forEach(item => {
         if (item.status === 'concluido') {
-          if (item.uidUsuario === uid) {
+          if (uids.includes(item.uidUsuario)) {
             if (item.tipo === 'Quebra-Cabeça') calcJogo++;
             else calcLivro++;
-          } else if (item.recebedorUid === uid && (item.finalidade || 'Troca') === 'Troca') {
+          } else if (uids.includes(item.recebedorUid) && (item.finalidade || 'Troca') === 'Troca') {
             if (item.tipo === 'Quebra-Cabeça') calcJogo = Math.max(0, calcJogo - 1);
             else calcLivro = Math.max(0, calcLivro - 1);
           }
         }
       });
 
-      const cacheU = todosUsuariosCache[uid] || (usuarioAtual?.uid === uid ? dadosUsuarioAtual : null);
-      const finalLivro = Math.min(10, Math.max(calcLivro, cacheU?.creditosLivro ?? 0));
-      const finalJogo = Math.min(10, Math.max(calcJogo, cacheU?.creditosJogo ?? 0));
+      let maxCacheLivro = 0;
+      let maxCacheJogo = 0;
+      uids.forEach(id => {
+        const cU = (usuarioAtual?.uid === id) ? dadosUsuarioAtual : todosUsuariosCache[id];
+        if (cU) {
+          maxCacheLivro = Math.max(maxCacheLivro, cU.creditosLivro ?? 0);
+          maxCacheJogo = Math.max(maxCacheJogo, cU.creditosJogo ?? 0);
+        }
+      });
+
+      const finalLivro = Math.min(10, Math.max(calcLivro, maxCacheLivro));
+      const finalJogo = Math.min(10, Math.max(calcJogo, maxCacheJogo));
       return {
         creditosLivro: finalLivro,
         creditosJogo: finalJogo,
@@ -2468,7 +2562,7 @@
         }
 
         const finalidade = item.finalidade || 'Troca';
-        const ehDono = usuarioAtual && usuarioAtual.uid === item.uidUsuario;
+        const ehDono = usuarioAtual && pertenceAoUsuario(item.uidUsuario, usuarioAtual.uid);
 
         if (ehDono) {
           contadorMeus++;
@@ -2662,10 +2756,10 @@
 
       const pendentesParaMim = Object.entries(dadosLocaisItens).filter(([id, item]) => {
         if (item.status !== 'aguardando_confirmacao') return false;
-        if (item.uidUsuario === usuarioAtual.uid) return false;
-        if (item.recebedorUid === usuarioAtual.uid) return true;
+        if (pertenceAoUsuario(item.uidUsuario, usuarioAtual.uid)) return false;
+        if (pertenceAoUsuario(item.recebedorUid, usuarioAtual.uid)) return true;
         const interessados = item.interessados || [];
-        return item.recebedorUid === 'qualquer' && interessados.some(i => i.uid === usuarioAtual.uid);
+        return item.recebedorUid === 'qualquer' && interessados.some(i => pertenceAoUsuario(i.uid, usuarioAtual.uid));
       });
 
       if (pendentesParaMim.length > 0) {
@@ -2694,7 +2788,7 @@
 
       // Histórico de trocas concluídas do usuário
       const meuHistorico = Object.entries(dadosLocaisItens).filter(([id, item]) => {
-        return item.status === 'concluido' && (item.uidUsuario === usuarioAtual.uid || item.recebedorUid === usuarioAtual.uid);
+        return item.status === 'concluido' && (pertenceAoUsuario(item.uidUsuario, usuarioAtual.uid) || pertenceAoUsuario(item.recebedorUid, usuarioAtual.uid));
       });
 
       const listaHistEl = document.getElementById('listaHistoricoUsuario');
@@ -2702,7 +2796,7 @@
         listaHistEl.innerHTML = `<p class="text-xs text-slate-400">Nenhuma troca ou doação concluída ainda.</p>`;
       } else {
         listaHistEl.innerHTML = meuHistorico.map(([id, item]) => {
-          const foiDoador = item.uidUsuario === usuarioAtual.uid;
+          const foiDoador = pertenceAoUsuario(item.uidUsuario, usuarioAtual.uid);
           return `
             <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl flex items-center justify-between gap-2">
               <div>
@@ -2738,13 +2832,13 @@
         return;
       }
       const item = dadosLocaisItens[docId];
-      if (!item || item.uidUsuario === usuarioAtual.uid) return;
+      if (!item || pertenceAoUsuario(item.uidUsuario, usuarioAtual.uid)) return;
       try {
         await updateDoc(doc(db, "itens", docId), {
           interessados: arrayUnion({
             uid: usuarioAtual.uid,
-            nome: usuarioAtual.displayName || usuarioAtual.email.split('@')[0],
-            email: usuarioAtual.email
+            nome: usuarioAtual.displayName || (usuarioAtual.email ? usuarioAtual.email.split('@')[0] : 'Morador'),
+            email: usuarioAtual.email || ''
           })
         });
       } catch (e) { /* silencioso */ }
@@ -2763,14 +2857,14 @@
       const jaAdicionados = new Set();
 
       interessados.forEach(intUser => {
-        if (intUser.uid && intUser.uid !== usuarioAtual.uid && !jaAdicionados.has(intUser.uid)) {
+        if (intUser.uid && !pertenceAoUsuario(intUser.uid, usuarioAtual.uid) && !jaAdicionados.has(intUser.uid)) {
           jaAdicionados.add(intUser.uid);
           select.innerHTML += `<option value="${intUser.uid}" data-nome="${intUser.nome}">⭐ ${intUser.nome} (${intUser.email || 'Interessado neste anúncio'})</option>`;
         }
       });
 
       Object.values(todosUsuariosCache).forEach(u => {
-        if (u.uid && u.uid !== usuarioAtual.uid && !jaAdicionados.has(u.uid)) {
+        if (u.uid && !pertenceAoUsuario(u.uid, usuarioAtual.uid) && !jaAdicionados.has(u.uid)) {
           jaAdicionados.add(u.uid);
           select.innerHTML += `<option value="${u.uid}" data-nome="${u.nome || u.email}">${u.nome || u.email}</option>`;
         }
@@ -2833,17 +2927,18 @@
       const item = dadosLocaisItens[docId];
       if (!item) return;
 
-      if (item.uidUsuario === usuarioAtual.uid) {
+      if (pertenceAoUsuario(item.uidUsuario, usuarioAtual.uid)) {
         mostrarAviso("Apenas o morador que recebeu o item pode confirmar o recebimento!", "erro");
         return;
       }
 
-      if (item.recebedorUid && item.recebedorUid !== 'qualquer' && item.recebedorUid !== usuarioAtual.uid) {
+      if (item.recebedorUid && item.recebedorUid !== 'qualquer' && !pertenceAoUsuario(item.recebedorUid, usuarioAtual.uid)) {
         mostrarAviso(`Este item está reservado para confirmação de ${item.recebedorNome}.`, "erro");
         return;
       }
 
       const meuFilhoAtivo = obterFilhoAtivo(usuarioAtual.uid);
+      const nomeResp = usuarioAtual.displayName || (usuarioAtual.email ? usuarioAtual.email.split('@')[0] : 'Morador');
 
       try {
         // 1. Atualiza o status do anúncio para concluído (incluindo o subperfil recebedor)
@@ -2851,7 +2946,7 @@
           status: 'concluido',
           recebedorUid: usuarioAtual.uid,
           recebedorFilhoId: meuFilhoAtivo ? meuFilhoAtivo.id : '',
-          recebedorNome: meuFilhoAtivo ? `${meuFilhoAtivo.nome} (Resp: ${usuarioAtual.displayName || usuarioAtual.email.split('@')[0]})` : (usuarioAtual.displayName || usuarioAtual.email.split('@')[0]),
+          recebedorNome: meuFilhoAtivo ? `${meuFilhoAtivo.nome} (Resp: ${nomeResp})` : nomeResp,
           concluidoEm: new Date().toISOString()
         });
 
@@ -2900,7 +2995,7 @@
       const fotos = item.fotosUrls && item.fotosUrls.length > 0 ? item.fotosUrls : (item.fotoUrl ? [item.fotoUrl] : []);
       const finalidade = item.finalidade || 'Troca';
       const aguardando = item.status === 'aguardando_confirmacao';
-      const ehDono = usuarioAtual && usuarioAtual.uid === item.uidUsuario;
+      const ehDono = usuarioAtual && pertenceAoUsuario(item.uidUsuario, usuarioAtual.uid);
       
       const badge = document.getElementById('detalheTipoBadge');
       if (aguardando) {
@@ -2966,7 +3061,7 @@
       const boxConfirmacao = document.getElementById('detalheBoxConfirmacaoTroca');
       if (aguardando) {
         boxConfirmacao.classList.remove('hidden');
-        const podeConfirmar = !ehDono && (!item.recebedorUid || item.recebedorUid === 'qualquer' || (usuarioAtual && item.recebedorUid === usuarioAtual.uid));
+        const podeConfirmar = !ehDono && (!item.recebedorUid || item.recebedorUid === 'qualquer' || (usuarioAtual && pertenceAoUsuario(item.recebedorUid, usuarioAtual.uid)));
         if (podeConfirmar) {
           boxConfirmacao.innerHTML = `
             <div class="bg-emerald-50 border-2 border-emerald-400 p-4 rounded-2xl space-y-2 text-center">
@@ -3127,8 +3222,8 @@
           meioContato: meio,
           contatoValor: valorContato,
           whatsapp: meio === 'whatsapp' ? valorContato.replace(/\D/g, '') : '',
-          uidUsuario: usuarioAtual.uid,
-          emailUsuario: usuarioAtual.email,
+          uidUsuario: docIdEdicao && dadosLocaisItens[docIdEdicao]?.uidUsuario ? dadosLocaisItens[docIdEdicao].uidUsuario : usuarioAtual.uid,
+          emailUsuario: usuarioAtual.email || (docIdEdicao && dadosLocaisItens[docIdEdicao]?.emailUsuario) || '',
           filhoId: filhoEscolhidoObj ? filhoEscolhidoObj.id : '',
           filhoNome: filhoEscolhidoObj ? filhoEscolhidoObj.nome : '',
           filhoEtaria: filhoEscolhidoObj ? filhoEscolhidoObj.etaria : '',
@@ -3142,8 +3237,8 @@
           mostrarAviso("Anúncio atualizado com sucesso!", "sucesso");
         } else {
           const jaTinhaItemParaEsteFilho = filhoEscolhidoObj
-            ? Object.values(dadosLocaisItens).some(it => it.uidUsuario === usuarioAtual.uid && it.filhoId === filhoEscolhidoObj.id)
-            : Object.values(dadosLocaisItens).some(it => it.uidUsuario === usuarioAtual.uid);
+            ? Object.values(dadosLocaisItens).some(it => pertenceAoUsuario(it.uidUsuario, usuarioAtual.uid) && it.filhoId === filhoEscolhidoObj.id)
+            : Object.values(dadosLocaisItens).some(it => pertenceAoUsuario(it.uidUsuario, usuarioAtual.uid));
 
           dadosItem.status = 'ativo';
           dadosItem.criadoEm = new Date().toISOString();
@@ -3311,12 +3406,12 @@
     };
 
     function renderizarUsuariosAdmin() {
-      // Unifica usuários da coleção 'usuarios' com autores de anúncios da coleção 'itens'
-      const mapaUsuarios = { ...todosUsuariosCache };
+      // Unifica usuários da coleção 'usuarios' com autores de anúncios da coleção 'itens', agrupando contas Google/Facebook do mesmo morador
+      const mapaBruto = { ...todosUsuariosCache };
       Object.values(dadosLocaisItens).forEach(item => {
-        if (item.uidUsuario && !mapaUsuarios[item.uidUsuario]) {
+        if (item.uidUsuario && !mapaBruto[item.uidUsuario]) {
           const calc = calcularCreditosDoUsuario(item.uidUsuario);
-          mapaUsuarios[item.uidUsuario] = {
+          mapaBruto[item.uidUsuario] = {
             uid: item.uidUsuario,
             nome: item.nome || 'Morador',
             email: item.emailUsuario || '',
@@ -3325,7 +3420,33 @@
         }
       });
 
-      const listaUsuarios = Object.values(mapaUsuarios);
+      const uidsProcessados = new Set();
+      const listaUsuarios = [];
+
+      Object.values(mapaBruto).forEach(u => {
+        if (!u.uid || uidsProcessados.has(u.uid)) return;
+        const grupoUids = obterUidsUnificados(u.uid);
+        grupoUids.forEach(id => uidsProcessados.add(id));
+
+        const calc = calcularCreditosDoUsuario(u.uid);
+        let melhorNome = u.nome || 'Morador';
+        let melhorEmail = u.email || '';
+        grupoUids.forEach(id => {
+          const cand = mapaBruto[id];
+          if (cand?.nome && cand.nome.length > melhorNome.length) melhorNome = cand.nome;
+          if (cand?.email && !melhorEmail) melhorEmail = cand.email;
+        });
+
+        listaUsuarios.push({
+          uid: u.uid,
+          uidsGrupo: grupoUids,
+          nome: melhorNome,
+          email: melhorEmail,
+          creditosLivro: calc.creditosLivro,
+          creditosJogo: calc.creditosJogo
+        });
+      });
+
       const statUsuariosEl = document.getElementById('adminStatUsuarios');
       if (statUsuariosEl) statUsuariosEl.innerText = listaUsuarios.length;
 
@@ -3339,17 +3460,19 @@
       }
 
       container.innerHTML = listaUsuarios.map(u => {
-        const qtdAnuncios = Object.values(dadosLocaisItens).filter(i => i.uidUsuario === u.uid).length;
+        const qtdAnuncios = Object.values(dadosLocaisItens).filter(i => u.uidsGrupo.includes(i.uidUsuario)).length;
+        const filhosMorador = obterFilhosDoUsuario(u.uid);
         const cLivro = u.creditosLivro ?? 0;
         const cJogo = u.creditosJogo ?? 0;
         return `
           <div class="bg-slate-50 border border-slate-200 p-3.5 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
             <div>
-              <div class="flex items-center gap-2">
+              <div class="flex flex-wrap items-center gap-2">
                 <strong class="text-slate-800 text-sm">${u.nome || 'Morador'}</strong>
                 <span class="bg-purple-100 text-purple-800 text-[10px] font-bold px-2 py-0.5 rounded-full">${qtdAnuncios} ${qtdAnuncios === 1 ? 'item anunciado' : 'itens anunciados'}</span>
+                ${filhosMorador.length > 0 ? `<span class="bg-sky-100 text-sky-800 text-[10px] font-bold px-2 py-0.5 rounded-full">👦👧 ${filhosMorador.map(f => f.nome).join(', ')}</span>` : ''}
               </div>
-              <p class="text-slate-500">${u.email || 'Sem e-mail visível'}</p>
+              <p class="text-slate-500">${u.email || 'Login via Rede Social'}</p>
             </div>
             <div class="flex flex-wrap items-center gap-3">
               <div class="flex items-center gap-1.5 bg-emerald-50 border border-emerald-200 px-2.5 py-1.5 rounded-xl">
