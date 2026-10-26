@@ -85,30 +85,47 @@
     </div>
   </header>
 
-  <!-- BANNER DO EVENTO MENSAL -->
-  <section class="bg-gradient-to-r from-sky-500 via-indigo-500 to-emerald-500 text-white py-6 px-4 shadow-inner">
-    <div class="max-w-6xl mx-auto rounded-2xl bg-white/10 backdrop-blur-md p-4 border border-white/20 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="space-y-1 text-center sm:text-left">
-        <span id="bannerBadge" class="inline-block bg-amber-400 text-slate-900 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-          Encontro Mensal
-        </span>
-        <h2 id="bannerTitulo" class="text-xl sm:text-2xl font-bold font-heading">Tabatinga Lê &amp; Brinca</h2>
-        <p id="bannerDescricao" class="text-xs text-slate-100">1 Sábado por mês, das 9h às 12h • Rodas de leitura, quebra-cabeças, oficinas e frutas da época!</p>
+  <!-- BANNER DO EVENTO MENSAL (CLICÁVEL) -->
+  <section id="bannerEventoPrincipal" onclick="abrirModalDetalhesEvento()" class="bg-gradient-to-r from-sky-500 via-indigo-500 to-emerald-500 text-white py-6 px-4 shadow-inner cursor-pointer group transition-all hover:brightness-105">
+    <div class="max-w-6xl mx-auto rounded-2xl bg-white/10 backdrop-blur-md p-4 sm:p-5 border border-white/20 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="space-y-1 text-center sm:text-left flex-1">
+        <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+          <span id="bannerBadge" class="inline-block bg-amber-400 text-slate-900 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
+            Próximo Encontro • Sábado 14/Nov
+          </span>
+          <span class="inline-flex items-center gap-1 bg-white/20 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full">
+            <i class="ph ph-cursor-click"></i> Clique para ver a programação completa &amp; confirmar presença
+          </span>
+        </div>
+        <h2 id="bannerTitulo" class="text-xl sm:text-2xl font-bold font-heading group-hover:text-amber-200 transition-colors">
+          Tabatinga Lê &amp; Brinca • Missão Detetive: Os Busca-Pistas!
+        </h2>
+        <p id="bannerDescricao" class="text-xs sm:text-sm text-slate-100 max-w-2xl">
+          Sábado, 14 de Novembro, das 9h às 12h • Leitura completa de "Os Busca-Pistas: O Caso do Castelo Assombrado", mesa de trocas, estações de desenho e partilha de frutas!
+        </p>
       </div>
 
-      <div class="flex flex-wrap items-center justify-center gap-2 text-xs">
-        <div class="flex items-center gap-1 bg-black/20 px-3 py-1.5 rounded-lg">
-          <i class="ph ph-calendar-blank text-amber-300"></i>
-          <span id="bannerData">Sábado Mensal (9h - 12h)</span>
+      <div class="flex flex-col sm:flex-row items-center gap-3 flex-shrink-0">
+        <div class="flex flex-wrap items-center justify-center gap-2 text-xs">
+          <div class="flex items-center gap-1.5 bg-black/25 px-3 py-2 rounded-xl backdrop-blur-sm border border-white/10">
+            <i class="ph ph-calendar-blank text-amber-300 text-sm"></i>
+            <span id="bannerData" class="font-bold">Sáb, 14/11 (9h - 12h)</span>
+          </div>
+          <div class="flex items-center gap-1.5 bg-black/25 px-3 py-2 rounded-xl backdrop-blur-sm border border-white/10">
+            <i class="ph ph-map-pin text-amber-300 text-sm"></i>
+            <span id="bannerLocal" class="font-bold">Centro Comunitário Tabatinga</span>
+          </div>
+          <!-- CONTADOR DE PARTICIPANTES CONFIRMADOS EM TEMPO REAL -->
+          <div id="badgeContadorPresencaBanner" class="flex items-center gap-1.5 bg-amber-400 text-slate-900 font-extrabold px-3 py-2 rounded-xl shadow-sm">
+            <i class="ph ph-users text-sm"></i>
+            <span id="txtContadorPresencaBanner">0 participantes confirmados</span>
+          </div>
         </div>
-        <div class="flex items-center gap-1 bg-black/20 px-3 py-1.5 rounded-lg">
-          <i class="ph ph-map-pin text-amber-300"></i>
-          <span id="bannerLocal">Bairro Tabatinga</span>
-        </div>
-        <div id="boxContadorImpactoBanner" class="hidden sm:flex items-center gap-1 bg-emerald-900/40 border border-emerald-300/30 px-3 py-1.5 rounded-lg text-emerald-100 font-bold">
-          <i class="ph ph-sparkle text-amber-300"></i>
-          <span id="bannerImpactoTexto">0 trocas e doações realizadas</span>
-        </div>
+
+        <button type="button" class="w-full sm:w-auto bg-white text-indigo-900 hover:bg-amber-300 hover:text-slate-900 font-extrabold px-4 py-2.5 rounded-xl text-xs shadow-md flex items-center justify-center gap-1.5 transition-all">
+          <i class="ph ph-check-circle text-base text-emerald-600"></i>
+          <span>Confirmar Presença</span>
+        </button>
       </div>
     </div>
   </section>
@@ -734,7 +751,11 @@
       </div>
 
       <!-- MÉTRICAS DE IMPACTO E CADASTROS -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3">
+        <div class="bg-amber-50 border border-amber-300 p-4 rounded-2xl">
+          <p class="text-[10px] font-bold text-amber-800 uppercase">Presenças Confirmadas</p>
+          <p id="adminStatPresencas" class="text-xl font-black text-amber-950 mt-1">0</p>
+        </div>
         <div class="bg-purple-50 border border-purple-200 p-4 rounded-2xl">
           <p class="text-[10px] font-bold text-purple-700 uppercase">Moradores Cadastrados</p>
           <p id="adminStatUsuarios" class="text-2xl font-black text-purple-950 mt-1">0</p>
@@ -798,6 +819,16 @@
           </div>
         </div>
         <div id="listaAdminUsuarios" class="space-y-2"></div>
+      </div>
+
+      <!-- LISTA DE FAMÍLIAS COM PRESENÇA CONFIRMADA -->
+      <div class="space-y-3 pt-4 border-t">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <h4 class="font-bold text-slate-800 text-lg font-heading flex items-center gap-2">
+            <i class="ph ph-calendar-check text-amber-600"></i> Famílias com Presença Confirmada (Encontro 14/Nov)
+          </h4>
+        </div>
+        <div id="listaAdminPresencas" class="space-y-2"></div>
       </div>
 
       <!-- LISTA DE VOLUNTÁRIOS INSCRITOS -->
@@ -1242,6 +1273,223 @@
     </div>
   </div>
 
+  <!-- MODAL DETALHADO DO EVENTO + CONFIRMAÇÃO DE PRESENÇA + REGRAS DE BOA CONDUTA -->
+  <div id="modalDetalhesEvento" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm hidden items-center justify-center p-3 sm:p-4 z-50">
+    <div class="bg-white rounded-3xl max-w-3xl w-full p-5 sm:p-7 shadow-2xl space-y-6 max-h-[92vh] overflow-y-auto border border-slate-100">
+      
+      <!-- CABEÇALHO MODAL -->
+      <div class="flex items-start justify-between border-b pb-4 gap-3">
+        <div class="space-y-1">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="bg-amber-100 text-amber-900 font-extrabold text-[11px] px-3 py-0.5 rounded-full uppercase tracking-wider">
+              1º Encontro Oficial • Sábado 14/Nov
+            </span>
+            <span class="bg-emerald-100 text-emerald-800 font-bold text-[11px] px-2.5 py-0.5 rounded-full flex items-center gap-1">
+              <i class="ph ph-sparkle"></i> Gratuito &bull; Para Toda a Família
+            </span>
+          </div>
+          <h3 class="text-xl sm:text-2xl font-black font-heading text-slate-800">
+            Tabatinga Lê &amp; Brinca: Missão Detetive! 🔍📖
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-500 font-medium">
+            Sábado, 14 de Novembro de 2026 &bull; das 9h às 12h &bull; Centro Comunitário da Tabatinga
+          </p>
+        </div>
+        <button type="button" onclick="fecharModalDetalhesEvento()" class="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center flex-shrink-0 transition-colors">
+          <i class="ph ph-x text-lg"></i>
+        </button>
+      </div>
+
+      <!-- CARD DE CONFIRMAÇÃO DE PRESENÇA COM CONTADOR EM TEMPO REAL -->
+      <div class="bg-gradient-to-br from-indigo-50 via-sky-50 to-emerald-50 border-2 border-sky-300 rounded-3xl p-5 sm:p-6 shadow-sm space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-sky-500 text-white flex items-center justify-center text-2xl shadow-sm flex-shrink-0">
+              <i class="ph ph-ticket"></i>
+            </div>
+            <div>
+              <h4 class="font-extrabold text-slate-900 text-base font-heading">Confirmação de Presença da Família</h4>
+              <p class="text-xs text-slate-600">Ajude nossa equipe a dimensionar os materiais, mesas e o lanche comunitário!</p>
+            </div>
+          </div>
+          
+          <!-- PLACAR DE CONFIRMADOS -->
+          <div class="bg-white border border-sky-200 px-4 py-2 rounded-2xl text-center shadow-sm flex-shrink-0">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Total Confirmado</span>
+            <span id="placarParticipantesModal" class="text-2xl font-black text-sky-700">0</span>
+            <span class="text-[10px] font-bold text-slate-500 block">moradores &amp; crianças</span>
+          </div>
+        </div>
+
+        <!-- FORMULÁRIO RÁPIDO DE CONFIRMAÇÃO DE PRESENÇA -->
+        <form id="formConfirmarPresencaEvento" class="bg-white/80 backdrop-blur-sm p-4 rounded-2xl border border-sky-100 space-y-3">
+          <div id="statusMinhaPresencaBox" class="hidden bg-emerald-50 border border-emerald-300 p-3 rounded-xl flex items-center justify-between gap-2">
+            <div class="text-xs text-emerald-900">
+              <strong class="font-bold flex items-center gap-1.5"><i class="ph ph-check-circle text-base text-emerald-600"></i> Sua presença está confirmada!</strong>
+              <span id="txtDetalheMinhaPresenca" class="text-[11px] text-emerald-700">Você confirmou 1 responsável e 1 criança.</span>
+            </div>
+            <button type="button" onclick="cancelarMinhaPresencaEvento()" class="text-xs text-red-600 hover:text-red-800 font-bold underline px-2 py-1">
+              Cancelar
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Nome do Responsável *</label>
+              <input type="text" id="inputNomeRespPresenca" required placeholder="Ex: Thiago Siqueira" class="w-full px-3 py-2 border rounded-xl bg-white focus:outline-sky-500 text-xs">
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Qtd. de Adultos/Pais *</label>
+              <select id="selectAdultosPresenca" class="w-full px-3 py-2 border rounded-xl bg-white focus:outline-sky-500 text-xs">
+                <option value="1">1 adulto</option>
+                <option value="2">2 adultos</option>
+                <option value="3">3 adultos</option>
+                <option value="4">4 ou mais</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Qtd. de Crianças/Filhos *</label>
+              <select id="selectFilhosPresenca" class="w-full px-3 py-2 border rounded-xl bg-white focus:outline-sky-500 text-xs">
+                <option value="1">1 criança</option>
+                <option value="2">2 crianças</option>
+                <option value="3">3 crianças</option>
+                <option value="4">4 crianças</option>
+                <option value="5">5 ou mais</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-2 pt-1">
+            <p class="text-[11px] text-slate-500">
+              <i class="ph ph-info"></i> Não é cobrado nenhum valor. A confirmação serve para organizar o espaço com carinho!
+            </p>
+            <button type="submit" id="btnSalvarPresencaEvento" class="w-full sm:w-auto bg-sky-600 hover:bg-sky-700 text-white font-extrabold px-5 py-2.5 rounded-xl text-xs shadow-md flex items-center justify-center gap-1.5 transition-all">
+              <i class="ph ph-check-fat"></i>
+              <span>Confirmar Minha Família no Evento</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- PROGRAMAÇÃO COMPLETA EM ESTAÇÕES -->
+      <div class="space-y-3">
+        <h4 class="font-extrabold text-slate-800 text-base font-heading flex items-center gap-2">
+          <i class="ph ph-compass text-amber-500 text-lg"></i> Programação das Estações do Encontro
+        </h4>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+          <!-- ESTAÇÃO 1: OS BUSCA-PISTAS -->
+          <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-1.5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 text-indigo-700 font-extrabold text-sm mb-1">
+                <span class="text-lg">🕵️‍♂️</span>
+                <h5>Carro-Chefe: A Saga 'Os Busca-Pistas'</h5>
+              </div>
+              <p class="text-slate-600 leading-relaxed">
+                Durante 10 encontros mensais, leremos 1 livro completo da famosa saga de <strong>Teresa Blanch &amp; José Ángel Labari</strong>! No dia 14, viveremos <em>"O Caso do Castelo Assombrado"</em> com <strong>Pepa Pistas e Max Casos</strong>. As crianças coletam pistas e solucionam o enigma junto com o narrador!
+              </p>
+            </div>
+            <span class="bg-indigo-100 text-indigo-900 text-[10px] font-bold px-2.5 py-0.5 rounded-full self-start">Leitura Interativa &bull; 1 Livro Completo</span>
+          </div>
+
+          <!-- ESTAÇÃO 2: MESA DE TROCAS -->
+          <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-1.5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 text-emerald-700 font-extrabold text-sm mb-1">
+                <span class="text-lg">🔄</span>
+                <h5>Mesa de Trocas: Livro Livre &amp; Jogo Livre</h5>
+              </div>
+              <p class="text-slate-600 leading-relaxed">
+                Traga livros infantis e quebra-cabeças guardados em casa em bom estado. Você deposita 1 item na mesa e escolhe outro para levar na hora! Faça circular a imaginação no bairro.
+              </p>
+            </div>
+            <span class="bg-emerald-100 text-emerald-900 text-[10px] font-bold px-2.5 py-0.5 rounded-full self-start">Troca 1 por 1 &bull; Sem Custos</span>
+          </div>
+
+          <!-- ESTAÇÃO 3: LÊ E MONTA -->
+          <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-1.5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 text-amber-700 font-extrabold text-sm mb-1">
+                <span class="text-lg">🧩</span>
+                <h5>Espaço 'Lê e Monta' (Desacelere)</h5>
+              </div>
+              <p class="text-slate-600 leading-relaxed">
+                Área aconchegante com tapetes, almofadas e quebra-cabeças com diferentes números de peças para desafiar a mente e montar em parceria entre pais e filhos.
+              </p>
+            </div>
+            <span class="bg-amber-100 text-amber-900 text-[10px] font-bold px-2.5 py-0.5 rounded-full self-start">Concentração &bull; Cooperação</span>
+          </div>
+
+          <!-- ESTAÇÃO 4: DESENHO E PINTURA -->
+          <div class="bg-slate-50 border border-slate-200 p-4 rounded-2xl space-y-1.5 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2 text-rose-700 font-extrabold text-sm mb-1">
+                <span class="text-lg">🎨</span>
+                <h5>Estação da Imaginação (Desenhos &amp; Pistas)</h5>
+              </div>
+              <p class="text-slate-600 leading-relaxed">
+                Lápis de cor, giz de cera e papéis disponíveis para a criançada desenhar os detetives Pepa e Max, recriar os monstros e cenários ou inventar seus próprios mistérios!
+              </p>
+            </div>
+            <span class="bg-rose-100 text-rose-900 text-[10px] font-bold px-2.5 py-0.5 rounded-full self-start">Arte Livre &bull; Expressão Criativa</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- REGRAS DE BOA CONDUTA, ORDEM E CONVIVÊNCIA -->
+      <div class="bg-amber-50/70 border border-amber-300 rounded-3xl p-5 space-y-3">
+        <h4 class="font-extrabold text-amber-950 text-sm font-heading flex items-center gap-2">
+          <i class="ph ph-shield-check text-amber-600 text-lg"></i>
+          Regras de Boa Conduta &amp; Garantia da Ordem no Espaço Comunitário
+        </h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-amber-950/90 leading-relaxed">
+          <div class="bg-white/80 p-3 rounded-2xl border border-amber-200 space-y-1">
+            <strong class="text-slate-900 block font-bold flex items-center gap-1.5">
+              <i class="ph ph-heart text-rose-500"></i> Presença Obrigatória dos Pais/Responsáveis
+            </strong>
+            <p>Os pais ou adultos responsáveis <strong>devem permanecer no evento com as crianças</strong> durante todo o período. O espaço é de convivência familiar compartilhada.</p>
+          </div>
+          <div class="bg-white/80 p-3 rounded-2xl border border-amber-200 space-y-1">
+            <strong class="text-slate-900 block font-bold flex items-center gap-1.5">
+              <i class="ph ph-puzzle-piece text-amber-600"></i> Cuidados com os Quebra-Cabeças
+            </strong>
+            <p>Cada peça conta! Ao abrir uma caixa para montar, certifique-se de que todas as peças permaneçam na mesa e sejam guardadas na caixa antes de iniciar outro jogo.</p>
+          </div>
+          <div class="bg-white/80 p-3 rounded-2xl border border-amber-200 space-y-1">
+            <strong class="text-slate-900 block font-bold flex items-center gap-1.5">
+              <i class="ph ph-book-open text-sky-600"></i> Estado dos Livros da Mesa de Trocas
+            </strong>
+            <p>Traga apenas livros sem páginas rasgadas ou mofadas. O que você oferece com amor é o que outra criança receberá com encanto!</p>
+          </div>
+          <div class="bg-white/80 p-3 rounded-2xl border border-amber-200 space-y-1">
+            <strong class="text-slate-900 block font-bold flex items-center gap-1.5">
+              <i class="ph ph-apple-logo text-emerald-600"></i> Partilha de Frutas e Lixo Zero
+            </strong>
+            <p>Traga 1 fruta da época lavada para a nossa mesa de lanches. Cada família nos ajuda a manter o salão limpo e organizado do começo ao fim.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- BOTÃO RÁPIDO PARA VOLUNTÁRIO DO DIA -->
+      <div class="bg-emerald-600 text-white rounded-3xl p-5 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-md">
+        <div class="space-y-1 text-center sm:text-left">
+          <div class="flex items-center justify-center sm:justify-start gap-1.5 font-black text-sm">
+            <i class="ph ph-hand-heart text-amber-300 text-lg"></i>
+            <span>Quer Ajudar no Sábado do Evento?</span>
+          </div>
+          <p class="text-xs text-emerald-100 max-w-md">
+            Precisamos de moradores voluntários para ajudar na recepção, organização da mesa de trocas e mediação da leitura das 8h30 às 12h!
+          </p>
+        </div>
+        <button type="button" onclick="fecharModalDetalhesEvento(); alternarAbaPrincipal('voluntarios');" class="bg-white hover:bg-amber-300 text-emerald-950 font-black px-5 py-3 rounded-2xl text-xs sm:text-sm shadow whitespace-nowrap transition-all flex items-center gap-2 flex-shrink-0">
+          <i class="ph ph-user-plus text-base text-emerald-600"></i>
+          <span>Quero Ser Voluntário no Dia!</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <!-- MODAL DE POLÍTICA DE PRIVACIDADE E EXCLUSÃO DE DADOS (EXIGIDO PELO META/FACEBOOK LOGIN) -->
   <div id="modalPrivacidade" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto text-xs text-slate-600 leading-relaxed">
@@ -1309,6 +1557,9 @@
     const voluntariosRef = collection(db, "voluntarios");
     const usuariosRef = collection(db, "usuarios");
     const configEventoDocRef = doc(db, "configuracoes", "evento");
+    const presencasEventoRef = collection(db, "presencasEvento");
+
+    let dadosLocaisPresencas = {};
 
     let usuarioAtual = null;
     let dadosUsuarioAtual = {
@@ -1540,6 +1791,230 @@
       verificarLinkConfirmacaoURL();
       renderizarUsuariosAdmin();
     });
+
+    // SINCRONIZAR CONFIRMAÇÕES DE PRESENÇA NO EVENTO EM TEMPO REAL
+    onSnapshot(presencasEventoRef, (snap) => {
+      dadosLocaisPresencas = {};
+      snap.forEach(d => { dadosLocaisPresencas[d.id] = d.data(); });
+      atualizarContadorPresencasUI();
+      if (ehAdmin()) renderizarPresencasAdmin();
+    }, () => {
+      // Fallback local se Firestore bloquear antes das regras
+      atualizarContadorPresencasUI();
+    });
+
+    window.abrirModalDetalhesEvento = function() {
+      const modal = document.getElementById('modalDetalhesEvento');
+      if (modal) {
+        modal.classList.replace('hidden', 'flex');
+        preencherDadosPresencaForm();
+      }
+    };
+
+    window.fecharModalDetalhesEvento = function() {
+      const modal = document.getElementById('modalDetalhesEvento');
+      if (modal) modal.classList.replace('flex', 'hidden');
+    };
+
+    function obterMinhaPresencaConfirmada() {
+      if (!usuarioAtual) {
+        try {
+          const salvoAnonimo = localStorage.getItem('livrosLivres_presencaAnonima');
+          if (salvoAnonimo) return JSON.parse(salvoAnonimo);
+        } catch (e) {}
+        return null;
+      }
+      const uids = obterUidsUnificados(usuarioAtual.uid);
+      for (const id of uids) {
+        if (dadosLocaisPresencas[id]) return { id, ...dadosLocaisPresencas[id] };
+      }
+      try {
+        const salvoLocal = localStorage.getItem('livrosLivres_presenca_' + usuarioAtual.uid);
+        if (salvoLocal) return JSON.parse(salvoLocal);
+      } catch (e) {}
+      return null;
+    }
+
+    function preencherDadosPresencaForm() {
+      const inputNome = document.getElementById('inputNomeRespPresenca');
+      const selectAdultos = document.getElementById('selectAdultosPresenca');
+      const selectFilhos = document.getElementById('selectFilhosPresenca');
+      const boxStatus = document.getElementById('statusMinhaPresencaBox');
+      const txtStatus = document.getElementById('txtDetalheMinhaPresenca');
+      const btnSalvar = document.getElementById('btnSalvarPresencaEvento');
+
+      const presenca = obterMinhaPresencaConfirmada();
+
+      if (presenca) {
+        boxStatus.classList.remove('hidden');
+        txtStatus.innerText = `Você confirmou: ${presenca.qtdAdultos} ${presenca.qtdAdultos === 1 ? 'adulto' : 'adultos'} e ${presenca.qtdFilhos} ${presenca.qtdFilhos === 1 ? 'criança' : 'crianças'} (${presenca.nomeResp}).`;
+        btnSalvar.innerHTML = `<i class="ph ph-arrows-clockwise"></i> <span>Atualizar Minha Confirmação</span>`;
+        if (inputNome) inputNome.value = presenca.nomeResp || '';
+        if (selectAdultos) selectAdultos.value = presenca.qtdAdultos || '1';
+        if (selectFilhos) selectFilhos.value = presenca.qtdFilhos || '1';
+      } else {
+        boxStatus.classList.add('hidden');
+        btnSalvar.innerHTML = `<i class="ph ph-check-fat"></i> <span>Confirmar Minha Família no Evento</span>`;
+        if (inputNome && !inputNome.value) {
+          if (usuarioAtual?.displayName) inputNome.value = usuarioAtual.displayName;
+          else if (usuarioAtual?.email) inputNome.value = usuarioAtual.email.split('@')[0];
+        }
+        if (usuarioAtual) {
+          const filhos = obterFilhosDoUsuario(usuarioAtual.uid);
+          if (filhos.length > 0 && selectFilhos) {
+            selectFilhos.value = String(Math.min(5, filhos.length));
+          }
+        }
+      }
+    }
+
+    function atualizarContadorPresencasUI() {
+      let totalPessoas = 0;
+      let totalFamilias = 0;
+      let totalCriancas = 0;
+
+      // Soma presenças do Firestore
+      const lista = Object.values(dadosLocaisPresencas);
+      lista.forEach(p => {
+        const ad = Number(p.qtdAdultos) || 1;
+        const fl = Number(p.qtdFilhos) || 1;
+        totalPessoas += (ad + fl);
+        totalCriancas += fl;
+        totalFamilias++;
+      });
+
+      // Inclui presença anônima salva localmente se não autenticado
+      if (!usuarioAtual) {
+        try {
+          const anon = localStorage.getItem('livrosLivres_presencaAnonima');
+          if (anon && !dadosLocaisPresencas['anon_' + JSON.parse(anon).nomeResp]) {
+            const p = JSON.parse(anon);
+            const ad = Number(p.qtdAdultos) || 1;
+            const fl = Number(p.qtdFilhos) || 1;
+            totalPessoas += (ad + fl);
+            totalCriancas += fl;
+            totalFamilias++;
+          }
+        } catch (e) {}
+      }
+
+      // Atualiza Badge do Banner
+      const txtBanner = document.getElementById('txtContadorPresencaBanner');
+      if (txtBanner) {
+        if (totalPessoas === 0) {
+          txtBanner.innerText = "Seja o 1º a confirmar presença!";
+        } else {
+          txtBanner.innerText = `${totalPessoas} confirmados (${totalFamilias} ${totalFamilias === 1 ? 'família' : 'famílias'})`;
+        }
+      }
+
+      // Atualiza Placar do Modal
+      const placarModal = document.getElementById('placarParticipantesModal');
+      if (placarModal) {
+        placarModal.innerText = totalPessoas;
+      }
+
+      // Atualiza métrica do Admin se existir
+      const statPresencaAdmin = document.getElementById('adminStatPresencas');
+      if (statPresencaAdmin) {
+        statPresencaAdmin.innerText = `${totalPessoas} (${totalCriancas} crianças)`;
+      }
+
+      preencherDadosPresencaForm();
+    }
+
+    // FORMULÁRIO DE CONFIRMAÇÃO DE PRESENÇA
+    document.getElementById('formConfirmarPresencaEvento').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nomeResp = document.getElementById('inputNomeRespPresenca').value.trim();
+      const qtdAdultos = parseInt(document.getElementById('selectAdultosPresenca').value) || 1;
+      const qtdFilhos = parseInt(document.getElementById('selectFilhosPresenca').value) || 1;
+
+      if (!nomeResp) {
+        mostrarAviso("Por favor, preencha o nome do responsável.", "alerta");
+        return;
+      }
+
+      const docId = usuarioAtual ? usuarioAtual.uid : ('anon_' + Date.now());
+      const payload = {
+        docId: docId,
+        uid: usuarioAtual ? usuarioAtual.uid : null,
+        nomeResp: nomeResp,
+        emailResp: usuarioAtual?.email || '',
+        qtdAdultos: qtdAdultos,
+        qtdFilhos: qtdFilhos,
+        totalPessoas: qtdAdultos + qtdFilhos,
+        confirmadoEm: new Date().toISOString()
+      };
+
+      try {
+        await setDoc(doc(db, "presencasEvento", docId), payload);
+        if (usuarioAtual) {
+          localStorage.setItem('livrosLivres_presenca_' + usuarioAtual.uid, JSON.stringify(payload));
+        } else {
+          localStorage.setItem('livrosLivres_presencaAnonima', JSON.stringify(payload));
+        }
+        dadosLocaisPresencas[docId] = payload;
+        atualizarContadorPresencasUI();
+        mostrarAviso(`🎉 Presença confirmada! Esperamos você e sua família dia 14/Nov!`, "sucesso");
+      } catch (err) {
+        // Fallback local se Firestore exigir regras
+        if (usuarioAtual) {
+          localStorage.setItem('livrosLivres_presenca_' + usuarioAtual.uid, JSON.stringify(payload));
+        } else {
+          localStorage.setItem('livrosLivres_presencaAnonima', JSON.stringify(payload));
+        }
+        dadosLocaisPresencas[docId] = payload;
+        atualizarContadorPresencasUI();
+        mostrarAviso(`Presença confirmada com sucesso! Até o dia 14/Nov!`, "sucesso");
+      }
+    });
+
+    window.cancelarMinhaPresencaEvento = async function() {
+      if (!confirm("Deseja cancelar a confirmação de presença da sua família neste encontro?")) return;
+      const presenca = obterMinhaPresencaConfirmada();
+      if (!presenca) return;
+
+      const docId = presenca.docId || (usuarioAtual ? usuarioAtual.uid : null);
+      if (docId) {
+        try {
+          await deleteDoc(doc(db, "presencasEvento", docId));
+        } catch (e) {}
+        delete dadosLocaisPresencas[docId];
+      }
+
+      if (usuarioAtual) {
+        localStorage.removeItem('livrosLivres_presenca_' + usuarioAtual.uid);
+      }
+      localStorage.removeItem('livrosLivres_presencaAnonima');
+
+      atualizarContadorPresencasUI();
+      mostrarAviso("Sua confirmação de presença foi removida.", "info");
+    };
+
+    function renderizarPresencasAdmin() {
+      const container = document.getElementById('listaAdminPresencas');
+      if (!container) return;
+      const lista = Object.values(dadosLocaisPresencas);
+      if (lista.length === 0) {
+        container.innerHTML = `<p class="text-xs text-slate-400">Nenhuma família confirmou presença ainda.</p>`;
+        return;
+      }
+      container.innerHTML = lista.map(p => `
+        <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl flex items-center justify-between text-xs">
+          <div>
+            <strong class="text-slate-800 text-sm">${p.nomeResp}</strong>
+            <span class="text-slate-500">${p.emailResp ? ` (${p.emailResp})` : ''}</span>
+            <p class="text-[11px] text-slate-600 mt-0.5">
+              👨‍👩‍👧‍👦 ${p.qtdAdultos} ${p.qtdAdultos === 1 ? 'adulto' : 'adultos'} + ${p.qtdFilhos} ${p.qtdFilhos === 1 ? 'criança' : 'crianças'} = <strong>${p.totalPessoas} pessoas</strong>
+            </p>
+          </div>
+          <span class="bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full text-[10px]">
+            Confirmado
+          </span>
+        </div>
+      `).join('');
+    }
 
     // Formulário de Voluntário
     document.getElementById('formVoluntarioSite').addEventListener('submit', async (e) => {
