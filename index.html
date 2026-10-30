@@ -223,7 +223,7 @@
           </p>
         </div>
 
-        <a id="btnVisitarFacebookPrincipal" href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" class="bg-[#1877F2] hover:bg-[#166FE5] text-white font-extrabold px-6 py-3.5 rounded-2xl text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 whitespace-nowrap flex-shrink-0">
+        <a id="btnVisitarFacebookPrincipal" href="https://www.facebook.com/profile.php?id=61595958183193" target="_blank" rel="noopener noreferrer" class="bg-[#1877F2] hover:bg-[#166FE5] text-white font-extrabold px-6 py-3.5 rounded-2xl text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 whitespace-nowrap flex-shrink-0">
           <i class="ph ph-facebook-logo text-xl"></i>
           <span>Seguir Nossa Página no Facebook ↗</span>
         </a>
@@ -933,7 +933,7 @@
             <label class="block font-bold text-[#1877F2] mb-1 flex items-center gap-1">
               <i class="ph ph-facebook-logo text-base"></i> Link da Página do Projeto no Facebook (exibe o botão e as últimas publicações no site!)
             </label>
-            <input type="url" id="cfgUrlFacebook" placeholder="Ex: https://www.facebook.com/tabatingaleebrinca" class="w-full px-3 py-2 border border-sky-200 rounded-xl bg-white">
+            <input type="url" id="cfgUrlFacebook" placeholder="https://www.facebook.com/profile.php?id=61595958183193" class="w-full px-3 py-2 border border-sky-200 rounded-xl bg-white">
           </div>
           <div class="sm:col-span-2 flex justify-end">
             <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2.5 rounded-xl transition-all flex items-center gap-2 shadow-sm">
@@ -1874,6 +1874,8 @@
     document.getElementById('selectTipo').addEventListener('change', alternarCamposEspecificos);
     document.getElementById('selectMeioContato').addEventListener('change', alternarCampoContato);
 
+    const URL_FACEBOOK_PADRAO = 'https://www.facebook.com/profile.php?id=61595958183193';
+
     // FUNÇÃO PARA ATUALIZAR O BOTÃO E O FEED DE PUBLICAÇÕES DO FACEBOOK NO SITE
     function atualizarFeedFacebookUI(urlPagina) {
       const btnPrincipal = document.getElementById('btnVisitarFacebookPrincipal');
@@ -1882,9 +1884,9 @@
       const containerIframe = document.getElementById('containerIframeFacebook');
       const linkDireto = document.getElementById('linkDiretoFeedFace');
 
-      const urlLimpa = (urlPagina || '').trim();
+      const urlLimpa = (urlPagina || '').trim() || URL_FACEBOOK_PADRAO;
       if (btnPrincipal) {
-        btnPrincipal.href = urlLimpa || 'https://www.facebook.com';
+        btnPrincipal.href = urlLimpa;
       }
 
       if (urlLimpa && urlLimpa.includes('facebook.com/') && urlLimpa !== 'https://www.facebook.com' && urlLimpa !== 'https://www.facebook.com/') {
@@ -1898,7 +1900,7 @@
               src="https://www.facebook.com/plugins/page.php?href=${encodedUrl}&tabs=timeline&width=380&height=520&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true"
               width="380"
               height="520"
-              style="border:none;overflow:hidden"
+              style="border:none;overflow:hidden;width:100%;max-width:380px;"
               scrolling="no"
               frameborder="0"
               allowfullscreen="true"
@@ -1912,6 +1914,9 @@
       }
     }
 
+    // Inicializa imediatamente com a página oficial do projeto
+    atualizarFeedFacebookUI(URL_FACEBOOK_PADRAO);
+
     // SINCRONIZAR CONFIGURAÇÃO DO BANNER DO EVENTO MENSAL E FACEBOOK
     onSnapshot(configEventoDocRef, (snap) => {
       if (snap.exists()) {
@@ -1924,8 +1929,9 @@
         document.getElementById('cfgLocalEvento').value = cfg.localEvento || '';
         document.getElementById('cfgDescricaoEvento').value = cfg.descricaoEvento || '';
         const inputFace = document.getElementById('cfgUrlFacebook');
-        if (inputFace) inputFace.value = cfg.urlFacebook || '';
-        atualizarFeedFacebookUI(cfg.urlFacebook || '');
+        const urlFinal = cfg.urlFacebook || URL_FACEBOOK_PADRAO;
+        if (inputFace) inputFace.value = urlFinal;
+        atualizarFeedFacebookUI(urlFinal);
       }
     }, () => {});
 
