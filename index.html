@@ -207,6 +207,135 @@
         <p>A carregar itens de troca...</p>
       </div>
     </div>
+
+    <!-- SEÇÃO FACEBOOK: BOTÃO DIRETO + FEED DE ÚLTIMAS PUBLICAÇÕES + GALERIA ILUSTRADA DO PROJETO -->
+    <section id="secaoFacebookGaleria" class="mt-12 bg-white rounded-3xl border border-sky-200 p-6 sm:p-8 shadow-sm space-y-6">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+        <div class="space-y-1">
+          <span class="inline-flex items-center gap-1.5 bg-[#1877F2]/10 text-[#1877F2] text-[11px] font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
+            <i class="ph ph-facebook-logo text-sm"></i> Comunidade nas Redes
+          </span>
+          <h3 class="text-xl sm:text-2xl font-bold font-heading text-slate-800">
+            Acompanhe Nossos Encontros e Novidades no Facebook!
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-500 max-w-2xl">
+            Curta a página do <strong>Tabatinga Lê &amp; Brinca</strong> no Facebook para ver as novidades dos encontros mensais, fotos das oficinas e avisos da comunidade.
+          </p>
+        </div>
+
+        <a id="btnVisitarFacebookPrincipal" href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" class="bg-[#1877F2] hover:bg-[#166FE5] text-white font-extrabold px-6 py-3.5 rounded-2xl text-xs sm:text-sm shadow-md transition-all flex items-center justify-center gap-2 whitespace-nowrap flex-shrink-0">
+          <i class="ph ph-facebook-logo text-xl"></i>
+          <span>Seguir Nossa Página no Facebook ↗</span>
+        </a>
+      </div>
+
+      <!-- ÁREA HÍBRIDA: FEED AO VIVO DO FACEBOOK (QUANDO CONFIGURADO) + GALERIA DE ARTES DO PROJETO -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- COLUNA DA GALERIA ILUSTRADA (4 ARTES DE IA PRONTAS PARA O PROJETO E PARA POSTAR NO FACE) -->
+        <div id="colunaGaleriaIlustrada" class="lg:col-span-12 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+            <h4 class="font-bold text-slate-800 text-sm sm:text-base font-heading flex items-center gap-2">
+              <i class="ph ph-sparkle text-amber-500 text-lg"></i> Destaques &amp; Estações do Nosso Próximo Encontro (14/Nov)
+            </h4>
+            <span class="text-[11px] text-slate-400 font-medium">Clique em qualquer imagem para ampliar ou baixar para compartilhar!</span>
+          </div>
+
+          <!-- CAPA EM DESTAQUE -->
+          <div class="rounded-2xl overflow-hidden border border-slate-200 bg-slate-900 relative group">
+            <img src="imagens/capa-facebook.png" alt="Capa Tabatinga Lê e Brinca" class="w-full h-48 sm:h-64 object-cover">
+            <div class="bg-gradient-to-t from-slate-950/90 via-slate-900/40 to-transparent p-4 sm:p-5 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+              <div class="text-white space-y-0.5">
+                <span class="bg-amber-400 text-slate-900 text-[10px] font-black uppercase px-2 py-0.5 rounded-full">Arte de Capa Oficial</span>
+                <h5 class="font-bold text-base sm:text-lg font-heading">Tabatinga Lê &amp; Brinca • Leitura, Jogos e Comunidade</h5>
+                <p class="text-xs text-slate-200">Centro Comunitário da Tabatinga • 1 Sábado por mês, das 9h às 12h</p>
+              </div>
+              <a href="imagens/capa-facebook.png" download="capa-facebook-livros-livres.png" class="bg-white/95 hover:bg-amber-300 text-slate-900 font-bold px-3.5 py-2 rounded-xl text-xs flex items-center gap-1.5 self-start sm:self-auto shadow transition-all">
+                <i class="ph ph-download-simple text-sm"></i> Baixar Capa p/ Facebook
+              </a>
+            </div>
+          </div>
+
+          <!-- 3 CARDS DE PUBLICAÇÕES -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <!-- POST 1 -->
+            <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-md transition-all">
+              <div>
+                <div class="aspect-square bg-slate-200 overflow-hidden">
+                  <img src="imagens/post-busca-pistas.png" alt="Saga Os Busca-Pistas" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+                </div>
+                <div class="p-4 space-y-1.5">
+                  <span class="text-[10px] font-extrabold uppercase tracking-wider text-indigo-700 bg-indigo-100 px-2.5 py-0.5 rounded-full">🕵️‍♂️ Roda de Leitura</span>
+                  <h5 class="font-bold text-slate-800 text-sm font-heading">Missão Detetive: Os Busca-Pistas</h5>
+                  <p class="text-xs text-slate-600 leading-relaxed">
+                    Durante 10 meses, vamos desvendar juntos os mistérios de <strong>Pepa Pistas e Max Casos</strong>! 1 livro completo lido a cada encontro.
+                  </p>
+                </div>
+              </div>
+              <div class="px-4 pb-4 pt-2 border-t border-slate-200/60 flex items-center justify-between">
+                <a href="imagens/post-busca-pistas.png" download="post-1-busca-pistas.png" class="text-[11px] font-bold text-[#1877F2] hover:underline flex items-center gap-1">
+                  <i class="ph ph-download-simple"></i> Baixar imagem para o Face
+                </a>
+              </div>
+            </div>
+
+            <!-- POST 2 -->
+            <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-md transition-all">
+              <div>
+                <div class="aspect-square bg-slate-200 overflow-hidden">
+                  <img src="imagens/post-mesa-trocas.png" alt="Mesa de Trocas de Livros e Quebra-Cabeças" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+                </div>
+                <div class="p-4 space-y-1.5">
+                  <span class="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full">🔄 Feira Circular</span>
+                  <h5 class="font-bold text-slate-800 text-sm font-heading">Mesa de Trocas: Livro &amp; Jogo Livre</h5>
+                  <p class="text-xs text-slate-600 leading-relaxed">
+                    Deposite um livro infantil ou quebra-cabeça em bom estado que já usou em casa e escolha outro novinho para levar na hora!
+                  </p>
+                </div>
+              </div>
+              <div class="px-4 pb-4 pt-2 border-t border-slate-200/60 flex items-center justify-between">
+                <a href="imagens/post-mesa-trocas.png" download="post-2-mesa-trocas.png" class="text-[11px] font-bold text-[#1877F2] hover:underline flex items-center gap-1">
+                  <i class="ph ph-download-simple"></i> Baixar imagem para o Face
+                </a>
+              </div>
+            </div>
+
+            <!-- POST 3 -->
+            <div class="bg-slate-50 rounded-2xl border border-slate-200 overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-md transition-all">
+              <div>
+                <div class="aspect-square bg-slate-200 overflow-hidden">
+                  <img src="imagens/post-oficina-desenho.png" alt="Espaço Lê e Monta e Estação de Desenho" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+                </div>
+                <div class="p-4 space-y-1.5">
+                  <span class="text-[10px] font-extrabold uppercase tracking-wider text-rose-700 bg-rose-100 px-2.5 py-0.5 rounded-full">🎨 Arte &amp; Quebra-Cabeças</span>
+                  <h5 class="font-bold text-slate-800 text-sm font-heading">Estação de Desenho, Pintura &amp; Frutas</h5>
+                  <p class="text-xs text-slate-600 leading-relaxed">
+                    Tapetes para montar quebra-cabeças em família, pinturas livres dos personagens dos livros e nossa mesa comunitária de frutas!
+                  </p>
+                </div>
+              </div>
+              <div class="px-4 pb-4 pt-2 border-t border-slate-200/60 flex items-center justify-between">
+                <a href="imagens/post-oficina-desenho.png" download="post-3-oficina-desenho.png" class="text-[11px] font-bold text-[#1877F2] hover:underline flex items-center gap-1">
+                  <i class="ph ph-download-simple"></i> Baixar imagem para o Face
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- COLUNA DO WIDGET DE ÚLTIMAS PUBLICAÇÕES DO FACEBOOK (APARECE AUTOMATICAMENTE ASSIM QUE A PÁGINA DO FACE FOR INFORMADA) -->
+        <div id="colunaFeedFacebookVivo" class="hidden lg:col-span-5 bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col items-center space-y-3">
+          <div class="w-full flex items-center justify-between">
+            <h4 class="font-bold text-slate-800 text-sm font-heading flex items-center gap-1.5">
+              <i class="ph ph-facebook-logo text-[#1877F2] text-lg"></i> Últimas Publicações no Facebook
+            </h4>
+            <a id="linkDiretoFeedFace" href="#" target="_blank" class="text-[11px] font-bold text-[#1877F2] hover:underline">Abrir no Facebook ↗</a>
+          </div>
+          <div id="containerIframeFacebook" class="w-full flex justify-center overflow-hidden rounded-xl bg-white border border-slate-200 min-h-[500px]"></div>
+        </div>
+
+      </div>
+    </section>
   </main>
 
   <!-- 2. MURAL DE DOAÇÕES -->
@@ -800,9 +929,15 @@
             <label class="block font-bold text-slate-600 mb-1">Subtítulo / Chamada do Evento</label>
             <input type="text" id="cfgDescricaoEvento" placeholder="Ex: 1 Sábado por mês, das 9h às 12h • Rodas de leitura, quebra-cabeças, oficinas e frutas da época!" class="w-full px-3 py-2 border rounded-xl bg-white">
           </div>
+          <div class="sm:col-span-2">
+            <label class="block font-bold text-[#1877F2] mb-1 flex items-center gap-1">
+              <i class="ph ph-facebook-logo text-base"></i> Link da Página do Projeto no Facebook (exibe o botão e as últimas publicações no site!)
+            </label>
+            <input type="url" id="cfgUrlFacebook" placeholder="Ex: https://www.facebook.com/tabatingaleebrinca" class="w-full px-3 py-2 border border-sky-200 rounded-xl bg-white">
+          </div>
           <div class="sm:col-span-2 flex justify-end">
             <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2.5 rounded-xl transition-all flex items-center gap-2 shadow-sm">
-              <i class="ph ph-floppy-disk"></i> Salvar Banner do Evento
+              <i class="ph ph-floppy-disk"></i> Salvar Banner &amp; Link do Facebook
             </button>
           </div>
         </form>
@@ -1739,7 +1874,45 @@
     document.getElementById('selectTipo').addEventListener('change', alternarCamposEspecificos);
     document.getElementById('selectMeioContato').addEventListener('change', alternarCampoContato);
 
-    // SINCRONIZAR CONFIGURAÇÃO DO BANNER DO EVENTO MENSAL
+    // FUNÇÃO PARA ATUALIZAR O BOTÃO E O FEED DE PUBLICAÇÕES DO FACEBOOK NO SITE
+    function atualizarFeedFacebookUI(urlPagina) {
+      const btnPrincipal = document.getElementById('btnVisitarFacebookPrincipal');
+      const colGaleria = document.getElementById('colunaGaleriaIlustrada');
+      const colFeed = document.getElementById('colunaFeedFacebookVivo');
+      const containerIframe = document.getElementById('containerIframeFacebook');
+      const linkDireto = document.getElementById('linkDiretoFeedFace');
+
+      const urlLimpa = (urlPagina || '').trim();
+      if (btnPrincipal) {
+        btnPrincipal.href = urlLimpa || 'https://www.facebook.com';
+      }
+
+      if (urlLimpa && urlLimpa.includes('facebook.com/') && urlLimpa !== 'https://www.facebook.com' && urlLimpa !== 'https://www.facebook.com/') {
+        if (colGaleria) colGaleria.className = 'lg:col-span-7 space-y-4';
+        if (colFeed) colFeed.classList.remove('hidden');
+        if (linkDireto) linkDireto.href = urlLimpa;
+        if (containerIframe) {
+          const encodedUrl = encodeURIComponent(urlLimpa);
+          containerIframe.innerHTML = `
+            <iframe
+              src="https://www.facebook.com/plugins/page.php?href=${encodedUrl}&tabs=timeline&width=380&height=520&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true"
+              width="380"
+              height="520"
+              style="border:none;overflow:hidden"
+              scrolling="no"
+              frameborder="0"
+              allowfullscreen="true"
+              allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share">
+            </iframe>
+          `;
+        }
+      } else {
+        if (colGaleria) colGaleria.className = 'lg:col-span-12 space-y-4';
+        if (colFeed) colFeed.classList.add('hidden');
+      }
+    }
+
+    // SINCRONIZAR CONFIGURAÇÃO DO BANNER DO EVENTO MENSAL E FACEBOOK
     onSnapshot(configEventoDocRef, (snap) => {
       if (snap.exists()) {
         const cfg = snap.data();
@@ -1750,20 +1923,26 @@
         document.getElementById('cfgDataEvento').value = cfg.dataEvento || '';
         document.getElementById('cfgLocalEvento').value = cfg.localEvento || '';
         document.getElementById('cfgDescricaoEvento').value = cfg.descricaoEvento || '';
+        const inputFace = document.getElementById('cfgUrlFacebook');
+        if (inputFace) inputFace.value = cfg.urlFacebook || '';
+        atualizarFeedFacebookUI(cfg.urlFacebook || '');
       }
     }, () => {});
 
     document.getElementById('formConfigEvento').addEventListener('submit', async (e) => {
       e.preventDefault();
       if (!ehAdmin()) return;
+      const urlFaceVal = document.getElementById('cfgUrlFacebook')?.value.trim() || '';
       try {
         await setDoc(configEventoDocRef, {
-          dataEvento: document.getElementById('cfgDataEvento').value.trim() || 'Sábado Mensal (9h - 12h)',
-          localEvento: document.getElementById('cfgLocalEvento').value.trim() || 'Bairro Tabatinga',
-          descricaoEvento: document.getElementById('cfgDescricaoEvento').value.trim() || '1 Sábado por mês, das 9h às 12h • Rodas de leitura, quebra-cabeças, oficinas e frutas da época!',
+          dataEvento: document.getElementById('cfgDataEvento').value.trim() || 'Sáb, 14/11 (9h - 12h)',
+          localEvento: document.getElementById('cfgLocalEvento').value.trim() || 'Centro Comunitário Tabatinga',
+          descricaoEvento: document.getElementById('cfgDescricaoEvento').value.trim() || 'Sábado, 14 de Novembro, das 9h às 12h • Leitura completa de "Os Busca-Pistas: O Caso do Castelo Assombrado", mesa de trocas, estações de desenho e partilha de frutas!',
+          urlFacebook: urlFaceVal,
           atualizadoEm: new Date().toISOString()
         }, { merge: true });
-        mostrarAviso("Banner do próximo encontro atualizado com sucesso!", "sucesso");
+        atualizarFeedFacebookUI(urlFaceVal);
+        mostrarAviso("Banner e link do Facebook atualizados com sucesso!", "sucesso");
       } catch (err) {
         mostrarAviso("Para salvar o banner no banco, libere a coleção 'configuracoes' nas Regras do Firestore.", "alerta");
       }
