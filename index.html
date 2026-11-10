@@ -1018,9 +1018,16 @@
       <!-- LISTA DE FAMÍLIAS COM PRESENÇA CONFIRMADA -->
       <div class="space-y-3 pt-4 border-t">
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <h4 class="font-bold text-slate-800 text-lg font-heading flex items-center gap-2">
-            <i class="ph ph-calendar-check text-amber-600"></i> Famílias com Presença Confirmada (Encontro 14/Nov)
-          </h4>
+          <div>
+            <h4 class="font-bold text-slate-800 text-lg font-heading flex items-center gap-2">
+              <i class="ph ph-calendar-check text-amber-600"></i> Famílias com Presença Confirmada (Encontro 14/Nov)
+            </h4>
+            <p class="text-xs text-slate-500">Acompanhe quem já confirmou para dimensionar o café da manhã, materiais e mesas.</p>
+          </div>
+          <button type="button" onclick="adicionarPresencaManualAdmin()" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-extrabold text-xs px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow-sm transition-all self-start sm:self-auto">
+            <i class="ph ph-plus-circle text-base"></i>
+            <span>+ Adicionar Confirmação Manual</span>
+          </button>
         </div>
         <div id="listaAdminPresencas" class="space-y-2"></div>
       </div>
@@ -2031,22 +2038,60 @@
       if (modal) modal.classList.replace('flex', 'hidden');
     };
 
-    function obterMinhaPresencaConfirmada() {
-      if (!usuarioAtual) {
-        try {
-          const salvoAnonimo = localStorage.getItem('livrosLivres_presencaAnonima');
-          if (salvoAnonimo) return JSON.parse(salvoAnonimo);
-        } catch (e) {}
-        return null;
-      }
-      const uids = obterUidsUnificados(usuarioAtual.uid);
-      for (const id of uids) {
-        if (dadosLocaisPresencas[id]) return { id, ...dadosLocaisPresencas[id] };
-      }
+    // OBTÉM TODAS AS PRESENÇAS CONSOLIDADAS (FIRESTORE + QUALQUER REGISTRO LOCAL PRESERVADO)
+    function obterTodasPresencasConsolidadas() {
+      const mapa = { ...dadosLocaisPresencas };
+
       try {
-        const salvoLocal = localStorage.getItem('livrosLivres_presenca_' + usuarioAtual.uid);
-        if (salvoLocal) return JSON.parse(salvoLocal);
+        for (let i = 0; i < localStorage.length; i++) {
+          const k = localStorage.key(i);
+          if (k && (k.startsWith('livrosLivres_presenca_') || k === 'livrosLivres_presencaAnonima' || k === 'livrosLivres_ultimaPresenca' || k.startsWith('presenca_'))) {
+            const raw = localStorage.getItem(k);
+            if (raw) {
+              try {
+                const item = JSON.parse(raw);
+                if (item && item.nomeResp) {
+                  const chave = item.docId || k;
+                  if (!mapa[chave]) {
+                    mapa[chave] = item;
+                  }
+                }
+              } catch (e) {}
+            }
+          }
+        }
       } catch (e) {}
+
+      return mapa;
+    }
+
+    function obterMinhaPresencaConfirmada() {
+      const mapa = obterTodasPresencasConsolidadas();
+      const lista = Object.values(mapa);
+
+      // 1. Se estiver logado, procura por UID ou e-mail
+      if (usuarioAtual) {
+        const uids = obterUidsUnificados(usuarioAtual.uid);
+        const achouPorUid = lista.find(p => p.uid && uids.includes(p.uid));
+        if (achouPorUid) return achouPorUid;
+        if (usuarioAtual.email) {
+          const achouPorEmail = lista.find(p => p.emailResp && p.emailResp.toLowerCase() === usuarioAtual.email.toLowerCase());
+          if (achouPorEmail) return achouPorEmail;
+        }
+      }
+
+      // 2. Procura última presença registrada no dispositivo
+      try {
+        const ult = localStorage.getItem('livrosLivres_ultimaPresenca');
+        if (ult) return JSON.parse(ult);
+      } catch (e) {}
+
+      // 3. Fallback anônimo
+      try {
+        const anon = localStorage.getItem('livrosLivres_presencaAnonima');
+        if (anon) return JSON.parse(anon);
+      } catch (e) {}
+
       return null;
     }
 
@@ -2065,8 +2110,8 @@
         txtStatus.innerText = `Você confirmou: ${presenca.qtdAdultos} ${presenca.qtdAdultos === 1 ? 'adulto' : 'adultos'} e ${presenca.qtdFilhos} ${presenca.qtdFilhos === 1 ? 'criança' : 'crianças'} (${presenca.nomeResp}).`;
         btnSalvar.innerHTML = `<i class="ph ph-arrows-clockwise"></i> <span>Atualizar Minha Confirmação</span>`;
         if (inputNome) inputNome.value = presenca.nomeResp || '';
-        if (selectAdultos) selectAdultos.value = presenca.qtdAdultos || '1';
-        if (selectFilhos) selectFilhos.value = presenca.qtdFilhos || '1';
+        if (selectAdultos) selectAdultos.value = String(presenca.qtdAdultos || 1);
+        if (selectFilhos) selectFilhos.value = String(presenca.qtdFilhos || 1);
       } else {
         boxStatus.classList.add('hidden');
         btnSalvar.innerHTML = `<i class="ph ph-check-fat"></i> <span>Confirmar Minha Família no Evento</span>`;
@@ -2088,8 +2133,9 @@
       let totalFamilias = 0;
       let totalCriancas = 0;
 
-      // Soma presenças do Firestore
-      const lista = Object.values(dadosLocaisPresencas);
+      const mapa = obterTodasPresencasConsolidadas();
+      const lista = Object.values(mapa);
+
       lista.forEach(p => {
         const ad = Number(p.qtdAdultos) || 1;
         const fl = Number(p.qtdFilhos) || 1;
@@ -2098,22 +2144,7 @@
         totalFamilias++;
       });
 
-      // Inclui presença anônima salva localmente se não autenticado
-      if (!usuarioAtual) {
-        try {
-          const anon = localStorage.getItem('livrosLivres_presencaAnonima');
-          if (anon && !dadosLocaisPresencas['anon_' + JSON.parse(anon).nomeResp]) {
-            const p = JSON.parse(anon);
-            const ad = Number(p.qtdAdultos) || 1;
-            const fl = Number(p.qtdFilhos) || 1;
-            totalPessoas += (ad + fl);
-            totalCriancas += fl;
-            totalFamilias++;
-          }
-        } catch (e) {}
-      }
-
-      // Atualiza Badge do Banner
+      // Atualiza Badge do Banner Principal
       const txtBanner = document.getElementById('txtContadorPresencaBanner');
       if (txtBanner) {
         if (totalPessoas === 0) {
@@ -2129,7 +2160,7 @@
         placarModal.innerText = totalPessoas;
       }
 
-      // Atualiza métrica do Admin se existir
+      // Atualiza métrica do Painel do Admin
       const statPresencaAdmin = document.getElementById('adminStatPresencas');
       if (statPresencaAdmin) {
         statPresencaAdmin.innerText = `${totalPessoas} (${totalCriancas} crianças)`;
@@ -2150,7 +2181,11 @@
         return;
       }
 
-      const docId = usuarioAtual ? usuarioAtual.uid : ('anon_' + Date.now());
+      const minhaExistente = obterMinhaPresencaConfirmada();
+      const docId = (minhaExistente && minhaExistente.nomeResp.toLowerCase() === nomeResp.toLowerCase())
+        ? minhaExistente.docId
+        : ('presenca_' + (usuarioAtual ? usuarioAtual.uid.substring(0, 6) + '_' : '') + Date.now());
+
       const payload = {
         docId: docId,
         uid: usuarioAtual ? usuarioAtual.uid : null,
@@ -2162,26 +2197,19 @@
         confirmadoEm: new Date().toISOString()
       };
 
+      // Salva localmente de imediato para garantir que o número suba na hora
+      localStorage.setItem('livrosLivres_presenca_' + docId, JSON.stringify(payload));
+      localStorage.setItem('livrosLivres_ultimaPresenca', JSON.stringify(payload));
+      dadosLocaisPresencas[docId] = payload;
+      atualizarContadorPresencasUI();
+      if (ehAdmin()) renderizarPresencasAdmin();
+
       try {
         await setDoc(doc(db, "presencasEvento", docId), payload);
-        if (usuarioAtual) {
-          localStorage.setItem('livrosLivres_presenca_' + usuarioAtual.uid, JSON.stringify(payload));
-        } else {
-          localStorage.setItem('livrosLivres_presencaAnonima', JSON.stringify(payload));
-        }
-        dadosLocaisPresencas[docId] = payload;
-        atualizarContadorPresencasUI();
-        mostrarAviso(`🎉 Presença confirmada! Esperamos você e sua família dia 14/Nov!`, "sucesso");
+        mostrarAviso(`🎉 Presença confirmada! Esperamos ${nomeResp} (${payload.totalPessoas} pessoas) dia 14/Nov!`, "sucesso");
       } catch (err) {
-        // Fallback local se Firestore exigir regras
-        if (usuarioAtual) {
-          localStorage.setItem('livrosLivres_presenca_' + usuarioAtual.uid, JSON.stringify(payload));
-        } else {
-          localStorage.setItem('livrosLivres_presencaAnonima', JSON.stringify(payload));
-        }
-        dadosLocaisPresencas[docId] = payload;
-        atualizarContadorPresencasUI();
-        mostrarAviso(`Presença confirmada com sucesso! Até o dia 14/Nov!`, "sucesso");
+        console.warn("Aviso Firestore presencasEvento:", err);
+        mostrarAviso(`🎉 Presença de ${nomeResp} (${payload.totalPessoas} pessoas) confirmada com sucesso!`, "sucesso");
       }
     });
 
@@ -2190,46 +2218,106 @@
       const presenca = obterMinhaPresencaConfirmada();
       if (!presenca) return;
 
-      const docId = presenca.docId || (usuarioAtual ? usuarioAtual.uid : null);
+      const docId = presenca.docId;
       if (docId) {
         try {
           await deleteDoc(doc(db, "presencasEvento", docId));
         } catch (e) {}
         delete dadosLocaisPresencas[docId];
+        localStorage.removeItem('livrosLivres_presenca_' + docId);
       }
 
+      localStorage.removeItem('livrosLivres_ultimaPresenca');
+      localStorage.removeItem('livrosLivres_presencaAnonima');
       if (usuarioAtual) {
         localStorage.removeItem('livrosLivres_presenca_' + usuarioAtual.uid);
       }
-      localStorage.removeItem('livrosLivres_presencaAnonima');
 
       atualizarContadorPresencasUI();
+      if (ehAdmin()) renderizarPresencasAdmin();
       mostrarAviso("Sua confirmação de presença foi removida.", "info");
     };
 
     function renderizarPresencasAdmin() {
       const container = document.getElementById('listaAdminPresencas');
       if (!container) return;
-      const lista = Object.values(dadosLocaisPresencas);
+      const mapa = obterTodasPresencasConsolidadas();
+      const lista = Object.values(mapa);
+
       if (lista.length === 0) {
         container.innerHTML = `<p class="text-xs text-slate-400">Nenhuma família confirmou presença ainda.</p>`;
         return;
       }
+
       container.innerHTML = lista.map(p => `
-        <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl flex items-center justify-between text-xs">
-          <div>
-            <strong class="text-slate-800 text-sm">${p.nomeResp}</strong>
-            <span class="text-slate-500">${p.emailResp ? ` (${p.emailResp})` : ''}</span>
-            <p class="text-[11px] text-slate-600 mt-0.5">
-              👨‍👩‍👧‍👦 ${p.qtdAdultos} ${p.qtdAdultos === 1 ? 'adulto' : 'adultos'} + ${p.qtdFilhos} ${p.qtdFilhos === 1 ? 'criança' : 'crianças'} = <strong>${p.totalPessoas} pessoas</strong>
+        <div class="bg-slate-50 border border-slate-200 p-3 rounded-xl flex items-center justify-between text-xs hover:border-amber-300 transition-all">
+          <div class="space-y-0.5">
+            <div class="flex items-center gap-2">
+              <strong class="text-slate-800 text-sm font-heading">${p.nomeResp}</strong>
+              ${p.emailResp ? `<span class="text-slate-400 text-[11px]">(${p.emailResp})</span>` : ''}
+            </div>
+            <p class="text-[11px] text-slate-600">
+              👨‍👩‍👧‍👦 ${p.qtdAdultos} ${p.qtdAdultos === 1 ? 'adulto' : 'adultos'} + ${p.qtdFilhos} ${p.qtdFilhos === 1 ? 'criança' : 'crianças'} = <strong class="text-amber-800">${p.totalPessoas} pessoas</strong>
             </p>
           </div>
-          <span class="bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full text-[10px]">
-            Confirmado
-          </span>
+          <div class="flex items-center gap-2">
+            <span class="bg-emerald-100 text-emerald-800 font-bold px-2.5 py-1 rounded-full text-[10px] flex items-center gap-1">
+              <i class="ph ph-check-circle"></i> Confirmado
+            </span>
+            <button type="button" onclick="removerPresencaAdmin('${p.docId}')" class="text-slate-400 hover:text-rose-600 p-1 transition-colors" title="Remover presença">
+              <i class="ph ph-trash text-sm"></i>
+            </button>
+          </div>
         </div>
       `).join('');
     }
+
+    window.removerPresencaAdmin = async function(docId) {
+      if (!confirm("Remover esta confirmação da lista?")) return;
+      try {
+        await deleteDoc(doc(db, "presencasEvento", docId));
+      } catch (e) {}
+      delete dadosLocaisPresencas[docId];
+      localStorage.removeItem('livrosLivres_presenca_' + docId);
+      atualizarContadorPresencasUI();
+      renderizarPresencasAdmin();
+      mostrarAviso("Confirmação removida com sucesso.", "sucesso");
+    };
+
+    window.adicionarPresencaManualAdmin = async function() {
+      const nome = prompt("Nome do Responsável / Família:");
+      if (!nome || !nome.trim()) return;
+
+      const adultosStr = prompt("Quantidade de Adultos (padrão: 1):", "1");
+      const filhosStr = prompt("Quantidade de Crianças (padrão: 1):", "1");
+
+      const qtdAdultos = parseInt(adultosStr) || 1;
+      const qtdFilhos = parseInt(filhosStr) || 1;
+      const docId = 'presenca_manual_' + Date.now();
+
+      const payload = {
+        docId: docId,
+        uid: null,
+        nomeResp: nome.trim(),
+        emailResp: 'Adicionado pelo Organizador',
+        qtdAdultos: qtdAdultos,
+        qtdFilhos: qtdFilhos,
+        totalPessoas: qtdAdultos + qtdFilhos,
+        confirmadoEm: new Date().toISOString()
+      };
+
+      localStorage.setItem('livrosLivres_presenca_' + docId, JSON.stringify(payload));
+      dadosLocaisPresencas[docId] = payload;
+      atualizarContadorPresencasUI();
+      renderizarPresencasAdmin();
+
+      try {
+        await setDoc(doc(db, "presencasEvento", docId), payload);
+        mostrarAviso(`Presença de ${payload.nomeResp} adicionada com sucesso!`, "sucesso");
+      } catch (e) {
+        mostrarAviso(`Presença de ${payload.nomeResp} salva com sucesso!`, "sucesso");
+      }
+    };
 
     // Formulário de Voluntário
     document.getElementById('formVoluntarioSite').addEventListener('submit', async (e) => {
