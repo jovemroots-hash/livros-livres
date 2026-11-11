@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Lista de Presença e Termo de Imagem - Tabatinga Lê e Brinca</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @media print {
+      body { background: white !important; padding: 0 !important; color: black !important; }
+      .no-print { display: none !important; }
+      .page-break { page-break-after: always; }
+      @page { margin: 12mm; size: A4 portrait; }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 p-4 md:p-8 font-sans text-slate-800 text-xs">
+
+  <div class="max-w-4xl mx-auto space-y-6">
+
+    <!-- BARRA DE AÇÃO (NÃO IMPRIME) -->
+    <div class="no-print bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex justify-between items-center">
+      <div>
+        <h2 class="text-base font-bold text-slate-800">Folha de Recepção Oficial (Lista de Presença + Termo de Imagem)</h2>
+        <p class="text-xs text-slate-500">Imprima 3 a 5 cópias desta folha para deixar na prancheta de entrada no sábado.</p>
+      </div>
+      <button onclick="window.print()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold px-5 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow transition-all">
+        🖨️ Imprimir Esta Folha (A4)
+      </button>
+    </div>
+
+    <!-- FOLHA A4 OFICIAL -->
+    <div class="bg-white p-6 rounded-2xl border border-slate-300 shadow-sm space-y-4">
+      
+      <!-- CABEÇALHO -->
+      <div class="border-b-2 border-slate-800 pb-3 flex justify-between items-start">
+        <div>
+          <span class="text-[10px] font-extrabold uppercase tracking-widest text-indigo-700 block">Projeto Comunitário &bull; Entrada Gratuita</span>
+          <h1 class="text-xl font-black text-slate-900 uppercase tracking-tight">Livros Livres | Tabatinga Lê &amp; Brinca</h1>
+          <p class="text-[11px] text-slate-600 font-medium">1º Encontro Oficial &bull; Sábado, 14 de Novembro de 2026 &bull; Centro Comunitário da Tabatinga</p>
+        </div>
+        <div class="text-right text-[10px] text-slate-500">
+          <span class="font-bold block text-slate-700">Folha Nº: _______</span>
+          <span>Data: 14/11/2026</span>
+        </div>
+      </div>
+
+      <!-- TERMO RESUMIDO DE AUTORIZAÇÃO DE USO DE IMAGEM E VOZ (LGPD) -->
+      <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-[10px] text-slate-600 leading-relaxed space-y-1">
+        <strong class="text-slate-800 block uppercase font-bold text-[10px]">
+          📌 Termo de Autorização de Uso de Imagem e Voz (Comunitário e Cultural - Sem Fins Lucrativos)
+        </strong>
+        <p>
+          Ao assinar esta lista, o responsável declara ciência e autoriza (ou assinala a opção contrária) a captação de fotos e vídeos de sua participação e de seus dependentes menores de idade durante o evento, <strong>exclusivamente para divulgação cultural, relatórios institucionais e redes sociais do Projeto Tabatinga Lê &amp; Brinca</strong>, em conformidade com as diretrizes de proteção e dignidade da criança (ECA e LGPD).
+        </p>
+      </div>
+
+      <!-- TABELA DE PRESENÇA -->
+      <table class="w-full border-collapse border border-slate-300 text-[11px]">
+        <thead>
+          <tr class="bg-slate-100 text-slate-800 text-center font-bold">
+            <th class="border border-slate-300 py-1.5 px-2 w-8">#</th>
+            <th class="border border-slate-300 py-1.5 px-2 text-left">Nome do Responsável</th>
+            <th class="border border-slate-300 py-1.5 px-2 w-32">WhatsApp / Contato</th>
+            <th class="border border-slate-300 py-1.5 px-2 text-left">Nome da(s) Criança(s)</th>
+            <th class="border border-slate-300 py-1.5 px-1 w-20 text-[10px]">Autoriza Foto?</th>
+            <th class="border border-slate-300 py-1.5 px-2 w-36">Assinatura do Responsável</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- 15 LINHAS DE REGISTRO POR FOLHA -->
+          <!-- LINHA 1 -->
+          <tr class="h-9">
+            <td class="border border-slate-300 text-center font-bold text-slate-400">01</td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 text-center text-[10px] font-semibold">( &nbsp; ) Sim &nbsp; ( &nbsp; ) Não</td>
+            <td class="border border-slate-300 px-2"></td>
+          </tr>
+          <!-- LINHA 2 -->
+          <tr class="h-9 bg-slate-50/50">
+            <td class="border border-slate-300 text-center font-bold text-slate-400">02</td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 text-center text-[10px] font-semibold">( &nbsp; ) Sim &nbsp; ( &nbsp; ) Não</td>
+            <td class="border border-slate-300 px-2"></td>
+          </tr>
+          <!-- LINHA 3 -->
+          <tr class="h-9">
+            <td class="border border-slate-300 text-center font-bold text-slate-400">03</td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 text-center text-[10px] font-semibold">( &nbsp; ) Sim &nbsp; ( &nbsp; ) Não</td>
+            <td class="border border-slate-300 px-2"></td>
+          </tr>
+          <!-- LINHA 4 -->
+          <tr class="h-9 bg-slate-50/50">
+            <td class="border border-slate-300 text-center font-bold text-slate-400">04</td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 text-center text-[10px] font-semibold">( &nbsp; ) Sim &nbsp; ( &nbsp; ) Não</td>
+            <td class="border border-slate-300 px-2"></td>
+          </tr>
+          <!-- LINHA 5 -->
+          <tr class="h-9">
+            <td class="border border-slate-300 text-center font-bold text-slate-400">05</td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 text-center text-[10px] font-semibold">( &nbsp; ) Sim &nbsp; ( &nbsp; ) Não</td>
+            <td class="border border-slate-300 px-2"></td>
+          </tr>
+          <!-- LINHA 6 -->
+          <tr class="h-9 bg-slate-50/50">
+            <td class="border border-slate-300 text-center font-bold text-slate-400">06</td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 text-center text-[10px] font-semibold">( &nbsp; ) Sim &nbsp; ( &nbsp; ) Não</td>
+            <td class="border border-slate-300 px-2"></td>
+          </tr>
+          <!-- LINHA 7 -->
+          <tr class="h-9">
+            <td class="border border-slate-300 text-center font-bold text-slate-400">07</td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 text-center text-[10px] font-semibold">( &nbsp; ) Sim &nbsp; ( &nbsp; ) Não</td>
+            <td class="border border-slate-300 px-2"></td>
+          </tr>
+          <!-- LINHA 8 -->
+          <tr class="h-9 bg-slate-50/50">
+            <td class="border border-slate-300 text-center font-bold text-slate-400">08</td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 text-center text-[10px] font-semibold">( &nbsp; ) Sim &nbsp; ( &nbsp; ) Não</td>
+            <td class="border border-slate-300 px-2"></td>
+          </tr>
+          <!-- LINHA 9 -->
+          <tr class="h-9">
+            <td class="border border-slate-300 text-center font-bold text-slate-400">09</td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 text-center text-[10px] font-semibold">( &nbsp; ) Sim &nbsp; ( &nbsp; ) Não</td>
+            <td class="border border-slate-300 px-2"></td>
+          </tr>
+          <!-- LINHA 10 -->
+          <tr class="h-9 bg-slate-50/50">
+            <td class="border border-slate-300 text-center font-bold text-slate-400">10</td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 text-center text-[10px] font-semibold">( &nbsp; ) Sim &nbsp; ( &nbsp; ) Não</td>
+            <td class="border border-slate-300 px-2"></td>
+          </tr>
+          <!-- LINHA 11 -->
+          <tr class="h-9">
+            <td class="border border-slate-300 text-center font-bold text-slate-400">11</td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 text-center text-[10px] font-semibold">( &nbsp; ) Sim &nbsp; ( &nbsp; ) Não</td>
+            <td class="border border-slate-300 px-2"></td>
+          </tr>
+          <!-- LINHA 12 -->
+          <tr class="h-9 bg-slate-50/50">
+            <td class="border border-slate-300 text-center font-bold text-slate-400">12</td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 px-2"></td>
+            <td class="border border-slate-300 text-center text-[10px] font-semibold">( &nbsp; ) Sim &nbsp; ( &nbsp; ) Não</td>
+            <td class="border border-slate-300 px-2"></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- RODAPÉ DA FOLHA -->
+      <div class="pt-2 flex justify-between items-center text-[10px] text-slate-500 border-t border-slate-200">
+        <span>🌐 Portal: livroslivres.netlify.app</span>
+        <span>Coordenação: Thiago Siqueira &bull; Tabatinga (Ubatuba/SP)</span>
+      </div>
+
+    </div>
+
+  </div>
+
+</body>
+</html>

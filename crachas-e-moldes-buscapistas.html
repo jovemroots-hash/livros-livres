@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Moldes e Gabaritos - Cenários Os Busca-Pistas</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @media print {
+      body { background: white !important; color: black !important; padding: 0 !important; }
+      .no-print { display: none !important; }
+      .page-break { page-break-after: always; }
+      .printable-card { border: 2px dashed #444 !important; page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 text-slate-800 p-4 md:p-8 font-sans antialiased">
+  <div class="max-w-5xl mx-auto space-y-6">
+
+    <!-- CABEÇALHO -->
+    <header class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 bg-amber-100 text-amber-800 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
+          ✂️ Gabarito DIY - Custo R$ 0,00
+        </div>
+        <h1 class="text-2xl md:text-3xl font-extrabold text-slate-900 tracking-tight">
+          Moldes & Desenhos: Os Busca-Pistas
+        </h1>
+        <p class="text-sm text-slate-600 mt-1">
+          Livro 1: <em>O Caso do Castelo Assombrado</em> (Pepa, Maxi e Pulgas)
+        </p>
+      </div>
+      <div class="flex gap-2 no-print">
+        <button onclick="window.print()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-sm transition-all shadow-sm flex items-center gap-2">
+          🖨️ Imprimir Moldes
+        </button>
+      </div>
+    </header>
+
+    <!-- GUIA DE MEDIDAS RÁPIDAS -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <strong class="text-amber-600 block text-sm mb-1">📦 Papelão de Mercado</strong>
+        Use caixas de hortifrúti ou supermercado (camada dupla é mais firme para os portões e molduras).
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <strong class="text-indigo-600 block text-sm mb-1">☕ Tinta Rústica Caseira</strong>
+        Misture café solúvel com pouca água ou restos de carvão para envelhecer o papelão sem gastar tinta!
+      </div>
+      <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+        <strong class="text-emerald-600 block text-sm mb-1">📐 Escala dos Moldes</strong>
+        Cada molde abaixo já está dimensionado. Se for copiar no olho, use uma régua simples de 30cm.
+      </div>
+    </div>
+
+    <!-- SEÇÃO 1: CENÁRIO 1 - AGÊNCIA BUSCA-PISTAS -->
+    <section class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6 printable-card">
+      <div class="border-b border-slate-200 pb-3 flex justify-between items-center">
+        <div>
+          <span class="text-xs font-bold uppercase text-amber-600">Cenário 1 (Base Permanente)</span>
+          <h2 class="text-xl font-bold text-slate-900">Placa da Agência & Crachás de Detetive</h2>
+        </div>
+        <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-semibold">Tamanho: ~45cm x 22cm</span>
+      </div>
+
+      <!-- MOLDE 1: PLACA DA CASINHA DO PULGAS -->
+      <div class="space-y-2">
+        <p class="text-xs text-slate-600">
+          <strong>Como fazer:</strong> Recorte o contorno ondulado em papelão para simular madeira rústica e talhada. Pinte as letras com caneta preta ou carvão.
+        </p>
+        <div class="bg-amber-50 rounded-xl p-4 border border-amber-200 flex justify-center">
+          <svg viewBox="0 0 600 240" class="w-full max-w-xl h-auto drop-shadow-sm select-none">
+            <!-- Tábua rústica -->
+            <path d="M 25 35 
+                     Q 150 20, 300 35 
+                     Q 450 15, 575 30 
+                     Q 590 120, 570 210 
+                     Q 420 225, 300 210 
+                     Q 120 228, 25 205 
+                     Q 10 110, 25 35 Z" 
+                  fill="#d4a373" stroke="#8b5e34" stroke-width="6" stroke-linejoin="round" />
+            <!-- Veios da madeira -->
+            <path d="M 50 65 Q 280 50 540 60" stroke="#b07d50" stroke-width="2.5" fill="none" stroke-dasharray="12 6" />
+            <path d="M 60 180 Q 320 190 530 175" stroke="#b07d50" stroke-width="2.5" fill="none" stroke-dasharray="14 7" />
+            <circle cx="70" cy="115" r="7" fill="#b07d50" />
+            <!-- Pregos nos cantos -->
+            <circle cx="50" cy="55" r="5" fill="#4a3525" />
+            <circle cx="550" cy="50" r="5" fill="#4a3525" />
+            <circle cx="45" cy="185" r="5" fill="#4a3525" />
+            <circle cx="545" cy="185" r="5" fill="#4a3525" />
+            <!-- Letras -->
+            <text x="300" y="95" text-anchor="middle" font-family="Arial Black, Impact, sans-serif" font-size="34" fill="#3d2314" letter-spacing="2">
+              AGÊNCIA BUSCA-PISTAS
+            </text>
+            <text x="300" y="138" text-anchor="middle" font-family="Trebuchet MS, sans-serif" font-weight="bold" font-size="20" fill="#5c381e">
+              🔍 PEPA PISTAS & MAXI CASOS 🐾
+            </text>
+            <line x1="140" y1="155" x2="460" y2="155" stroke="#8b5e34" stroke-width="2" stroke-dasharray="6" />
+            <text x="300" y="182" text-anchor="middle" font-family="Courier New, monospace" font-size="14" font-weight="bold" fill="#3d2314">
+              [ SEDE SECRETA: CASINHA DO PULGAS ]
+            </text>
+          </svg>
+        </div>
+      </div>
+
+      <!-- MOLDE 2: CRACHÁS PARA AS CRIANÇAS -->
+      <div class="pt-4 border-t border-slate-100">
+        <h3 class="text-sm font-bold text-slate-800 mb-2">Gabarito de Crachá Individual (Recortar 1 por criança):</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Crachá 1 -->
+          <div class="border-2 border-dashed border-slate-300 p-4 rounded-xl bg-slate-50 flex gap-4 items-center">
+            <div class="w-20 h-24 border-2 border-slate-400 border-dashed rounded-lg flex flex-col items-center justify-center text-slate-400 text-center p-1 bg-white">
+              <span class="text-2xl">👤</span>
+              <span class="text-[10px] font-bold">DESENHE SEU ROSTO</span>
+            </div>
+            <div class="flex-1 space-y-1.5 text-xs">
+              <div class="font-extrabold text-slate-800 uppercase tracking-wide flex justify-between">
+                <span>CRACHÁ OFICIAL</span>
+                <span class="text-amber-600">Nº 001</span>
+              </div>
+              <div class="border-b border-slate-300 pb-1">
+                <span class="text-[10px] text-slate-500 block">NOME DO DETETIVE:</span>
+                <span class="font-mono text-slate-700 font-bold">______________________</span>
+              </div>
+              <div class="flex justify-between items-center pt-1 text-[11px] font-semibold text-emerald-700">
+                <span>HABILIDADE: Olho de Águia</span>
+                <span class="border border-emerald-500 rounded px-1 text-[9px] bg-emerald-50">CONFIDENCIAL</span>
+              </div>
+            </div>
+          </div>
+          <!-- Crachá 2 -->
+          <div class="border-2 border-dashed border-slate-300 p-4 rounded-xl bg-slate-50 flex gap-4 items-center">
+            <div class="w-20 h-24 border-2 border-slate-400 border-dashed rounded-lg flex flex-col items-center justify-center text-slate-400 text-center p-1 bg-white">
+              <span class="text-2xl">🔍</span>
+              <span class="text-[10px] font-bold">DESENHE SEU ROSTO</span>
+            </div>
+            <div class="flex-1 space-y-1.5 text-xs">
+              <div class="font-extrabold text-slate-800 uppercase tracking-wide flex justify-between">
+                <span>CRACHÁ OFICIAL</span>
+                <span class="text-amber-600">Nº 002</span>
+              </div>
+              <div class="border-b border-slate-300 pb-1">
+                <span class="text-[10px] text-slate-500 block">NOME DO DETETIVE:</span>
+                <span class="font-mono text-slate-700 font-bold">______________________</span>
+              </div>
+              <div class="flex justify-between items-center pt-1 text-[11px] font-semibold text-indigo-700">
+                <span>HABILIDADE: Desvenda Enigmas</span>
+                <span class="border border-indigo-500 rounded px-1 text-[9px] bg-indigo-50">CONFIDENCIAL</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEÇÃO 2: CENÁRIO 2 - OS PORTÕES DO CASTELO FANTOM -->
+    <section class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6 printable-card">
+      <div class="border-b border-slate-200 pb-3 flex justify-between items-center">
+        <div>
+          <span class="text-xs font-bold uppercase text-indigo-600">Cenário 2 (Transição)</span>
+          <h2 class="text-xl font-bold text-slate-900">Lanças Góticas do Portão & Silhuetas</h2>
+        </div>
+        <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-semibold">Corte em Papelão</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <div>
+          <h4 class="font-bold text-sm text-slate-800 mb-1">Grade de Ferro do Castelo:</h4>
+          <p class="text-xs text-slate-600 mb-3">
+            Recorte tiras de papelão de <strong>80cm a 1 metro de comprimento por 6cm de largura</strong>. Na ponta superior, recorte o formato de lança gótica desenhado ao lado. Pinte com tinta preta ou esfregue carvão/lápis 6B.
+          </p>
+          <div class="bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs space-y-1">
+            <span class="font-bold text-slate-700">💡 Truque de Fixação:</span>
+            <p class="text-slate-600">Cole as lanças numa barra transversal de papelão e pendure no vão da porta com fita crepe. Dá a impressão real de um portão medieval de ferro!</p>
+          </div>
+        </div>
+
+        <div class="bg-slate-900 rounded-xl p-4 flex justify-around items-center h-56">
+          <!-- SVG da Lança Gótica -->
+          <svg viewBox="0 0 100 240" class="h-48 w-auto">
+            <!-- Barra e Ponta de Lança -->
+            <path d="M 50 10 
+                     L 75 60 
+                     L 58 55 
+                     L 58 230 
+                     L 42 230 
+                     L 42 55 
+                     L 25 60 Z" 
+                  fill="#94a3b8" stroke="#cbd5e1" stroke-width="2" />
+            <!-- Detalhe gótico de losango -->
+            <polygon points="50,25 60,45 50,55 40,45" fill="#475569" />
+            <circle cx="50" cy="100" r="4" fill="#334155" />
+            <circle cx="50" cy="180" r="4" fill="#334155" />
+          </svg>
+
+          <!-- SVG do Morcego de Sombra -->
+          <svg viewBox="0 0 160 100" class="h-28 w-auto">
+            <!-- Morcego clássico -->
+            <path d="M 80 45 
+                     C 90 25, 110 10, 150 20 
+                     C 135 50, 130 70, 115 65 
+                     C 105 75, 95 65, 80 80 
+                     C 65 65, 55 75, 45 65 
+                     C 30 70, 25 50, 10 20 
+                     C 50 10, 70 25, 80 45 Z" 
+                  fill="#e2e8f0" />
+            <!-- Orelhinhas -->
+            <polygon points="76,43 78,35 80,43" fill="#e2e8f0" />
+            <polygon points="80,43 82,35 84,43" fill="#e2e8f0" />
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <!-- SEÇÃO 3: CENÁRIO 3 - O SALÃO DO CASTELO E O RETRATO COM OLHOS ESPIÕES -->
+    <section class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-6 printable-card">
+      <div class="border-b border-slate-200 pb-3 flex justify-between items-center">
+        <div>
+          <span class="text-xs font-bold uppercase text-red-600">Cenário 3 (O Clímax)</span>
+          <h2 class="text-xl font-bold text-slate-900">O Retrato Sinistro da Família Fantom (Com Olhos Furados)</h2>
+        </div>
+        <span class="text-xs bg-slate-100 text-slate-600 px-3 py-1 rounded-full font-semibold">Tamanho: Papel A4 ou Caixa Média</span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <div class="bg-slate-950 p-4 rounded-xl flex justify-center">
+          <!-- QUADRO DO FANTASMA -->
+          <svg viewBox="0 0 320 400" class="w-full max-w-xs h-auto select-none">
+            <!-- Moldura Dourada Envelhecida -->
+            <rect x="10" y="10" width="300" height="380" rx="15" fill="#854d0e" stroke="#ca8a04" stroke-width="8" />
+            <rect x="25" y="25" width="270" height="350" rx="8" fill="#1e1b4b" stroke="#a16207" stroke-width="3" />
+            <!-- Arabescos de Canto -->
+            <circle cx="25" cy="25" r="10" fill="#eab308" />
+            <circle cx="295" cy="25" r="10" fill="#eab308" />
+            <circle cx="25" cy="375" r="10" fill="#eab308" />
+            <circle cx="295" cy="375" r="10" fill="#eab308" />
+
+            <!-- Personagem Antigo (Lorde Fantom) -->
+            <!-- Capa e Terno -->
+            <path d="M 60 375 C 60 270, 100 240, 160 240 C 220 240, 260 270, 260 375 Z" fill="#0f172a" />
+            <polygon points="160,240 140,290 180,290" fill="#e2e8f0" />
+            <polygon points="160,265 152,275 168,275" fill="#dc2626" /> <!-- Gravata borboleta vermelha -->
+
+            <!-- Rosto Pálido -->
+            <ellipse cx="160" cy="180" rx="48" ry="60" fill="#cbd5e1" stroke="#64748b" stroke-width="2" />
+            <!-- Cabelo e Bigode Antigo -->
+            <path d="M 112 165 C 112 110, 208 110, 208 165 C 190 135, 130 135, 112 165 Z" fill="#1e293b" />
+            <path d="M 135 210 Q 160 220 185 210 Q 160 205 135 210 Z" fill="#1e293b" />
+
+            <!-- OLHOS VAZADOS (O TRUQUE DE CENA!) -->
+            <!-- Área de Corte com Tesoura -->
+            <ellipse cx="140" cy="175" rx="10" ry="6" fill="#000" stroke="#f43f5e" stroke-dasharray="3 2" stroke-width="2" />
+            <ellipse cx="180" cy="175" rx="10" ry="6" fill="#000" stroke="#f43f5e" stroke-dasharray="3 2" stroke-width="2" />
+            
+            <!-- Etiqueta do Quadro -->
+            <rect x="90" y="340" width="140" height="25" fill="#ca8a04" rx="4" />
+            <text x="160" y="357" text-anchor="middle" font-family="Times New Roman, serif" font-weight="bold" font-size="12" fill="#451a03">
+              BARÃO FANTOM - 1888
+            </text>
+
+            <!-- Linha indicadora de corte -->
+            <text x="160" y="145" text-anchor="middle" font-size="11" fill="#f43f5e" font-weight="bold">
+              ✂️ CORTE OS OLHOS AQUI!
+            </text>
+          </svg>
+        </div>
+
+        <div class="space-y-3">
+          <h4 class="font-bold text-slate-900 text-base">O Efeito do "Quadro Que Vigia":</h4>
+          <ol class="text-xs text-slate-600 space-y-2 list-decimal list-inside">
+            <li>Desenhe o retrato numa tampa de caixa de sapato ou placa de papelão.</li>
+            <li>Com a ponta de uma tesoura ou estilete, <strong>fure os dois círculos dos olhos</strong> (tracejados em vermelho).</li>
+            <li>Pendure o quadro em um móvel ou biombo.</li>
+            <li><strong>O Grande Truque:</strong> Durante a leitura do capítulo em que Pepa e Maxi se sentem observados, coloque uma lanterna fraca atrás dos olhos do quadro, OU posicione-se atrás e mexa os próprios olhos pelos buracos! As crianças vão pirar de empolgação.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- RASTROS E PEGADAS PARA ESPALHAR NO CHÃO -->
+    <section class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm space-y-4 printable-card">
+      <div class="border-b border-slate-200 pb-2">
+        <h2 class="text-lg font-bold text-slate-900">🐾 Gabarito de Rastros (Patinhas do Pulgas vs. Pegadas Misteriosas)</h2>
+        <p class="text-xs text-slate-600">Recorte vários e cole no chão com fita crepe ligando a Agência até o Castelo.</p>
+      </div>
+
+      <div class="flex flex-wrap justify-around items-center gap-6 py-4 bg-slate-50 rounded-xl border border-dashed border-slate-300">
+        <!-- Pata do Pulgas -->
+        <div class="text-center">
+          <svg viewBox="0 0 100 100" class="w-20 h-20 mx-auto">
+            <ellipse cx="50" cy="65" rx="22" ry="17" fill="#475569" />
+            <circle cx="28" cy="40" r="9" fill="#475569" />
+            <circle cx="43" cy="30" r="9" fill="#475569" />
+            <circle cx="58" cy="30" r="9" fill="#475569" />
+            <circle cx="73" cy="40" r="9" fill="#475569" />
+          </svg>
+          <span class="text-[11px] font-bold text-slate-600 mt-1 block">Patas do Pulgas</span>
+        </div>
+
+        <!-- Pegada Humana Misteriosa -->
+        <div class="text-center">
+          <svg viewBox="0 0 80 140" class="w-16 h-28 mx-auto">
+            <ellipse cx="40" cy="45" rx="22" ry="32" fill="#0f172a" />
+            <ellipse cx="40" cy="105" rx="16" ry="20" fill="#0f172a" />
+          </svg>
+          <span class="text-[11px] font-bold text-slate-600 mt-1 block">Sola Misteriosa</span>
+        </div>
+
+        <!-- Ponto de Interrogação / Pista -->
+        <div class="text-center">
+          <svg viewBox="0 0 80 100" class="w-16 h-20 mx-auto">
+            <text x="40" y="80" text-anchor="middle" font-family="Arial Black, Impact" font-size="80" fill="#dc2626">?</text>
+          </svg>
+          <span class="text-[11px] font-bold text-slate-600 mt-1 block">Pista nº 1</span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</body>
+</html>
